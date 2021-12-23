@@ -31,8 +31,8 @@ public class Maze {
         System.out.println("Rows = " + ro);
         System.out.println("Cols = " +  col);
         for(int i = 0 ; i < ro ; i++) {
-            for(int j = 1 ; j < col - 1 ; j++) {
-                grid[i][j] = (RandomUtil.randomInt(1, 20) % 3 == 0 ? 1 : 0);
+            for(int j = 2 ; j < col - 2 ; j++) {
+                grid[i][j] = (RandomUtil.randomInt(0, 2) == 0 ? 1 : 0);
             }
             System.out.println(Arrays.toString(grid[i]));
         }

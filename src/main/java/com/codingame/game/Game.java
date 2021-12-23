@@ -13,21 +13,22 @@ public class Game {
     int totalMinions, minionsPerPlayer;
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject private Maze maze;
-    @Inject private RandomUtil randomUtil;
     ArrayList<Minion>allMinions;
 
 
 
 
     void init() {
-        this.randomUtil.init(this.gameManager.getSeed());
 
         this.minionsPerPlayer = RandomUtil.randomInt(Config.MIN_MINIONS, Config.MAX_MINIONS);
         this.totalMinions = minionsPerPlayer * gameManager.getPlayerCount();
 
         generateMinions();
         setMinionsPositions();
+
     }
+
+
 
     void setMinionsPositions() {
         int leftPlayer = RandomUtil.randomInt(0, 1);
@@ -36,11 +37,11 @@ public class Game {
         gameManager.getPlayer(rightPlayer).setLeftPlayer(false);
 
         int leftColumn = 0, rightColumn = maze.getCol() - 1;
-        System.out.println(" ?? " + leftColumn + " " + rightColumn);
+        int offset = maze.getRo()/2 - this.minionsPerPlayer/2;
 
         for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
-            gameManager.getPlayer(0).getMinion(i).setPosition(new Coord(i, leftColumn));
-            gameManager.getPlayer(1).getMinion(i).setPosition(new Coord(i, rightColumn));
+            gameManager.getPlayer(0).getMinion(i).setPosition(new Coord(offset + i, leftColumn));
+            gameManager.getPlayer(1).getMinion(i).setPosition(new Coord(offset + i, rightColumn));
         }
     }
 

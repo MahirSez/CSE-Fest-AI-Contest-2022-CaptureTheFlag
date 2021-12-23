@@ -39,8 +39,8 @@ public class View {
                 Circle circle = graphicEntityModule.createCircle()
                         .setRadius(20)
                         .setLineWidth(0)
-                        .setX(coord.y * this.wallWidth + this.wallWidth / 2)
-                        .setY(Config.MAZE_UPPER_OFFSET + coord.x * this.wallHeight + this.wallHeight / 2);
+                        .setX(coord.getY() * this.wallWidth + this.wallWidth / 2)
+                        .setY(Config.MAZE_UPPER_OFFSET + coord.getX() * this.wallHeight + this.wallHeight / 2);
 
                 if(player.getIsLeftPlayer()) circle.setFillColor(0x00FF00);
                 else circle.setFillColor(0x0000FF);

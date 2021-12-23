@@ -6,10 +6,14 @@ import java.util.ArrayList;
 
 public class Player extends AbstractMultiplayerPlayer {
 
+
+    private final ArrayList<Minion> minions;
+    private Flag flag;
+
     private boolean isLeftPlayer;
-    private ArrayList<Minion> minions;
     Player() {
         this.minions = new ArrayList<Minion>();
+        this.flag = new Flag();
     }
 
     void setLeftPlayer(boolean isLeftPlayer) { this.isLeftPlayer = isLeftPlayer; }
