@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Random;
 
 @Singleton
 public class Game {
@@ -37,7 +36,7 @@ public class Game {
         gameManager.getPlayer(rightPlayer).setLeftPlayer(false);
 
         int leftColumn = 0, rightColumn = maze.getCol() - 1;
-        int offset = maze.getRo()/2 - this.minionsPerPlayer/2;
+        int offset = maze.getRow()/2 - this.minionsPerPlayer/2;
 
         for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
             gameManager.getPlayer(0).getMinion(i).setPosition(new Coord(offset + i, leftColumn));
