@@ -5,7 +5,6 @@ import java.util.List;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.MultiplayerGameManager;
-import com.codingame.gameengine.module.entities.GraphicEntityModule;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
@@ -23,19 +22,16 @@ public class Referee extends AbstractReferee {
         maze.init();
         game.init();
         view.init();
-        this.sendGlobalInfo();
+        this.sendInitialInfo();
     }
 
 
-    void sendGlobalInfo() {
-        for (Player player : gameManager.getPlayers()) {
-            for (String line : game.getGlobalInfo()) {
-                player.sendInputLine(line);
-            }
-        }
+    void sendInitialInfo() {
+        Player player0 = gameManager.getPlayer(0);
+        Player player1 = gameManager.getPlayer(1);
+        for(String line: game.getInitialInfo(player0, player1)) player0.sendInputLine(line);
+        for(String line: game.getInitialInfo(player1, player0)) player1.sendInputLine(line);
     }
-
-
 
     @Override
     public void gameTurn(int turn) {

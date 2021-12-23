@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.Random;
 
 @Singleton
 public class Game {
@@ -25,9 +24,25 @@ public class Game {
 
         generateMinions();
         setMinionsPositions();
-
+        setFlagBasePosition();
+        setFlagPosition();
+    }
+    void setFlagBasePosition() {
+        for(Player player: gameManager.getPlayers()) {
+            if(player.isLeftPlayer()) {
+                player.getFlagBase().setPos(new Coord(maze.getRow() / 2, 0));
+            }
+            else {
+                player.getFlagBase().setPos(new Coord(maze.getRow()/2, maze.getCol() - 1));
+            }
+        }
     }
 
+    void setFlagPosition() {
+        for(Player player: gameManager.getPlayers()) {
+            player.getFlag().setPos(player.getFlagBase().getPos());
+        }
+    }
 
 
     void setMinionsPositions() {
@@ -36,12 +51,12 @@ public class Game {
         gameManager.getPlayer(leftPlayer).setLeftPlayer(true);
         gameManager.getPlayer(rightPlayer).setLeftPlayer(false);
 
-        int leftColumn = 0, rightColumn = maze.getCol() - 1;
-        int offset = maze.getRo()/2 - this.minionsPerPlayer/2;
+        int leftColumn = 1, rightColumn = maze.getCol() - 2;
+        int offset = maze.getRow()/2 - this.minionsPerPlayer/2;
 
         for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
-            gameManager.getPlayer(0).getMinion(i).setPosition(new Coord(offset + i, leftColumn));
-            gameManager.getPlayer(1).getMinion(i).setPosition(new Coord(offset + i, rightColumn));
+            gameManager.getPlayer(leftPlayer).getMinion(i).setPosition(new Coord(offset + i, leftColumn));
+            gameManager.getPlayer(rightPlayer).getMinion(i).setPosition(new Coord(offset + i, rightColumn));
         }
     }
 
@@ -57,8 +72,12 @@ public class Game {
         }
     }
 
-    ArrayList<String> getGlobalInfo() {
+    ArrayList<String> getInitialInfo(Player self, Player opponent) {
         ArrayList<String>ret = new ArrayList<>();
+        ret.add(this.maze.getRow() + " "+ this.maze.getCol());
+        ret.add(self.getFlagBase().getPos().getX() + " " + self.getFlagBase().getPos().getY());
+        ret.add(opponent.getFlagBase().getPos().getX() + " " + opponent.getFlagBase().getPos().getY());
         return ret;
     }
 }
+
