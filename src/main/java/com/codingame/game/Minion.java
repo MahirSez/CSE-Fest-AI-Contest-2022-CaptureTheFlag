@@ -16,4 +16,5 @@ public class Minion {
         this.pos = pos;
     }
     Coord getPos() { return this.pos; }
+    int getHealth() { return health; }
 }

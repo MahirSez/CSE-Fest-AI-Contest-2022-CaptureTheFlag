@@ -27,18 +27,24 @@ public class Referee extends AbstractReferee {
 
 
     void sendInitialInfo() {
-        Player player0 = gameManager.getPlayer(0);
-        Player player1 = gameManager.getPlayer(1);
-        for(String line: game.getInitialInfo(player0, player1)) player0.sendInputLine(line);
-        for(String line: game.getInitialInfo(player1, player0)) player1.sendInputLine(line);
+        for(Player player: gameManager.getPlayers()) {
+            for(String line: game.getInitialInfo(player)) {
+                player.sendInputLine(line);
+            }
+        }
+    }
+    void sendGameState() {
+        for(Player player: gameManager.getPlayers()) {
+            for(String line: game.getGameState(player)) {
+                player.sendInputLine(line);
+            }
+            player.execute();
+        }
     }
 
     @Override
     public void gameTurn(int turn) {
-        for (Player player : gameManager.getActivePlayers()) {
-            player.sendInputLine("input");
-            player.execute();
-        }
+        this.sendGameState();
 
         for (Player player : gameManager.getActivePlayers()) {
             try {
@@ -47,6 +53,6 @@ public class Referee extends AbstractReferee {
             } catch (TimeoutException e) {
                 player.deactivate(String.format("$%d timeout!", player.getIndex()));
             }
-        }        
+        }
     }
 }

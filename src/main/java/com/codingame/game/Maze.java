@@ -15,9 +15,7 @@ public class Maze {
     private int[][] grid;
     private int row, col;
 
-    int[][] getGrid() {
-        return grid;
-    }
+    int[][] getGrid() { return grid; }
     int getRow() { return row; }
     int getCol() { return col; }
 
@@ -26,13 +24,10 @@ public class Maze {
         col = RandomUtil.randomInt(Config.MIN_MAZE_COL, Config.MAX_MAZE_COl);
         grid = new int[row][col];
 
-        System.out.println("Rows = " + row);
-        System.out.println("Cols = " +  col);
         for(int i = 0; i < row; i++) {
             for(int j = 2 ; j < col - 2 ; j++) {
                 grid[i][j] = (RandomUtil.randomInt(0, 2) == 0 ? 1 : 0);
             }
-//            System.out.println(Arrays.toString(grid[i]));
         }
 
     }
