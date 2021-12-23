@@ -13,4 +13,11 @@ public class Config {
     static final int MAX_MAZE_COl = 35;
 
     static final int MAZE_UPPER_OFFSET = 200;
+
+    public static final Coord[] ADJACENCY = {
+            new Coord(-1, 0),
+            new Coord(1, 0),
+            new Coord(0, -1),
+            new Coord(0, 1)
+    };
 }

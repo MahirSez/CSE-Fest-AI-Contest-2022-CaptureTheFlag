@@ -35,7 +35,7 @@ public class Game {
         gameManager.getPlayer(leftPlayer).setLeftPlayer(true);
         gameManager.getPlayer(rightPlayer).setLeftPlayer(false);
 
-        int leftColumn = 0, rightColumn = maze.getCol() - 1;
+        int leftColumn = 1, rightColumn = maze.getCol() - 2;
         int offset = maze.getRow()/2 - this.minionsPerPlayer/2;
 
         for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
