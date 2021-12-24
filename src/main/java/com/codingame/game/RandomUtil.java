@@ -5,7 +5,7 @@ import java.util.Random;
 
 @Singleton
 public class RandomUtil {
-    private static Random random;
+    public static Random random;
 
     public static int randomInt(int min, int max) {
         return min + random.nextInt(max - min + 1);

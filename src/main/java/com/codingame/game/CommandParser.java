@@ -3,11 +3,12 @@ package com.codingame.game;
 import com.codingame.game.action.Action;
 import com.codingame.game.action.MoveAction;
 import com.codingame.game.action.WaitAction;
+import com.codingame.game.exception.GameException;
+import com.codingame.game.exception.InvalidInputException;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.google.inject.Inject;
 
 import javax.inject.Singleton;
-import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;

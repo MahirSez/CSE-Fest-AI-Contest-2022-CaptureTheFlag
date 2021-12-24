@@ -1,17 +1,11 @@
 package com.codingame.game;
 
-import com.codingame.gameengine.core.MultiplayerGameManager;
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import java.util.Arrays;
-import java.util.Random;
 
 
 @Singleton
 public class Maze {
 
-    @Inject private MultiplayerGameManager<Player> gameManager;
     private int[][] grid;
     private int row, col;
 
@@ -28,7 +22,7 @@ public class Maze {
         Grid gridObj = new Grid(col - 4, row);
         TetrisBasedMapGenerator generator = new TetrisBasedMapGenerator();
         generator.init();
-        generator.generateWithHorizontalSymmetry(gridObj, new Random()); // change
+        generator.generateWithHorizontalSymmetry(gridObj, RandomUtil.random);
 
         System.out.println("Rows = " + row);
         System.out.println("Cols = " +  col);
