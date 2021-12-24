@@ -65,7 +65,8 @@ public class Agent1 {
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-                str.append(String.format("MOVE %d %d %d", i, opp_base_x, opp_flag_y) );
+                if(oppCaptured == 1) str.append(String.format("MOVE %d %d %d", i, my_base_x, my_base_y) );
+                else str.append(String.format("MOVE %d %d %d", i, opp_base_x, opp_flag_y) );
             }
             System.out.println(str.toString());
         }

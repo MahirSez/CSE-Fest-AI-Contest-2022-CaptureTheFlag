@@ -14,14 +14,14 @@ import java.util.List;
 @Singleton
 public class View {
 
-    @Inject
-    Maze maze;
+    @Inject Maze maze;
     @Inject GraphicEntityModule graphicEntityModule;
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject TooltipModule tooltips;
-    HashMap<Minion, Circle>minionCircle;
+    HashMap<Minion, Circle>minionToCircle;
+    HashMap<Flag, Sprite>flagToSprite;
 
-    List<Move> movers;
+    List<Minion> movers;
 
     World world;
 
@@ -35,10 +35,16 @@ public class View {
                 .setY(Config.MAZE_UPPER_OFFSET);
     }
     int toPixelCenterX(int x) {
-        return x * this.wallWidth + this.wallWidth / 2;
+        return this.toPixelCornerX(x) + this.wallWidth / 2;
     }
     int toPixelCenterY(int y) {
-        return Config.MAZE_UPPER_OFFSET + y * this.wallHeight + this.wallHeight / 2;
+        return this.toPixelCornerY(y) + this.wallHeight / 2;
+    }
+    int toPixelCornerX(int x) {
+        return x * wallWidth;
+    }
+    int toPixelCornerY(int y) {
+        return Config.MAZE_UPPER_OFFSET + wallHeight * y;
     }
 
     public void drawMinions() {
@@ -48,9 +54,7 @@ public class View {
                 Circle circle = graphicEntityModule.createCircle()
                         .setRadius(20)
                         .setLineWidth(0)
-//                        .setX(coord.getY() * this.wallWidth + this.wallWidth / 2)
                         .setX(this.toPixelCenterX(coord.getY()))
-//                        .setY(Config.MAZE_UPPER_OFFSET + coord.getX() * this.wallHeight + this.wallHeight / 2)
                         .setY(this.toPixelCenterY(coord.getX()))
                         .setLineColor(0)
                         .setLineWidth(2);
@@ -58,7 +62,7 @@ public class View {
                 if(player.isLeftPlayer()) circle.setFillColor(Config.LEFT_PLAYER_COLOR);
                 else circle.setFillColor(Config.RIGHT_PLAYER_COLOR);
 
-                this.minionCircle.put(minion, circle);
+                this.minionToCircle.put(minion, circle);
              }
          }
     }
@@ -71,9 +75,8 @@ public class View {
 
         for(int i = 0 ; i < row ; i++) {
             for(int j = 0 ; j < col ; j++) {
-                int x = wallWidth * j;
-                int y = Config.MAZE_UPPER_OFFSET + wallHeight * i;
-
+                int x = this.toPixelCornerX(j);
+                int y = this.toPixelCornerY(i);
                 Rectangle cellBlock = graphicEntityModule.createRectangle()
                         .setHeight(wallHeight)
                         .setWidth(wallWidth)
@@ -92,22 +95,22 @@ public class View {
     private void drawFlags() {
         for(Player player: gameManager.getPlayers()) {
 
-            int x = wallWidth * player.getFlag().getPos().getY();
-            int y = Config.MAZE_UPPER_OFFSET + wallHeight * player.getFlag().getPos().getX();;
-
-
+            int x = this.toPixelCornerX(player.getFlag().getPos().getY());
+            int y = this.toPixelCornerY(player.getFlag().getPos().getX());
             Rectangle cellBlock = graphicEntityModule.createRectangle()
                     .setHeight(wallHeight)
                     .setWidth(wallWidth)
                     .setX(x)
-                    .setY(y);
+                    .setY(y)
+                    .setZIndex(1);
 
             Sprite flag = graphicEntityModule.createSprite()
                     .setImage("flag.png")
                     .setBaseWidth(this.wallWidth)
                     .setBaseHeight(this.wallHeight)
                     .setX(x)
-                    .setY(y);
+                    .setY(y)
+                    .setZIndex(2);
 
 
             if(player.isLeftPlayer()) {
@@ -119,6 +122,8 @@ public class View {
                 cellBlock.setLineColor(Config.RIGHT_PLAYER_COLOR);
             }
             cellBlock.setLineWidth(7);
+
+            flagToSprite.put(player.getFlag(), flag);
         }
     }
 
@@ -134,7 +139,8 @@ public class View {
         this.wallHeight = (world.getHeight() - Config.MAZE_UPPER_OFFSET) / row;
 
         this.movers = new ArrayList<>();
-        this.minionCircle = new HashMap<>();
+        this.minionToCircle = new HashMap<>();
+        this.flagToSprite = new HashMap<>();
 
         drawBackground();
         drawOuterRectangle();
@@ -148,18 +154,26 @@ public class View {
 
     public void updateFrame() {
         performMoves();
+        updateFlag();
+    }
+
+    private void updateFlag() {
+        for(Player player: gameManager.getPlayers()) {
+            Sprite flag = this.flagToSprite.get(player.getFlag());
+            flag.setX(this.toPixelCornerX(player.getFlag().getPos().getY()))
+                .setY(this.toPixelCornerY(player.getFlag().getPos().getX()));
+        }
     }
 
     private void performMoves() {
-        movers.forEach(move -> {
-            Circle circle = this.minionCircle.get(move.minion);
-            circle
-                .setX(this.toPixelCenterX(move.minion.getPos().getY()), Curve.LINEAR)
-                .setY(this.toPixelCenterY(move.minion.getPos().getX()), Curve.LINEAR);
+        movers.forEach(minion -> {
+            Circle circle = this.minionToCircle.get(minion);
+            circle.setX(this.toPixelCenterX(minion.getPos().getY()), Curve.LINEAR)
+                .setY(this.toPixelCenterY(minion.getPos().getX()), Curve.LINEAR);
         });
     }
 
-    public void moveMinion(Minion minion, Coord from, Coord to) {
-        movers.add(new Move(minion, from, to));
+    public void moveMinion(Minion minion) {
+        movers.add(minion);
     }
 }

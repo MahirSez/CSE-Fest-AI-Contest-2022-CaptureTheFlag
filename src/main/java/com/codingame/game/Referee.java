@@ -52,7 +52,6 @@ public class Referee extends AbstractReferee {
         for (Player player : gameManager.getActivePlayers()) {
             try {
                 List<String> outputs = player.getOutputs();
-                // Check validity of the player output
                 commandParser.parseCommands(player, outputs);
             } catch (TimeoutException e) {
                 player.deactivate(String.format("$%d timeout!", player.getIndex()));
@@ -66,7 +65,6 @@ public class Referee extends AbstractReferee {
         game.resetTurnData();
         this.sendGameStateToPlayers();
         this.handlePlayerCommands();
-
 
         view.resetData();
         game.updateGameState();

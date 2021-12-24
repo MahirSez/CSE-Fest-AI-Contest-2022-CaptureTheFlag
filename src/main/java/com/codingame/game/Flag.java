@@ -2,14 +2,12 @@ package com.codingame.game;
 
 public class Flag {
     Coord pos;
-    private boolean captured;
-    Flag() {
-        this.captured = false;
-    }
-    void setPos(Coord pos) { this.pos = pos; }
-    public Coord getPos() { return pos; }
+    private Minion carrier;
 
-    public boolean isCaptured() {
-        return captured;
-    }
+    void setPos(Coord pos) { this.pos = pos; }
+    void setCarrier(Minion minion) { this.carrier = minion; }
+
+    public Coord getPos() { return pos; }
+    public boolean isCaptured() { return carrier != null; }
+    Minion getCarrier() { return carrier; }
 }

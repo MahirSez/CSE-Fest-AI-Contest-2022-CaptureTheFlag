@@ -73,7 +73,7 @@ public class Game {
     }
 
     ArrayList<String> getInitialInfo(Player player) {
-        Player opponent = gameManager.getActivePlayers().get(player.getIndex() ^ 1);
+        Player opponent = getOpponentOf(player);
         ArrayList<String>ret = new ArrayList<>();
         ret.add(this.maze.getRow() + " "+ this.maze.getCol());
         for(int[] row: this.maze.getGrid()) {
@@ -147,7 +147,7 @@ public class Game {
         gameManager.getPlayers().forEach(Player::turnReset);
     }
 
-    private void updateMovement() {
+    private void updateMinionMovement() {
         for(Minion minion: allMinions) {
             if(minion.getIntendedAction().getActionType() == ActionType.MOVE) {
                 Coord from = minion.getPos();
@@ -156,30 +156,15 @@ public class Game {
                 minion.setPathToDestination(path);
 
                 if(path.size() == 0) {
-                    minion.addSummary(String.format(
-                        "(%d, %d) is unreachable for Minion %d",
-                        to.getX(),
-                        to.getY(),
-                        minion.getID()
-                    ));
+                    minion.addSummary(String.format("(%d, %d) is unreachable for Minion %d", to.getX(), to.getY(), minion.getID()));
                 }
                 else if(path.size() == 1) {
-                    minion.addSummary(String.format(
-                        "Minion %d is already at (%d, %d)",
-                        minion.getID(),
-                        to.getX(),
-                        to.getY()
-                    ));
+                    minion.addSummary(String.format("Minion %d is already at (%d, %d)", minion.getID(), to.getX(), to.getY()));
                 }
                 else  {
-                    view.moveMinion(minion, minion.getPos(), path.get(1));
+                    view.moveMinion(minion);
                     minion.setPos(path.get(1));
-                    minion.addSummary(String.format(
-                        "Minion %d moved to (%d, %d).",
-                        minion.getID(),
-                        minion.getPos().x,
-                        minion.getPos().y
-                    ));
+                    minion.addSummary(String.format("Minion %d moved to (%d, %d)", minion.getID(), minion.getPos().x, minion.getPos().y));
                 }
             }
         }
@@ -227,8 +212,33 @@ public class Game {
 
 
     public void updateGameState() {
-        this.updateMovement();
+        this.updateMinionMovement();
+        this.updateFlagPosition();
         this.printGameSummary();
+    }
+
+    Player getOpponentOf(Player player) {
+        return gameManager.getActivePlayers().get(player.getIndex() ^ 1);
+    }
+
+    private void updateFlagPosition() {
+        for(Player player: gameManager.getPlayers()) {
+            Flag flag = player.getFlag();
+            if(flag.isCaptured() && !flag.getCarrier().isDead()) {
+                flag.setPos(flag.getCarrier().getPos());
+            }
+            else {
+                Player opponent = getOpponentOf(player);
+                for(Minion minion: opponent.getMinions()) {
+                    if(!minion.isDead() && minion.getPos().equals(flag.getPos())) {
+                        flag.setCarrier(minion);
+                        flag.setPos(flag.getCarrier().getPos());
+                        break;
+                    }
+                }
+            }
+
+        }
     }
 
     private void printGameSummary() {
@@ -247,22 +257,3 @@ public class Game {
         }
     }
 }
-
-/*
-
-	my_score  opp_score
-
-	my_flag_pos
-	opp_flag_pos
-
-	self_flag_captured
-	opponent_flag_bearer
-
-	alive minion_cnt
-		id, pos, health
-	seen opp-minion_cnt
-		id, pos, health
-
-
- */
-
