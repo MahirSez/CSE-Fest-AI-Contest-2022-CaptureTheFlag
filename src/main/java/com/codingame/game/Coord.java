@@ -1,6 +1,8 @@
 package com.codingame.game;
 
 
+import java.util.Objects;
+
 public class Coord {
     protected final int x;
     protected final int y;
@@ -35,6 +37,19 @@ public class Coord {
         if (x != other.x) return false;
         if (y != other.y) return false;
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coord coord = (Coord) o;
+        return x == coord.x && y == coord.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @Override

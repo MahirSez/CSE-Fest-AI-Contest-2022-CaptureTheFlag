@@ -28,7 +28,7 @@ public class Maze {
         Grid gridObj = new Grid(col - 4, row);
         TetrisBasedMapGenerator generator = new TetrisBasedMapGenerator();
         generator.init();
-        generator.generateWithHorizontalSymmetry(gridObj, new Random());
+        generator.generateWithHorizontalSymmetry(gridObj, new Random()); // change
 
         System.out.println("Rows = " + row);
         System.out.println("Cols = " +  col);
@@ -42,7 +42,6 @@ public class Maze {
             for(int j = 2 ; j < col - 2; j++) {
                 grid[i][j] = gridObj.get(j - 2, i).isWall() ? 1 : 0;
             }
-            System.out.println(Arrays.toString(grid[i]));
         }
 
     }
