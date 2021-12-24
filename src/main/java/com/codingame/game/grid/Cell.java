@@ -1,4 +1,4 @@
-package com.codingame.game;
+package com.codingame.game.grid;
 
 public class Cell {
     public static final Cell NO_CELL = new Cell() {

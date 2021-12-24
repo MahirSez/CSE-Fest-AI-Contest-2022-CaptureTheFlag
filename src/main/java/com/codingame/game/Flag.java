@@ -9,4 +9,7 @@ public class Flag {
     void setPos(Coord pos) { this.pos = pos; }
     public Coord getPos() { return pos; }
 
+    public boolean isCaptured() {
+        return captured;
+    }
 }

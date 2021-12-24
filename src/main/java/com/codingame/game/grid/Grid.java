@@ -1,5 +1,8 @@
-package com.codingame.game;
+package com.codingame.game.grid;
 
+
+import com.codingame.game.Config;
+import com.codingame.game.Coord;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -72,7 +75,7 @@ public class Grid {
     }
 
     public Cell get(Coord coord) {
-        return get(coord.x, coord.y);
+        return get(coord.getX(), coord.getY());
     }
 
     public Cell get(int x, int y) {
@@ -97,10 +100,10 @@ public class Grid {
     }
 
     public int calculateDistance(Coord a, Coord b) {
-        int dv = Math.abs(a.y - b.y);
+        int dv = Math.abs(a.getY() - b.getY());
         int dh = Math.min(
-                Math.abs(a.x - b.x),
-                Math.min(a.x + width - b.x, b.x + width - a.x)
+                Math.abs(a.getX() - b.getX()),
+                Math.min(a.getX() + width - b.getX(), b.getX() + width - a.getX())
         );
         return dv + dh;
     }

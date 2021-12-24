@@ -1,4 +1,4 @@
-package com.codingame.game;
+package com.codingame.game.grid;
 
 public class Ability {
     public enum Type {

@@ -1,4 +1,7 @@
-package com.codingame.game;
+package com.codingame.game.grid;
+
+import com.codingame.game.Config;
+import com.codingame.game.Coord;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.codingame.game;
+package com.codingame.game.grid;
 
 public enum CellType {
     WALL, FLOOR;

@@ -76,6 +76,11 @@ public class Game {
         Player opponent = gameManager.getActivePlayers().get(player.getIndex() ^ 1);
         ArrayList<String>ret = new ArrayList<>();
         ret.add(this.maze.getRow() + " "+ this.maze.getCol());
+        for(int[] row: this.maze.getGrid()) {
+            StringBuilder str = new StringBuilder();
+            for(int cell: row) str.append(cell == 1 ? "#": ".");
+            ret.add(str.toString());
+        }
         ret.add(player.getFlagBase().getPos().getX() + " " + player.getFlagBase().getPos().getY());
         ret.add(opponent.getFlagBase().getPos().getX() + " " + opponent.getFlagBase().getPos().getY());
         return ret;
@@ -108,8 +113,8 @@ public class Game {
         Player opponent = gameManager.getActivePlayers().get(player.getIndex() ^ 1);
         ArrayList<String>ret = new ArrayList<>();
         ret.add(player.getScore() + " " + opponent.getScore());
-        ret.add(player.getFlag().getPos().getX() + " " + player.getFlag().getPos().getY());
-        ret.add(opponent.getFlag().getPos().getX() + " " + opponent.getFlag().getPos().getY());
+        ret.add(player.getFlag().getPos().getX() + " " + player.getFlag().getPos().getY() + " " + (player.getFlag().isCaptured() ? 1 : 0) );
+        ret.add(opponent.getFlag().getPos().getX() + " " + opponent.getFlag().getPos().getY() + " " + (opponent.getFlag().isCaptured() ? 1 : 0));
 
         ArrayList<Minion>aliveMinions = new ArrayList<>();
         for(Minion minion: player.getMinions()) {
@@ -174,9 +179,7 @@ public class Game {
                         minion.getID(),
                         minion.getPos().x,
                         minion.getPos().y
-                        )
-                    );
-
+                    ));
                 }
             }
         }
@@ -214,13 +217,11 @@ public class Game {
         if(distance[to.getX()][to.getY()] == Config.INF) return path;
 
         path.add(to);
-        System.out.println("From " + from + " To " + to);
         while(!to.equals(from)) {
             to = parent[to.getX()][to.getY()];
             path.add(to);
         }
         Collections.reverse(path);
-//        System.out.println(path);
         return path;
     }
 

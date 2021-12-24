@@ -1,5 +1,7 @@
 package com.codingame.game;
 
+import com.codingame.game.grid.Grid;
+import com.codingame.game.grid.TetrisBasedMapGenerator;
 import com.google.inject.Singleton;
 
 
@@ -37,7 +39,6 @@ public class Maze {
                 grid[i][j] = gridObj.get(j - 2, i).isWall() ? 1 : 0;
             }
         }
-
     }
 
 }

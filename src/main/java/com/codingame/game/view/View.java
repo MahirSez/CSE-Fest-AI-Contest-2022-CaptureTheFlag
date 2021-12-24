@@ -153,7 +153,6 @@ public class View {
     private void performMoves() {
         movers.forEach(move -> {
             Circle circle = this.minionCircle.get(move.minion);
-            System.out.println(circle.getX() + " " + circle.getY());
             circle
                 .setX(this.toPixelCenterX(move.minion.getPos().getY()), Curve.LINEAR)
                 .setY(this.toPixelCenterY(move.minion.getPos().getX()), Curve.LINEAR);
