@@ -19,7 +19,7 @@ public class Agent1 {
         opp_base_x = scanner.nextInt();
         opp_base_y = scanner.nextInt();
 
-        System.err.print("Entering game loop\\n");
+        System.err.print("Entering game loop\n");
         while (true) {
             int my_score, opp_score;
             int my_flag_x, my_flag_y;
@@ -38,7 +38,8 @@ public class Agent1 {
             alive_cnt = scanner.nextInt();
             
             for(int i = 0 ; i < alive_cnt ; i++) {
-                int x, y, health;
+                int id, x, y, health;
+                id = scanner.nextInt();
                 x = scanner.nextInt();
                 y = scanner.nextInt();
                 health = scanner.nextInt();
@@ -46,11 +47,13 @@ public class Agent1 {
 
             opp_seen_cnt = scanner.nextInt();
             for(int i = 0 ; i < opp_seen_cnt ; i++) {
-                int x, y;
+                int id, x, y, health;
+                id = scanner.nextInt();
                 x = scanner.nextInt();
                 y = scanner.nextInt();
+                health = scanner.nextInt();
             }
-            System.out.println("0 0");
+            System.out.println("MOVE 0 4 5");
         }
     }
 }

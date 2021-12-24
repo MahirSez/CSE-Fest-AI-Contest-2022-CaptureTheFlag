@@ -6,6 +6,8 @@ public class Config {
 
     static final int LEFT_PLAYER_COLOR = 0x0000ff;
     static final int RIGHT_PLAYER_COLOR = 0xff0000;
+    static final String LEFT_PLAYER_COLOR_NAME = "blue";
+    static final String RIGHT_PLAYER_COLOR_NAME = "red";
     static final int WALL_COLOR = 0x964B00;
 
 

@@ -60,10 +60,9 @@ public class Game {
 
     void generateMinions() {
         allMinions = new ArrayList<>();
-        int minionId = 0;
         for(Player player: gameManager.getPlayers()) {
             for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
-                Minion minion = new Minion(minionId++, player);
+                Minion minion = new Minion(i, player);
                 allMinions.add(minion);
                 player.addMinion(minion);
             }
@@ -115,7 +114,7 @@ public class Game {
         }
         ret.add(aliveMinions.size() + "");
         for(Minion minion: player.getMinions()) {
-            ret.add(minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth());
+            ret.add(minion.getID() + " " +minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth());
         }
         ArrayList<Minion>visibleOpponents = new ArrayList<>();
 
@@ -131,9 +130,17 @@ public class Game {
         }
         ret.add(visibleOpponents.size() + "");
         for(Minion minion: visibleOpponents) {
-            ret.add(minion.getPos().getX() + " " + minion.getPos().getY());
+            ret.add(minion.getID() + " " + minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth());
         }
         return ret;
+    }
+
+    public void resetTurnData() {
+        gameManager.getPlayers().forEach(Player::turnReset);
+    }
+
+    public void updateGameState() {
+
     }
 }
 
@@ -144,9 +151,14 @@ public class Game {
 	my_flag_pos
 	opp_flag_pos
 
+	self_flag_captured
+	opponent_flag_bearer
+
 	alive minion_cnt
-		pos, health
+		id, pos, health
 	seen opp-minion_cnt
-		pos
+		id, pos, health
+
+
  */
 

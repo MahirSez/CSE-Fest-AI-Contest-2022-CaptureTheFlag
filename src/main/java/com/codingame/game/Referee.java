@@ -14,6 +14,7 @@ public class Referee extends AbstractReferee {
     @Inject View view;
     @Inject Game game;
     @Inject RandomUtil randomUtil;
+    @Inject CommandParser commandParser;
 
     @Override
     public void init() {
@@ -33,7 +34,7 @@ public class Referee extends AbstractReferee {
             }
         }
     }
-    void sendGameState() {
+    void sendGameStateToPlayers() {
         for(Player player: gameManager.getPlayers()) {
             for(String line: game.getGameState(player)) {
                 player.sendInputLine(line);
@@ -42,17 +43,27 @@ public class Referee extends AbstractReferee {
         }
     }
 
-    @Override
-    public void gameTurn(int turn) {
-        this.sendGameState();
 
+    private void handlePlayerCommands() {
         for (Player player : gameManager.getActivePlayers()) {
             try {
                 List<String> outputs = player.getOutputs();
-                // Check validity of the player output and compute the new game state
+                // Check validity of the player output
+                commandParser.parseCommands(player, outputs);
             } catch (TimeoutException e) {
                 player.deactivate(String.format("$%d timeout!", player.getIndex()));
+                gameManager.addToGameSummary(player.getNicknameToken() + " has not provided " + player.getExpectedOutputLines() + " lines in time");
             }
         }
     }
+
+    @Override
+    public void gameTurn(int turn) {
+        game.resetTurnData();
+        this.sendGameStateToPlayers();
+        this.handlePlayerCommands();
+        game.updateGameState();
+
+    }
+
 }
