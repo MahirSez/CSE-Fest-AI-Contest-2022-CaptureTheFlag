@@ -12,11 +12,12 @@ public class Referee extends AbstractReferee {
 
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject Maze maze;
-    @Inject
-    View view;
+    @Inject View view;
     @Inject Game game;
     @Inject RandomUtil randomUtil;
     @Inject CommandParser commandParser;
+
+    boolean gameOverFrame;
 
     @Override
     public void init() {
@@ -63,12 +64,28 @@ public class Referee extends AbstractReferee {
     @Override
     public void gameTurn(int turn) {
         game.resetTurnData();
-        this.sendGameStateToPlayers();
-        this.handlePlayerCommands();
+
+        if(!gameOverFrame) {
+            sendGameStateToPlayers();
+            handlePlayerCommands();
+        }
 
         view.resetData();
         game.updateGameState();
         view.updateFrame();
+
+        if(this.gameOverFrame) {
+            game.endGame();
+            gameManager.endGame();
+        }
+        else if(game.isGameOver()) {
+            this.gameOverFrame = true;
+        }
+
     }
 
+    @Override
+    public void onEnd() {
+
+    }
 }
