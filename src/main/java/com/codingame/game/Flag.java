@@ -7,6 +7,6 @@ public class Flag {
         this.captured = false;
     }
     void setPos(Coord pos) { this.pos = pos; }
-    Coord getPos() { return pos; }
+    public Coord getPos() { return pos; }
 
 }

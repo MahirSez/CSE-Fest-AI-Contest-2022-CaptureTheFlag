@@ -2,6 +2,7 @@ package com.codingame.game;
 
 import java.util.List;
 
+import com.codingame.game.view.View;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.MultiplayerGameManager;
@@ -11,7 +12,8 @@ public class Referee extends AbstractReferee {
 
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject Maze maze;
-    @Inject View view;
+    @Inject
+    View view;
     @Inject Game game;
     @Inject RandomUtil randomUtil;
     @Inject CommandParser commandParser;
@@ -63,6 +65,7 @@ public class Referee extends AbstractReferee {
         this.sendGameStateToPlayers();
         this.handlePlayerCommands();
         game.updateGameState();
+        view.updateFrame();
 
     }
 

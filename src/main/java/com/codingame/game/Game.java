@@ -1,10 +1,13 @@
 package com.codingame.game;
 
+import com.codingame.game.action.ActionType;
+import com.codingame.game.action.MoveAction;
+import com.codingame.game.view.View;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.google.inject.Inject;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
+import java.util.*;
 
 @Singleton
 public class Game {
@@ -12,6 +15,7 @@ public class Game {
     int totalMinions, minionsPerPlayer;
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject private Maze maze;
+    @Inject private View view;
     ArrayList<Minion>allMinions;
 
     void init() {
@@ -52,8 +56,8 @@ public class Game {
         int offset = maze.getRow()/2 - this.minionsPerPlayer/2;
 
         for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
-            gameManager.getPlayer(leftPlayer).getMinion(i).setPosition(new Coord(offset + i, leftColumn));
-            gameManager.getPlayer(rightPlayer).getMinion(i).setPosition(new Coord(offset + i, rightColumn));
+            gameManager.getPlayer(leftPlayer).getMinion(i).setPos(new Coord(offset + i, leftColumn));
+            gameManager.getPlayer(rightPlayer).getMinion(i).setPos(new Coord(offset + i, rightColumn));
         }
     }
 
@@ -138,8 +142,91 @@ public class Game {
         gameManager.getPlayers().forEach(Player::turnReset);
     }
 
-    public void updateGameState() {
+    private void updateMovement() {
+        for(Minion minion: allMinions) {
+            if(minion.getIntendedAction().getActionType() == ActionType.MOVE) {
+                Coord from = minion.getPos();
+                Coord to = ((MoveAction)minion.getIntendedAction()).getDestination();
+                List<Coord>path = this.computeShortestPath(from, to);
+                minion.setPathToDestination(path);
 
+                if(path.size() == 0) {
+                    minion.addSummary(String.format(
+                        "(%d, %d) is unreachable for Minion %d",
+                        to.getX(),
+                        to.getY(),
+                        minion.getID()
+                    ));
+                }
+                else if(path.size() == 1) {
+                    minion.addSummary(String.format(
+                        "Minion %d is already at (%d, %d)",
+                        minion.getID(),
+                        to.getX(),
+                        to.getY()
+                    ));
+                }
+                else  {
+                    view.moveMinion(minion, minion.getPos(), path.get(1));
+                    minion.setPos(path.get(1));
+                    minion.addSummary(String.format(
+                        "Minion %d moved to (%d, %d).",
+                        minion.getID(),
+                        minion.getPos().x,
+                        minion.getPos().y
+                        )
+                    );
+
+                }
+            }
+        }
+    }
+
+    private List<Coord> computeShortestPath(Coord from, Coord to) {
+        int n = maze.getRow();
+        int m = maze.getCol();
+        Coord[][] parent = new Coord[n][m];
+        int[][] distance = new int[n][m];
+
+        for(int[] row: distance) {
+            Arrays.fill(row, Config.INF);
+        }
+        Queue<Coord> queue = new LinkedList<>();
+        queue.add(from);
+        distance[from.getX()][from.getY()] = 0;
+
+        while(!queue.isEmpty()) {
+            Coord top = queue.remove();
+            int topDistance = distance[top.getX()][top.getY()];
+            for(Coord adj: Config.ADJACENCY) {
+                int x = top.getX() + adj.getX();
+                int y = top.getY() + adj.getY();
+                if(x >=0 && x < n && y >=0 && y < m && distance[x][y] == Config.INF) {
+                    distance[x][y] = topDistance + 1;
+                    parent[x][y] = top;
+                    Coord newCoord = new Coord(x, y);
+                    if(newCoord.equals(to)) break;
+                    queue.add(newCoord);
+                }
+            }
+        }
+        List<Coord>path = new ArrayList<>();
+        if(distance[to.getX()][to.getY()] == Config.INF) return path;
+
+        path.add(to);
+        System.out.println("From " + from + " To " + to);
+        while(!to.equals(from)) {
+            to = parent[to.getX()][to.getY()];
+            path.add(to);
+        }
+        Collections.reverse(path);
+//        System.out.println(path);
+        return path;
+    }
+
+
+    public void updateGameState() {
+        this.updateMovement();
     }
 }
 

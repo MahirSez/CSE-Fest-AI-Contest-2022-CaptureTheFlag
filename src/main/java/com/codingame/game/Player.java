@@ -23,13 +23,13 @@ public class Player extends AbstractMultiplayerPlayer {
 
     void addMinion(Minion minion) { minions.add(minion); }
     
-    ArrayList<Minion>getMinions() { return this.minions; }
+    public ArrayList<Minion>getMinions() { return this.minions; }
 
-    boolean isLeftPlayer() { return this.leftPlayer; }
+    public boolean isLeftPlayer() { return this.leftPlayer; }
 
     Minion getMinion(int id) { return this.minions.get(id); }
 
-    Flag getFlag() { return this.flag; }
+    public Flag getFlag() { return this.flag; }
 
     FlagBase getFlagBase() { return this.flagBase; }
 

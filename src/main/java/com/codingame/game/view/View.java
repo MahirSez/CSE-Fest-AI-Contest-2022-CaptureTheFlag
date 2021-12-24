@@ -1,5 +1,6 @@
-package com.codingame.game;
+package com.codingame.game.view;
 
+import com.codingame.game.*;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.*;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
@@ -10,17 +11,19 @@ import javax.inject.Singleton;
 @Singleton
 public class View {
 
-    @Inject Maze maze;
+    @Inject
+    Maze maze;
     @Inject GraphicEntityModule graphicEntityModule;
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject TooltipModule tooltips;
 
+//    List<Move>movers;
 
     World world;
 
     int wallWidth, wallHeight;
 
-    void drawOuterRectangle() {
+    public void drawOuterRectangle() {
         graphicEntityModule.createRectangle()
                 .setHeight(world.getHeight() - Config.MAZE_UPPER_OFFSET)
                 .setWidth(world.getWidth())
@@ -28,7 +31,7 @@ public class View {
                 .setY(Config.MAZE_UPPER_OFFSET);
     }
 
-    void drawMinions() {
+    public void drawMinions() {
          for(Player player: gameManager.getPlayers()) {
              for(Minion minions: player.getMinions()) {
                 Coord coord = minions.getPos();
@@ -47,11 +50,11 @@ public class View {
          }
     }
 
-    void drawBackground() {
+    public void drawBackground() {
         // add background image / texture
     }
 
-    void drawMaze(int row, int col, int[][] grid) {
+    public void drawMaze(int row, int col, int[][] grid) {
 
         for(int i = 0 ; i < row ; i++) {
             for(int j = 0 ; j < col ; j++) {
@@ -106,7 +109,7 @@ public class View {
         }
     }
 
-    void init() {
+    public void init() {
         this.world = graphicEntityModule.getWorld();
 
 
@@ -124,4 +127,11 @@ public class View {
         drawFlags();
     }
 
+    public void updateFrame() {
+
+    }
+
+    public void moveMinion(Minion minion, Coord pos, Coord coord) {
+
+    }
 }

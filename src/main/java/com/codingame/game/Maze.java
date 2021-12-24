@@ -9,7 +9,7 @@ public class Maze {
     private int[][] grid;
     private int row, col;
 
-    int[][] getGrid() {
+    public int[][] getGrid() {
         return grid;
     }
     int getRow() { return row; }

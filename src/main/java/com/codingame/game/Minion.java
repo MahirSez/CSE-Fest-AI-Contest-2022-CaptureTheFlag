@@ -11,22 +11,25 @@ public class Minion {
     Player owner;
     int health;
     Coord pos;
-    List<String> gameSummary = new ArrayList<>();
+    List<String> gameSummary;
     Action intendedAction;
+    List<Coord>pathToDest;
 
     Minion(int minionID, Player owner) {
         this.minionID = minionID;
         this.owner = owner;
         this.health = Config.MINION_TOTAL_HEALTH;
         this.intendedAction = Action.NO_ACTION;
+        this.gameSummary = new ArrayList<>();
+        this.pathToDest = new ArrayList<>();
     }
 
-    void setPosition(Coord pos) { this.pos = pos; }
+    void setPos(Coord pos) { this.pos = pos; }
     void addSummary(String message) { this.gameSummary.add(message); }
     void clearSummary() { this.gameSummary.clear(); }
     void setIntendedAction(Action action) { this.intendedAction = action; }
 
-    Coord getPos() { return this.pos; }
+    public Coord getPos() { return this.pos; }
     int getHealth() { return this.health; }
     int getID() { return this.minionID; }
     Player getOwner() { return this.owner; }
@@ -36,5 +39,9 @@ public class Minion {
     public void turnReset() {
         this.intendedAction = Action.NO_ACTION;
         this.clearSummary();
+    }
+
+    public void setPathToDestination(List<Coord> pathToDest) {
+        this.pathToDest = pathToDest;
     }
 }
