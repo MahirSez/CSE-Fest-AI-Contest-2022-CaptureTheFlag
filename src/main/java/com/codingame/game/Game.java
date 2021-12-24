@@ -201,7 +201,7 @@ public class Game {
             for(Coord adj: Config.ADJACENCY) {
                 int x = top.getX() + adj.getX();
                 int y = top.getY() + adj.getY();
-                if(x >=0 && x < n && y >=0 && y < m && distance[x][y] == Config.INF) {
+                if(x >=0 && x < n && y >=0 && y < m && maze.getGrid()[x][y] == 0 && distance[x][y] == Config.INF) {
                     distance[x][y] = topDistance + 1;
                     parent[x][y] = top;
                     Coord newCoord = new Coord(x, y);
@@ -227,6 +227,23 @@ public class Game {
 
     public void updateGameState() {
         this.updateMovement();
+        this.printGameSummary();
+    }
+
+    private void printGameSummary() {
+        for (Player player : gameManager.getPlayers()) {
+            if (player.getMinions().stream().anyMatch(minion -> !minion.getGameSummary().isEmpty())) {
+                gameManager.addToGameSummary(String.format("%s:", player.getNicknameToken()));
+                player.getMinions().stream()
+                    .sorted(Comparator.comparing(Minion::getID))
+                    .forEach(minion -> {
+                        minion.getGameSummary().forEach(line -> {
+                            gameManager.addToGameSummary("- " + line);
+                        });
+                        minion.clearSummary();
+                    });
+            }
+        }
     }
 }
 

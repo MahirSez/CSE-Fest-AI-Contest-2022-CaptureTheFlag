@@ -20,6 +20,8 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void init() {
+        gameManager.setFrameDuration(Config.FRAME_DURATION);
+
 
         randomUtil.init(gameManager.getSeed());
         maze.init();
@@ -64,9 +66,11 @@ public class Referee extends AbstractReferee {
         game.resetTurnData();
         this.sendGameStateToPlayers();
         this.handlePlayerCommands();
+
+
+        view.resetData();
         game.updateGameState();
         view.updateFrame();
-
     }
 
 }

@@ -30,4 +30,5 @@ public class Config {
     };
 
     public static final int INF = 10000000;
+    public static final int FRAME_DURATION = 200;
 }

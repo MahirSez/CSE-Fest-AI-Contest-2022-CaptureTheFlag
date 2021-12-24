@@ -36,6 +36,10 @@ public class Minion {
     public boolean isDead() { return this.health == 0; }
     public Action getIntendedAction() { return this.intendedAction; }
 
+    public List<String> getGameSummary() {
+        return gameSummary;
+    }
+
     public void turnReset() {
         this.intendedAction = Action.NO_ACTION;
         this.clearSummary();
