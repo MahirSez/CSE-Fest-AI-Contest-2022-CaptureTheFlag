@@ -1,35 +1,35 @@
-# Backend Documentation for capture-the-flag
+# Documentation
+
+Game Link: https://www.codingame.com/contribute/view/7845e540d4efbbe4d9f4b68686460bb53424
+
+
+Useful Resources
+-----------------
+
+1. Getting Started with multiplayer game: https://www.codingame.com/playgrounds/25775/codingame-sdk-documentation/create-a-multiplayer-game
+2. javadoc: https://codingame.github.io/codingame-game-engine/
+3. Front-end Assets: https://github.com/CodinGame/codingame-sdk-assets
+4. Pacman Game: https://www.codingame.com/ide/puzzle/spring-challenge-2020
+5. Pacman Game GitHub: https://github.com/CodinGame/SpringChallenge2020 
 
 
 Player's I/O
 -------------
 
-Line 1: two integers `height` and `width` - the size of the maze.
-
-Next `height` lines: a string of `width` characters each representing one cell of a row: `'.'` is an empty cell and `'#'` is a wall.
-
-Next line: `my_flag_base_x` & `my_flag_base_y` - player's flag-base position
-
+Line 1: two integers `height` and `width` - the size of the maze. <br>
+Next `height` lines: a string of `width` characters each representing one cell of a row: `'.'` is an empty cell and `'#'` is a wall. <br>
+Next line: `my_flag_base_x` & `my_flag_base_y` - player's flag-base position <br>
 Next line: `opponent_flag_base_x` & `opponent_flag_base_y` - opponent's flag-base position
 
-Input for each game turn:
 
-Line 1: `my_score` & `opponent_score` - player's and opponent's current score
-
-Line 2: `my_flag_pos_x`, `my_flag_pos_y` & `my_flag_captured` - player's flag position and whether it is currently being carried by opponet's minion (1 if captured, 0 otherwise)
-
-Line 3: `opponent_flag_pos_x`, `opponent_flag_pos_y` & `opponent_flag_captured` - opponent's flag position and whether it is currently being carried by player's minion (1 if captured, 0 otherwise)
-
-Line 4: `my_alive_minion_cnt` - number of player's alive minions
-
-Next `my_alive_minion_cnt` lines:
-    `id` `pos_x` `pos_y` `health` - player's minion's id, position & health
-
-Next Line: `visible_minion_cnt` - number of opponent's visible minions
-
-Next `visible_minion_cnt` lines: 
-    `id` `pos_x` `pos_y` `health` - opponent's minion's id, position & health
-
+Input for each game turn: <br>
+Line 1: `my_score` & `opponent_score` - player's and opponent's current score <br>
+Line 2: `my_flag_pos_x`, `my_flag_pos_y` & `my_flag_captured` - player's flag position and whether it is currently being carried by opponet's minion (1 if captured, 0 otherwise) <br>
+Line 3: `opponent_flag_pos_x`, `opponent_flag_pos_y` & `opponent_flag_captured` - opponent's flag position and whether it is currently being carried by player's minion (1 if captured, 0 otherwise) <br>
+Line 4: `my_alive_minion_cnt` - number of player's alive minions <br>
+Next `my_alive_minion_cnt` lines: `id` `pos_x` `pos_y` `health` - player's minion's id, position & health <br>
+Next Line: `visible_minion_cnt` - number of opponent's visible minions <br>
+Next `visible_minion_cnt` lines: `id` `pos_x` `pos_y` `health` - opponent's minion's id, position & health <br>
 
 
 
@@ -74,6 +74,7 @@ Packages
 1. action: contains different types of minion actions
 2. exception
 3. grid: [ Copied from pacman game ]
+4. view: contains Front-end stuffs
 
 
 
