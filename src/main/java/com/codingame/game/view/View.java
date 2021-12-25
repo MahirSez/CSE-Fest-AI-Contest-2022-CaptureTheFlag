@@ -52,7 +52,7 @@ public class View {
              for(Minion minion: player.getMinions()) {
                 Coord coord = minion.getPos();
                 Circle circle = graphicEntityModule.createCircle()
-                        .setRadius(20)
+                        .setRadius( (int) (this.wallHeight*0.8 /2))
                         .setLineWidth(0)
                         .setX(this.toPixelCenterX(coord.getY()))
                         .setY(this.toPixelCenterY(coord.getX()))

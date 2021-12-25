@@ -110,7 +110,7 @@ public class Game {
     }
 
     ArrayList<String>getGameState(Player player) {
-        Player opponent = gameManager.getActivePlayers().get(player.getIndex() ^ 1);
+        Player opponent = gameManager.getPlayers().get(player.getIndex() ^ 1);
         ArrayList<String>ret = new ArrayList<>();
         ret.add(player.getScore() + " " + opponent.getScore());
         ret.add(player.getFlag().getPos().getX() + " " + player.getFlag().getPos().getY() + " " + (player.getFlag().isCaptured() ? 1 : 0) );
@@ -218,7 +218,7 @@ public class Game {
     }
 
     Player getOpponentOf(Player player) {
-        return gameManager.getActivePlayers().get(player.getIndex() ^ 1);
+        return gameManager.getPlayers().get(player.getIndex() ^ 1);
     }
 
     private void updateFlagPosition() {

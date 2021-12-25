@@ -23,7 +23,6 @@ public class Referee extends AbstractReferee {
     public void init() {
         gameManager.setFrameDuration(Config.FRAME_DURATION);
 
-
         randomUtil.init(gameManager.getSeed());
         maze.init();
         game.init();

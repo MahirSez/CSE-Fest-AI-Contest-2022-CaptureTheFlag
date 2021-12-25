@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Agent1 {
@@ -72,23 +71,3 @@ public class Agent1 {
         }
     }
 }
-
-/*
-
-n, m
-my_base
-opp_base
-
-
-loop() {
-	my_score , opp_score
-
-	my_flag_pos
-	opp_flag_pos
-
-	alive minon_cnt
-		pos, health
-	seen opp-minion_cnt
-		pos
-}
- */

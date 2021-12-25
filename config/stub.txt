@@ -1,5 +1,5 @@
 read height:int width:int
-loop height read:string(50)
+loop height read row:string(50)
 read myFlagBaseX:int myFlagBaseY:int
 read opponentFlagBaseX:int opponentFlagBaseY:int
 gameloop
