@@ -19,52 +19,57 @@
     </h1>
     <div>
       <div class="statement-rules-content">
+        <p>
         The game is played on a grid given to you at the start of each run. The grid is made up of walls and floors.
         Each player controls a team of minion that can move along the grid.
-        <h3>Map</h3>
+      </p>
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">The Map</h3>
+        <p>
         The grid is generated randomly, and can vary in <var>height</var> and <var>width</var>.
         Each cell of the map is either:
+        </p>
         <ul>
           <li>A wall (represented by a pound character: <action>#</action>)</li>
           <li>An empty space (represented by a dot character: <action>.</action>)</li>
         </ul>
-        Maps are always symetrical across the central vertical axis.
+        <p>
+        Maps are always symmetrical across the central vertical axis.</p>
 
-        <h3>The Minions</h3>
-        Each player starts with the same number of minions, up to <action>5</action> each.<br>
-        Your minions <b>cannot see through walls</b>. On each turn you have vision on all of the enemy minions that can be connected by a continuous straight line to any one of your pacs<br>
+
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">The Minions</h3>
+        <p>Each player starts with the same number of minions, up to <action>5</action> each.</p>
+        <p>Your minions <b>cannot see through walls</b>. On each turn you have vision on all of the enemy minions that can be connected by a continuous straight line to any one of your minions.</p>
         At each turn, you are given information regarding your own alive minions and the opponent's visible minions. For each minion, you are given its identifier, its coordinates and its health.<br>
         Minions can receive the following commands (a minion can only receive one command per turn):
         <ul>
           <li>
             <action>MOVE</action>: Give the minion a target position, the minion will find a shortest route to that position
-            and <b>move the first step of the way</b>. The minion will not take into account the presence of other pacs when choosing a route.
+            and <b>move the first step of the way</b>. The minion will not take into account the presence of other minions when choosing a route.
           </li>
           <li>
             <action>WAIT</action>: Do nothing
           </li>
         </ul>
-        See the Game Protocol section for more information on sending commands to your minion. Note that, minions <b>never</b> collide.
-        <h3>Flag and Flag base</h3>
-        Each player's flag resides at the flag-base in the beginning of the game. A player's minions can only carry opponent's flag. Note that each player
-        s minions <b>cannot</b> carry their own flag. A flag can be carried by only one minion at a time. Once a minion obtains a flag, it cannot let it go until it is dead.
-        <h3>Game end</h3>
-        Game ends when one of the player's minions captures opponent's flag and returns to their flag-base.
-
-
-
-
-
-
-
-
-
-
-
-
+        <p>See the Game Protocol section for more information on sending commands to your minion. Note that, minions <b>never</b> collide.</p>
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">Flag and Flag base</h3>
+        <p>Each player's flag resides at the flag-base in the beginning of the game. A player's minions can only carry opponent's flag. Note that each player
+          s minions <b>cannot</b> carry their own flag. A flag can be carried by only one minion at a time. Once a minion obtains a flag, it cannot let it go until it is dead.</p>
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">Game end</h3>
+        <p>Game ends when one of the player's minions captures opponent's flag and returns to their flag-base.</p>
       </div>
     </div>
-  </div>
   </div>
   <!-- PROTOCOL -->
   <div class="statement-section statement-protocol">
@@ -72,11 +77,6 @@
       <span class="icon icon-protocol">&nbsp;</span>
       <span>Game Input</span>
     </h1>
-    <!-- Protocol block -->
-    <div class="blk">
-      <div class="text">The program must first read the initialization data from standard input. Then, provide to the
-        standard output one line with ...</div>
-    </div>
 
     <!-- Protocol block -->
     <div class="blk">
@@ -89,6 +89,8 @@
 
       </div>
     </div>
+    <!-- Protocol block -->
+    <div class="blk">
       <div class="title">Input for Each Game Turn</div>
       <div class="text">
         <span class="statement-lineno">Line 1:</span> <var>my_score</var> & <var>opponent_score</var> - player's and opponent's current score <br>
@@ -122,6 +124,6 @@
 <!--        is ≤ <const>2</const> seconds.</div>-->
       TBD
     </div>
-  </div>
 
+  </div>
 </div>
