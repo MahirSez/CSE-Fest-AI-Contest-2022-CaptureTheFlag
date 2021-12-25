@@ -14,11 +14,11 @@ public class Config {
     public static final int MIN_MINIONS = 3;
     public static final int MAX_MINIONS = 5;
 
-    public static final int MIN_MAZE_ROW = 25;
-    public static final int MAX_MAZE_ROW = 30;
+    public static final int MIN_MAZE_ROW = 17;
+    public static final int MAX_MAZE_ROW = 20;
 
-    public static final int MIN_MAZE_COL = 45;
-    public static final int MAX_MAZE_COl = 50;
+    public static final int MIN_MAZE_COL = 33;
+    public static final int MAX_MAZE_COl = 35;
 
     public static final int MAZE_UPPER_OFFSET = 200;
 
