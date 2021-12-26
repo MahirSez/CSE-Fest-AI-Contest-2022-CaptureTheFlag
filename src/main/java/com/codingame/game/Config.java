@@ -4,10 +4,10 @@ public class Config {
 
     public static final int MINION_TOTAL_HEALTH = 100;
 
-    public static final int LEFT_PLAYER_COLOR = 0x0000ff;
-    public static final int RIGHT_PLAYER_COLOR = 0xff0000;
-    public static final String LEFT_PLAYER_COLOR_NAME = "blue";
-    public static final String RIGHT_PLAYER_COLOR_NAME = "red";
+    public static final int RIGHT_PLAYER_COLOR = 0x0000ff;
+    public static final int LEFT_PLAYER_COLOR = 0xff0000;
+    public static final String LEFT_PLAYER_COLOR_NAME = "red";
+    public static final String RIGHT_PLAYER_COLOR_NAME = "blue";
     public static final int WALL_COLOR = 0x964B00;
 
 
