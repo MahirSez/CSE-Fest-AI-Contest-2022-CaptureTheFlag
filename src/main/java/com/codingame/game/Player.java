@@ -11,6 +11,7 @@ public class Player extends AbstractMultiplayerPlayer {
     private final ArrayList<Minion> minions;
     private final Flag flag;
     private final FlagBase flagBase;
+    private boolean isWinner;
 
     private boolean leftPlayer;
     Player() {
@@ -51,4 +52,10 @@ public class Player extends AbstractMultiplayerPlayer {
         return 1;
     }
 
+    public void setWinner(boolean isWinner) {
+        this.isWinner = isWinner;
+    }
+    public boolean isWinner() {
+        return this.isWinner;
+    }
 }

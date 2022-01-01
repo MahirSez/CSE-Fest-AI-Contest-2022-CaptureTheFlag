@@ -20,7 +20,7 @@ public class Game {
 
     void init() {
 
-        this.minionsPerPlayer = RandomUtil.randomInt(Config.MIN_MINIONS, Config.MAX_MINIONS);
+        this.minionsPerPlayer = RandomUtil.randomOddInt(Config.MIN_MINIONS, Config.MAX_MINIONS);
         this.totalMinions = minionsPerPlayer * gameManager.getPlayerCount();
 
         generateMinions();
@@ -29,12 +29,17 @@ public class Game {
         setFlagPosition();
     }
     void setFlagBasePosition() {
-        for(Player player: gameManager.getPlayers()) {
-            if(player.isLeftPlayer()) {
-                player.getFlagBase().setPos(new Coord(maze.getRow() / 2, 0));
-            }
-            else {
-                player.getFlagBase().setPos(new Coord(maze.getRow()/2, maze.getCol() - 1));
+
+        for(int row = maze.getRow()/ 2 ; row < maze.getRow() ; row++) {
+            if(maze.getGrid()[row][1] == 0) {
+                for (Player player : gameManager.getPlayers()) {
+                    if (player.isLeftPlayer()) {
+                        player.getFlagBase().setPos(new Coord(row, 1));
+                    } else {
+                        player.getFlagBase().setPos(new Coord(row, maze.getCol() - 2));
+                    }
+                }
+                break;
             }
         }
     }
@@ -47,17 +52,34 @@ public class Game {
 
 
     void setMinionsPositions() {
-        int leftPlayer = RandomUtil.randomInt(0, 1);
+//        int leftPlayer = RandomUtil.randomInt(0, 1);
+        int leftPlayer = 0;
         int rightPlayer = (leftPlayer ^ 1);
         gameManager.getPlayer(leftPlayer).setLeftPlayer(true);
         gameManager.getPlayer(rightPlayer).setLeftPlayer(false);
 
-        int leftColumn = 1, rightColumn = maze.getCol() - 2;
-        int offset = maze.getRow()/2 - this.minionsPerPlayer/2;
+        int leftColumn = 0, rightColumn = maze.getCol() - 1;
+        int midPos = maze.getRow()/2;
 
-        for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
-            gameManager.getPlayer(leftPlayer).getMinion(i).setPos(new Coord(offset + i, leftColumn));
-            gameManager.getPlayer(rightPlayer).getMinion(i).setPos(new Coord(offset + i, rightColumn));
+        List<Integer>freeRows = new ArrayList<>();
+
+        for(int row = midPos, minionLeft = minionsPerPlayer/2 + 1; minionLeft > 0 ; row++) {
+            if(maze.getGrid()[row][leftColumn] == 0) {
+                freeRows.add(row);
+                minionLeft--;
+            }
+        }
+        for(int row = midPos - 1 , minionLeft = minionsPerPlayer/2 ; minionLeft > 0 ; row--) {
+            if(maze.getGrid()[row][leftColumn] == 0) {
+                freeRows.add(row);
+                minionLeft--;
+            }
+        }
+        Collections.sort(freeRows);
+        for(int i = 0 ; i < minionsPerPlayer ; i++) {
+            gameManager.getPlayer(leftPlayer).getMinion(i).setPos(new Coord(freeRows.get(i), leftColumn));
+            gameManager.getPlayer(rightPlayer).getMinion(i).setPos(new Coord(freeRows.get(i), rightColumn));
+            System.out.println(freeRows.get(i));
         }
     }
 
@@ -258,15 +280,20 @@ public class Game {
     }
 
     public boolean isGameOver() {
+        boolean gameOver = false;
         for(Player player: gameManager.getPlayers()) {
-            if(player.getFlag().getPos().equals(getOpponentOf(player).getFlagBase().getPos())) return true;
+            if(player.getFlag().getPos().equals(getOpponentOf(player).getFlagBase().getPos())) {
+                getOpponentOf(player).setWinner(true);
+                gameOver = true;
+            }
         }
         for(Player player: gameManager.getPlayers()) {
             if( (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count() == 0) {
-                return true;
+                getOpponentOf(player).setWinner(true);
+                gameOver = true;
             }
         }
-        return false;
+        return gameOver;
     }
 
     public void endGame() {

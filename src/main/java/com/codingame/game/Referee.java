@@ -1,11 +1,14 @@
 package com.codingame.game;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.codingame.game.view.View;
+import com.codingame.gameengine.core.AbstractMultiplayerPlayer;
 import com.codingame.gameengine.core.AbstractPlayer.TimeoutException;
 import com.codingame.gameengine.core.AbstractReferee;
 import com.codingame.gameengine.core.MultiplayerGameManager;
+import com.codingame.gameengine.module.endscreen.EndScreenModule;
 import com.google.inject.Inject;
 
 public class Referee extends AbstractReferee {
@@ -16,6 +19,9 @@ public class Referee extends AbstractReferee {
     @Inject Game game;
     @Inject RandomUtil randomUtil;
     @Inject CommandParser commandParser;
+    @Inject private EndScreenModule endScreenModule;
+
+
 
     boolean gameOverFrame;
 
@@ -85,6 +91,12 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void onEnd() {
-
+        gameManager.getPlayers().forEach(player -> player.setScore(player.isWinner()? 1: 0));
+        endScreenModule.setScores(
+                gameManager.getPlayers()
+                        .stream()
+                        .mapToInt(AbstractMultiplayerPlayer::getScore)
+                        .toArray()
+        );
     }
 }
