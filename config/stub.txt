@@ -10,4 +10,4 @@ read myAliveMinionCnt:int
 loop myAliveMinionCnt read id:int posX:int posY:int health:int
 read visibleMinionCnt:int
 loop visibleMinionCnt read id:int posX:int posY:int health:int
-write MOVE 0 10 15
+write MOVE 0 opponentFlagPosX opponentFlagPosY

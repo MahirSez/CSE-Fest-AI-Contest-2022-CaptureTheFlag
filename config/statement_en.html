@@ -20,8 +20,8 @@
     <div>
       <div class="statement-rules-content">
         <p>
-        The game is played on a grid given to you at the start of each run. The grid is made up of walls and floors.
-        Each player controls a team of minion that can move along the grid.
+        The game is played on a grid given to you at the start of each run. The grid is made up of walls and empty spaces.
+        Each player controls a team of minions that can move along the grid.
       </p>
         <h3 style="font-size: 14px;
       font-weight: 700;
@@ -36,7 +36,8 @@
           <li>An empty space (represented by a dot character: <action>.</action>)</li>
         </ul>
         <p>
-        Maps are always symmetrical across the central vertical axis.</p>
+        Maps are always symmetrical across the central vertical axis. Minions cannot go pass the border of the map.
+        </p>
 
 
         <h3 style="font-size: 14px;
@@ -49,25 +50,26 @@
         Minions can receive the following commands (a minion can only receive one command per turn):
         <ul>
           <li>
-            <action>MOVE</action>: Give the minion a target position, the minion will find a shortest route to that position
-            and <b>move the first step of the way</b>. The minion will not take into account the presence of other minions when choosing a route.
+            <action>MOVE</action>: Give the minion a target position. The minion will find a shortest route to that position
+            and <b>make the first move along the way</b>. The minion will not take into account the presence of other minions when choosing a route.
           </li>
           <li>
-            <action>WAIT</action>: Do nothing
+            <action>WAIT</action>: Do nothing.
           </li>
         </ul>
-        <p>See the Game Protocol section for more information on sending commands to your minion. Note that, minions <b>never</b> collide.</p>
+        <p>See the Game Protocol section for more information on sending commands to your minion. Note that, minions <b>never</b> collide.</p> and multiple minions can exist in the same cell.
         <h3 style="font-size: 14px;
       font-weight: 700;
       padding-top: 5px;
-      padding-bottom: 15px;">Flag and Flag base</h3>
+      padding-bottom: 15px;">Flag and Flag Base</h3>
         <p>Each player's flag resides at the flag-base in the beginning of the game. A player's minions can only carry opponent's flag. Note that each player
-          s minions <b>cannot</b> carry their own flag. A flag can be carried by only one minion at a time. Once a minion obtains a flag, it cannot let it go until it is dead.</p>
+          s minions <b>cannot</b> carry their own flag. A flag can be carried by only one minion at a time. <b>Once a minion obtains a flag, it cannot let it go until it is dead.</b>
+        </p>
         <h3 style="font-size: 14px;
       font-weight: 700;
       padding-top: 5px;
       padding-bottom: 15px;">Game end</h3>
-        <p>Game ends when one of the player's minions captures opponent's flag and returns to their flag-base.</p>
+        <p>Game ends when one of the player's minions captures opponent's flag and returns to its own flag-base.</p>
       </div>
     </div>
   </div>
@@ -84,8 +86,8 @@
       <div class="text">
         <span class="statement-lineno">Line 1: </span>two integers <var>height</var> and <var>width</var> - the size of the maze. <br>
         <span class="statement-lineno">Next <var>height</var> lines:</span> a string of <var>width</var> characters each representing one cell of a row: <const>'.'</const> is an empty cell and <const>'#'</const> is a wall. <br>
-        <span class="statement-lineno">Next line:</span> <var>my_flag_base_x</var> & <var>my_flag_base_y</var> - player's flag-base position <br>
-        <span class="statement-lineno">Next line:</span> <var>opponent_flag_base_x</var> & <var>opponent_flag_base_y</var> - opponent's flag-base position
+        <span class="statement-lineno">Next line:</span> two integers: <var>my_flag_base_x</var> & <var>my_flag_base_y</var> - player's flag-base position <br>
+        <span class="statement-lineno">Next line:</span> two integers: <var>opponent_flag_base_x</var> & <var>opponent_flag_base_y</var> - opponent's flag-base position
 
       </div>
     </div>
@@ -93,13 +95,31 @@
     <div class="blk">
       <div class="title">Input for Each Game Turn</div>
       <div class="text">
-        <span class="statement-lineno">Line 1:</span> <var>my_score</var> & <var>opponent_score</var> - player's and opponent's current score <br>
-        <span class="statement-lineno">Line 2:</span> <var>my_flag_pos_x</var>, <var>my_flag_pos_y</var> & <var>my_flag_captured</var> - player's flag position and whether it is currently being carried by opponent's minion (1 if captured, 0 otherwise) <br>
-        <span class="statement-lineno">Line 3:</span> <var>opponent_flag_pos_x</var>, <var>opponent_flag_pos_y</var> & <var>opponent_flag_captured</var> - opponent's flag position and whether it is currently being carried by player's minion (1 if captured, 0 otherwise) <br>
+        <span class="statement-lineno">Line 1:</span>
+          two integers:
+          <ul>
+            <li><var>my_score</var> & <var>opponent_score</var> - player's and opponent's current score</li>
+          </ul>
+        <span class="statement-lineno">Line 2:</span>
+          three integers:
+          <ul>
+            <li><var>my_flag_pos_x</var>, <var>my_flag_pos_y</var> & <var>my_flag_captured</var> - player's flag position and whether it is currently being carried by opponent's minion (1 if captured, 0 otherwise)</li>
+          </ul>
+        <span class="statement-lineno">Line 3:</span>
+          three integers:
+          <ul>
+            <li><var>opponent_flag_pos_x</var>, <var>opponent_flag_pos_y</var> & <var>opponent_flag_captured</var> - opponent's flag position and whether it is currently being carried by player's minion (1 if captured, 0 otherwise) </li>
+          </ul>
         <span class="statement-lineno">Line 4:</span> <var>my_alive_minion_cnt</var> - number of player's alive minions <br>
-        <span class="statement-lineno">Next <var>my_alive_minion_cnt</var> lines:</span> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> - player's minion's id, position & health <br>
+        <span class="statement-lineno">Next <var>my_alive_minion_cnt</var> lines:</span>
+          <ul>
+            <li> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> - player's minion's id, position & health</li>
+          </ul>
         <span class="statement-lineno">Next Line:</span> <var>visible_minion_cnt</var> - number of opponent's visible minions <br>
-        <span class="statement-lineno">Next <var>visible_minion_cnt</var> lines:</span> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> - opponent's minion's id, position & health <br>
+        <span class="statement-lineno">Next <var>visible_minion_cnt</var> lines:</span>
+          <ul>
+            <li><var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> - opponent's minion's id, position & health </li>
+          </ul>
       </div>
     </div>
 
@@ -110,7 +130,10 @@
         A single line with one or multiple commands separated by <const>|</const>. For example: <action>MOVE 0 5 7 | MOVE 1 16 10</action>.
         <ul>
           <li>
-            <action>MOVE minionID x y</action>: the minion with the identifier <const>minionID</const> moves towards the given cell
+            <action>MOVE minionID x y</action>: the minion with the identifier <const>minionID</const> moves towards the given cell.
+          </li>
+          <li>
+            <action>WAIT minion</action>: the minion with the identifier <const>minionID</const> does nothing.
           </li>
         </ul>
       </div>
