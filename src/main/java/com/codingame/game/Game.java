@@ -23,11 +23,42 @@ public class Game {
         this.minionsPerPlayer = RandomUtil.randomOddInt(Config.MIN_MINIONS, Config.MAX_MINIONS);
         this.totalMinions = minionsPerPlayer * gameManager.getPlayerCount();
 
+        setPlayerSide();
         generateMinions();
-        setMinionsPositions();
+//        setMinionsPositions();
         setFlagBasePosition();
         setFlagPosition();
+        setMinionsPositionsRandom();
     }
+
+    private void setPlayerSide() {
+        gameManager.getPlayer(0).setLeftPlayer(true);
+        gameManager.getPlayer(1).setLeftPlayer(false);
+    }
+
+    private void setMinionsPositionsRandom() {
+
+        int midCol = maze.getCol()/2;
+        List<Coord>freeSpaces = new ArrayList<>();
+        for(int i = 0 ; i < maze.getRow() ; i++) {
+            for(int j = 0 ; j < midCol ; j++) {
+                if(maze.getGrid()[i][j] == 0) freeSpaces.add(new Coord(i,j));
+            }
+        }
+
+        freeSpaces.remove(gameManager.getPlayer(0).getFlagBase().getPos());
+
+        for(int i = 0 ; i < minionsPerPlayer ; i++) {
+            int id = RandomUtil.randomInt(0, freeSpaces.size());
+            Coord leftCoord = freeSpaces.get(id);
+            Coord rightCoord = new Coord(leftCoord.getX(), maze.getCol() - leftCoord.getY() - 1);
+            gameManager.getPlayer(0).getMinion(i).setPos(leftCoord);
+            gameManager.getPlayer(1).getMinion(i).setPos(rightCoord);
+            freeSpaces.remove(leftCoord);
+        }
+
+    }
+
     void setFlagBasePosition() {
 
         for(int row = maze.getRow()/ 2 ; row < maze.getRow() ; row++) {
@@ -52,13 +83,12 @@ public class Game {
 
 
     void setMinionsPositions() {
-//        int leftPlayer = RandomUtil.randomInt(0, 1);
         int leftPlayer = 0;
         int rightPlayer = (leftPlayer ^ 1);
         gameManager.getPlayer(leftPlayer).setLeftPlayer(true);
         gameManager.getPlayer(rightPlayer).setLeftPlayer(false);
 
-        int leftColumn = 0, rightColumn = maze.getCol() - 1;
+        int leftColumn = 1, rightColumn = maze.getCol() - 2;
         int midPos = maze.getRow()/2;
 
         List<Integer>freeRows = new ArrayList<>();

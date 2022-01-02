@@ -33,7 +33,7 @@ public class Maze {
             for(int j = 0 ; j < col ; j++) {
 
                 grid[i][j] = gridObj.get(j, i).isWall() ? 1 : 0;
-//                if(i == 0 || j == 0 || i == row-1 || j == col-1) grid[i][j] = 1;
+                if(i == 0 || j == 0 || i == row-1 || j == col-1) grid[i][j] = 1;
             }
         }
     }

@@ -8,11 +8,10 @@ public class Config {
     public static final int LEFT_PLAYER_COLOR = 0xff0000;
     public static final String LEFT_PLAYER_COLOR_NAME = "red";
     public static final String RIGHT_PLAYER_COLOR_NAME = "blue";
-    public static final int WALL_COLOR = 0x964B00;
 
 
     public static final int MIN_MINIONS = 3;
-    public static final int MAX_MINIONS = 5;
+    public static final int MAX_MINIONS = 3;
 
     public static final int MIN_MAZE_ROW = 17;
     public static final int MAX_MAZE_ROW = 20;
