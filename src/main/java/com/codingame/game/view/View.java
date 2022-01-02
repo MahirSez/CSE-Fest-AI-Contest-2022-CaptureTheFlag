@@ -18,14 +18,18 @@ public class View {
     @Inject GraphicEntityModule graphicEntityModule;
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject TooltipModule tooltips;
-    HashMap<Minion, Circle>minionToCircle;
+    HashMap<Minion, Sprite>minionToCircle;
     HashMap<Flag, Sprite>flagToSprite;
 
     List<Minion> movers;
 
     World world;
+    Sprite background;
 
+    List<Sprite> walls;
     int wallWidth, wallHeight;
+
+    final String theme = "tank";
 
     public void drawOuterRectangle() {
         graphicEntityModule.createRectangle()
@@ -51,43 +55,84 @@ public class View {
          for(Player player: gameManager.getPlayers()) {
              for(Minion minion: player.getMinions()) {
                 Coord coord = minion.getPos();
-                Circle circle = graphicEntityModule.createCircle()
-                        .setRadius( (int) (this.wallHeight*0.8 /2))
-                        .setLineWidth(0)
-                        .setX(this.toPixelCenterX(coord.getY()))
-                        .setY(this.toPixelCenterY(coord.getX()))
-                        .setLineColor(0)
-                        .setLineWidth(2);
 
-                if(player.isLeftPlayer()) circle.setFillColor(Config.LEFT_PLAYER_COLOR);
-                else circle.setFillColor(Config.RIGHT_PLAYER_COLOR);
 
-                this.minionToCircle.put(minion, circle);
+                // calculating player sprite scaling factor
+                // Sprite minionImageSprite = graphicEntityModule.createSprite().setImage("playerShip1_red.png");
+                // int targetHeight = (int) (this.wallHeight*0.8 /2);
+                // double currentHeight = minionImageSprite.getBaseHeight();
+                // double scalingRatio = (targetHeight - currentHeight) / currentHeight;
+
+
+                Sprite minionSprite = graphicEntityModule.createSprite()    
+                    .setBaseHeight((int) (this.wallHeight))
+                    .setBaseWidth((int) (this.wallHeight))
+                    .setAnchor(0.5)
+                    .setX(this.toPixelCenterX(coord.getY()))
+                    .setY(this.toPixelCenterY(coord.getX()));
+                // Circle circle = graphicEntityModule.createCircle()
+                //         .setRadius( (int) (this.wallHeight*0.8 /2))
+                //         .setLineWidth(0)
+                //         .setX(this.toPixelCenterX(coord.getY()))
+                //         .setY(this.toPixelCenterY(coord.getX()))
+                //         .setLineColor(0)
+                //         .setLineWidth(2);
+
+                // if(player.isLeftPlayer()) circle.setFillColor(Config.LEFT_PLAYER_COLOR);
+                // else circle.setFillColor(Config.RIGHT_PLAYER_COLOR);
+                if(player.isLeftPlayer()) {
+                    minionSprite.setImage(theme + "/player1.png");
+                    minionSprite.setRotation(Math.PI / 2);
+                }
+                else {
+                    minionSprite.setImage(theme + "/player2.png");
+                    minionSprite.setRotation(-Math.PI / 2);
+                }
+
+                this.minionToCircle.put(minion, minionSprite);
              }
          }
     }
 
     public void drawBackground() {
         // add background image / texture
+        background = graphicEntityModule.createSprite().setImage(theme + "/back.png")
+            .setBaseHeight(world.getHeight())
+            .setBaseWidth(world.getWidth());
     }
 
     public void drawMaze(int row, int col, int[][] grid) {
 
         for(int i = 0 ; i < row ; i++) {
             for(int j = 0 ; j < col ; j++) {
-                int x = this.toPixelCornerX(j);
-                int y = this.toPixelCornerY(i);
-                Rectangle cellBlock = graphicEntityModule.createRectangle()
-                        .setHeight(wallHeight)
-                        .setWidth(wallWidth)
+                // int x = this.toPixelCornerX(j);
+                // int y = this.toPixelCornerY(i);
+                int x = this.toPixelCenterX(j);
+                int y = this.toPixelCenterY(i);
+                Sprite cellBlock = graphicEntityModule.createSprite()
+                        .setBaseHeight( (int) (wallHeight ))
+                        .setBaseWidth( (int) (wallWidth))
+                        .setAnchor(0.5)
                         .setX(x)
-                        .setY(y)
-                        .setLineColor(0)
-                        .setLineWidth(2);
+                        .setY(y);
+                        // .setLineColor(0)
+                        // .setLineWidth(2);
                 if(grid[i][j] == 1) {
-                    cellBlock.setFillColor(Config.WALL_COLOR);
+                    // cellBlock.setFillColor(Config.WALL_COLOR);
+                    cellBlock.setImage(theme + "/wall" + (int) (1 + Math.random() * 1) + ".png");
+                  
+                    // cellBlock.setRotation(0);
+                    // graphicEntityModule.commitWorldState(0);
+                    // cellBlock.setRotation(Math.PI * 0.5);
+                    // graphicEntityModule.commitWorldState(0.5);
+                    // cellBlock.setRotation(Math.PI);
+                    // graphicEntityModule.commitWorldState(1);
                 }
+
+            
                 tooltips.setTooltipText(cellBlock, i + " , " + j);
+
+                walls.add(cellBlock);
             }
         }
     }
@@ -105,7 +150,7 @@ public class View {
                     .setZIndex(1);
 
             Sprite flag = graphicEntityModule.createSprite()
-                    .setImage("flag.png")
+                    .setImage(theme + "/flag.png")
                     .setBaseWidth(this.wallWidth)
                     .setBaseHeight(this.wallHeight)
                     .setX(x)
@@ -139,11 +184,12 @@ public class View {
         this.wallHeight = (world.getHeight() - Config.MAZE_UPPER_OFFSET) / row;
 
         this.movers = new ArrayList<>();
+        this.walls = new ArrayList<>();
         this.minionToCircle = new HashMap<>();
         this.flagToSprite = new HashMap<>();
 
         drawBackground();
-        drawOuterRectangle();
+        // drawOuterRectangle();
         drawMaze(row, col, grid);
         drawMinions();
         drawFlags();
@@ -167,9 +213,38 @@ public class View {
 
     private void performMoves() {
         movers.forEach(minion -> {
-            Circle circle = this.minionToCircle.get(minion);
+            Sprite circle = this.minionToCircle.get(minion);
+            int targetX = this.toPixelCenterX(minion.getPos().getY());
+            int targetY = this.toPixelCenterY(minion.getPos().getX());
+            int currentX = circle.getX();
+            int currentY = circle.getY();
+
+            if(targetX > currentX) {
+                circle.setRotation(Math.PI / 2);
+            }
+            if(targetX < currentX) {
+                circle.setRotation(-Math.PI / 2);
+            }
+            if(targetY > currentY) {    // Y increases downwards
+                circle.setRotation(-Math.PI);
+            }
+            if(targetY < currentY) {
+                circle.setRotation(0);
+            }
+            
             circle.setX(this.toPixelCenterX(minion.getPos().getY()), Curve.LINEAR)
                 .setY(this.toPixelCenterY(minion.getPos().getX()), Curve.LINEAR);
+        });
+
+        walls.forEach(wall -> {
+            if(Math.random() > 2) { //0.5 probability of a wall rotating  
+                double rotationDeltaMax = 2 * Math.PI * 0.1; // must not rotate more than 10% of full rotation at a time
+                wall.setRotation(wall.getRotation());
+                graphicEntityModule.commitEntityState(0, wall);
+                wall.setRotation(wall.getRotation() + Math.random() * rotationDeltaMax);
+                graphicEntityModule.commitEntityState(1, wall);
+            }
+            
         });
     }
 
