@@ -79,7 +79,6 @@ public class Game {
         for(int i = 0 ; i < minionsPerPlayer ; i++) {
             gameManager.getPlayer(leftPlayer).getMinion(i).setPos(new Coord(freeRows.get(i), leftColumn));
             gameManager.getPlayer(rightPlayer).getMinion(i).setPos(new Coord(freeRows.get(i), rightColumn));
-            System.out.println(freeRows.get(i));
         }
     }
 

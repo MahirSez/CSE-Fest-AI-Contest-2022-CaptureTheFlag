@@ -28,15 +28,12 @@ public class Maze {
 
         System.out.println("Rows = " + row);
         System.out.println("Cols = " +  col);
-        int flagRow = row / 2, leftFlagCol = 0, rightFlagCol = col - 1;
-//        for (int i = 0; i < row; i++) {
-//            if (i != flagRow) {
-//                grid[i][leftFlagCol] = grid[i][rightFlagCol] = 1;
-//            }
-//        }
+
         for(int i = 0; i < row; i++) {
             for(int j = 0 ; j < col ; j++) {
+
                 grid[i][j] = gridObj.get(j, i).isWall() ? 1 : 0;
+//                if(i == 0 || j == 0 || i == row-1 || j == col-1) grid[i][j] = 1;
             }
         }
     }
