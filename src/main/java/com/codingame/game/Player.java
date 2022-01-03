@@ -34,7 +34,7 @@ public class Player extends AbstractMultiplayerPlayer {
 
     FlagBase getFlagBase() { return this.flagBase; }
 
-    String getColor() { return this.leftPlayer ? Config.LEFT_PLAYER_COLOR_NAME : Config.RIGHT_PLAYER_COLOR_NAME ; }
+    public String getColor() { return this.leftPlayer ? Config.LEFT_PLAYER_COLOR_NAME : Config.RIGHT_PLAYER_COLOR_NAME ; }
 
     public Stream<Minion> getAliveMinions() {
         return this.minions.stream().filter(minion -> !minion.isDead());

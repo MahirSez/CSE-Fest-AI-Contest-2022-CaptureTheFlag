@@ -24,7 +24,7 @@ public class View {
 
 
     // Note: Damaged minions also contain dead minions
-    List<Minion> deadMinions, damagedMinions;
+    List<Minion> deadMinions, damagedMinions, frozenMinions;
     List<Minion> flamers, freezers, miners;
     List<Minion> movers;
 
@@ -194,6 +194,7 @@ public class View {
         this.freezers = new ArrayList<>();
         this.miners = new ArrayList<>();
         this.damagedMinions = new ArrayList<>();
+        this.frozenMinions = new ArrayList<>();
 
         this.walls = new ArrayList<>();
         this.minionToCircle = new HashMap<>();
@@ -212,6 +213,7 @@ public class View {
         freezers.clear();
         miners.clear();
         damagedMinions.clear();
+        frozenMinions.clear();
     }
 
     public void updateFrame() {
@@ -286,6 +288,23 @@ public class View {
     }
 
     public void addDamagedMinions(List<Minion> damagedMinions) {
-        this.damagedMinions = damagedMinions;
+        this.damagedMinions.addAll(damagedMinions);
     }
+
+    private void addFrozenMinions(List<Minion> frozenMinions) {
+        this.frozenMinions.addAll(frozenMinions);
+    }
+
+
+    public void addAffectedMinions(List<Minion> affectedMinions, PowerUpType power) {
+        switch (power) {
+            case FIRE:
+            case MINE:
+                addDamagedMinions(affectedMinions);
+                break;
+            case FREEZE:
+                addFrozenMinions(affectedMinions);
+        }
+    }
+
 }

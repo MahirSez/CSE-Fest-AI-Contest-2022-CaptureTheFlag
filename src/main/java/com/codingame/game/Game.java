@@ -181,10 +181,10 @@ public class Game {
 
         ArrayList<Minion>aliveMinions = new ArrayList<>();
         for(Minion minion: player.getMinions()) {
-            if(minion.health > 0) aliveMinions.add(minion);
+            if( !minion.isDead()) aliveMinions.add(minion);
         }
         ret.add(aliveMinions.size() + "");
-        for(Minion minion: player.getMinions()) {
+        for(Minion minion: aliveMinions) {
             ret.add(minion.getID() + " " +minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth());
         }
         ArrayList<Minion>visibleOpponents = new ArrayList<>();
@@ -192,7 +192,7 @@ public class Game {
         for(Minion opponentMinion: opponent.getMinions()) {
             boolean visible = false;
             for(Minion minion: player.getMinions()) {
-                if(this.isVisible(opponentMinion.getPos(), minion.getPos())) {
+                if(!minion.isDead() && !opponentMinion.isDead() && this.isVisible(opponentMinion.getPos(), minion.getPos())) {
                     visible = true;
                     break;
                 }
@@ -278,11 +278,25 @@ public class Game {
 
 
     public void updateGameState() {
+        updateMinionTimeOut();
         updateMinionMovement();
         updateDamage();
         removeDeadMinions();
         updateFlagPosition();
         printGameSummary();
+
+        for(Player player: gameManager.getPlayers()) {
+            System.out.println(player.getColor());
+            for(Minion minion: player.getMinions()) {
+                System.out.println(minion.getID() + " -> "  + minion.getPos() +  " = " + minion.getHealth());
+            }
+        }
+    }
+
+    private void updateMinionTimeOut() {
+        for(Minion minion: aliveMinions) {
+            minion.decreaseTimeOut();
+        }
     }
 
     private void removeDeadMinions() {
@@ -305,8 +319,9 @@ public class Game {
                     minion.addSummary(String.format("Cannot buy power %s, not enough credit available", power.getPowerType()));
                 }
                 else {
-                    List<Minion>damagedMinions = power.damageMinions();
-                    view.addDamagedMinions(damagedMinions);
+                    minion.addSummary(String.format("Minion %d is using power: %s", minion.getID(), power.getPowerType()));
+                    List<Minion>affectedMinions = power.damageMinions(this);
+                    view.addAffectedMinions(affectedMinions, power.getPowerType());
                     view.addPowerUpUser(minion, power.getPowerType());
                 }
             }

@@ -23,8 +23,11 @@ public class Config {
 
 
     public static final int FIRE_DAMAGE = 60;
+    public static final int FREEZE_TIMEOUT = 10;
+
 
     public static final int FIRE_PRICE = 20;
+    public static final int FREEZE_PRICE = 10;
 
     public static final Coord[] ADJACENCY = {
             new Coord(-1, 0),

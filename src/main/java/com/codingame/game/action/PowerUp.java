@@ -14,14 +14,15 @@ public abstract class PowerUp implements Action {
     int price;
     Coord origin;
     Minion powerUpUser;
-    @Inject Game game;
+
+
 
     PowerUp(Coord origin, Minion powerUpUser) {
         this.origin = origin;
         this.powerUpUser = powerUpUser;
     }
 
-    public abstract List<Minion> damageMinions();
+    public abstract List<Minion> damageMinions(Game game);
     public abstract PowerUpType getPowerType();
 
     /**
