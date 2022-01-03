@@ -1,6 +1,7 @@
 package com.codingame.game;
 
 import com.codingame.game.action.Action;
+import com.codingame.game.action.FirePower;
 import com.codingame.game.action.MoveAction;
 import com.codingame.game.action.WaitAction;
 import com.codingame.game.exception.GameException;
@@ -36,9 +37,14 @@ public class CommandParser {
                     + "$",
             Pattern.CASE_INSENSITIVE
     );
-
+    static final Pattern PLAYER_FIRE_PATTERN = Pattern.compile(
+            "^FIRE\\s+(?<id>\\d+)"
+                    + "(?:\\s+(?<message>.+))?"
+                    + "$",
+            Pattern.CASE_INSENSITIVE
+    );
     static final Pattern PLAYER_ACTION_PATTERN = Pattern.compile(
-            "^(WAIT|MOVE)\\s+(?<id>\\d+).*",
+            "^(WAIT|MOVE|FIRE|FREEZE|MINE)\\s+(?<id>\\d+).*",
             Pattern.CASE_INSENSITIVE
     );
 
@@ -85,6 +91,10 @@ public class CommandParser {
         minion.setIntendedAction(new WaitAction());
     }
 
+    private void handleFireCommand(Minion minion) {
+        minion.setIntendedAction(new FirePower(minion.getPos(), minion));
+    }
+
     public void parseCommands(Player player, List<String> outputs) {
 
         String[] commands = outputs.get(0).split("\\|");
@@ -108,6 +118,9 @@ public class CommandParser {
                 }
                 else if(PLAYER_WAIT_PATTERN.matcher(str).matches()) {
                     handleWaitCommand(minion);
+                }
+                else if(PLAYER_FIRE_PATTERN.matcher(str).matches()) {
+                    handleFireCommand(minion);
                 }
                 else {
                     throw new InvalidInputException(EXPECTED, str);

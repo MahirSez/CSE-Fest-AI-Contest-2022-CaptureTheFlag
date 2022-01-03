@@ -21,7 +21,6 @@ public class Cell {
 
     private CellType type;
 
-    private Ability powerUp;
     private boolean hasPellet;
     private boolean hasCherry;
 
@@ -46,13 +45,6 @@ public class Cell {
         this.type = type;
     }
 
-    public Ability getPowerUp() {
-        return powerUp;
-    }
-
-    public void setPowerUp(Ability powerUp) {
-        this.powerUp = powerUp;
-    }
 
     public boolean isFloor() {
         return type == CellType.FLOOR;

@@ -2,6 +2,7 @@ package com.codingame.game;
 
 import com.codingame.game.action.ActionType;
 import com.codingame.game.action.MoveAction;
+import com.codingame.game.action.PowerUp;
 import com.codingame.game.view.View;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.google.inject.Inject;
@@ -16,7 +17,7 @@ public class Game {
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject private Maze maze;
     @Inject private View view;
-    ArrayList<Minion>allMinions;
+    ArrayList<Minion> aliveMinions;
 
     void init() {
 
@@ -29,6 +30,10 @@ public class Game {
         setFlagBasePosition();
         setFlagPosition();
         setMinionsPositionsRandom();
+    }
+
+    public ArrayList<Minion> getAliveMinions() {
+        return this.aliveMinions;
     }
 
     private void setPlayerSide() {
@@ -113,11 +118,11 @@ public class Game {
     }
 
     void generateMinions() {
-        allMinions = new ArrayList<>();
+        aliveMinions = new ArrayList<>();
         for(Player player: gameManager.getPlayers()) {
             for(int i = 0 ; i < this.minionsPerPlayer ; i++) {
                 Minion minion = new Minion(i, player);
-                allMinions.add(minion);
+                aliveMinions.add(minion);
                 player.addMinion(minion);
             }
         }
@@ -136,7 +141,14 @@ public class Game {
         ret.add(opponent.getFlagBase().getPos().getX() + " " + opponent.getFlagBase().getPos().getY());
         return ret;
     }
-    boolean isVisible(Coord pos1, Coord pos2) {
+
+    /**
+     * returns True if pos1 and pos2 resides in the same row/column and
+     * there exists no wall between them
+     *
+     * Todo: Optimize with cumulative sum
+     */
+    public boolean isVisible(Coord pos1, Coord pos2) {
 
         if(pos1.getX() == pos2.getX()) {
             int minY = Math.min(pos1.getY(), pos2.getY());
@@ -185,7 +197,10 @@ public class Game {
                     break;
                 }
             }
-            if(visible) visibleOpponents.add(opponentMinion);
+            if(visible) {
+                visibleOpponents.add(opponentMinion);
+                System.out.println(player.getColor() + " can see minion at " + opponentMinion.getPos());
+            }
         }
         ret.add(visibleOpponents.size() + "");
         for(Minion minion: visibleOpponents) {
@@ -199,7 +214,7 @@ public class Game {
     }
 
     private void updateMinionMovement() {
-        for(Minion minion: allMinions) {
+        for(Minion minion: aliveMinions) {
             if(minion.getIntendedAction().getActionType() == ActionType.MOVE) {
                 Coord from = minion.getPos();
                 Coord to = ((MoveAction)minion.getIntendedAction()).getDestination();
@@ -263,9 +278,39 @@ public class Game {
 
 
     public void updateGameState() {
-        this.updateMinionMovement();
-        this.updateFlagPosition();
-        this.printGameSummary();
+        updateMinionMovement();
+        updateDamage();
+        removeDeadMinions();
+        updateFlagPosition();
+        printGameSummary();
+    }
+
+    private void removeDeadMinions() {
+        List<Minion>deadMinions = new ArrayList<>();
+        for(Minion minion: aliveMinions) {
+            if(minion.isDead()) {
+                deadMinions.add(minion);
+                view.addDeadMinion(minion);
+            }
+        }
+        aliveMinions.removeAll(deadMinions);
+    }
+
+    private void updateDamage() {
+
+        for(Minion minion: aliveMinions) {
+            if(minion.getIntendedAction().getActionType() == ActionType.POWER_UP) {
+                PowerUp power = (PowerUp) minion.getIntendedAction();
+                if(!power.canBuy(minion.getOwner())) {
+                    minion.addSummary(String.format("Cannot buy power %s, not enough credit available", power.getPowerType()));
+                }
+                else {
+                    List<Minion>damagedMinions = power.damageMinions();
+                    view.addDamagedMinions(damagedMinions);
+                    view.addPowerUpUser(minion, power.getPowerType());
+                }
+            }
+        }
     }
 
     Player getOpponentOf(Player player) {
