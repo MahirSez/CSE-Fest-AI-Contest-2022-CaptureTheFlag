@@ -62,6 +62,7 @@ public class Referee extends AbstractReferee {
                 commandParser.parseCommands(player, outputs);
             } catch (TimeoutException e) {
                 player.deactivate(String.format("$%d timeout!", player.getIndex()));
+                player.setTimedOut(true);
                 gameManager.addToGameSummary(player.getNicknameToken() + " has not provided " + player.getExpectedOutputLines() + " lines in time");
             }
         }
@@ -92,7 +93,13 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void onEnd() {
-        gameManager.getPlayers().forEach(player -> player.setScore(player.isWinner()? 1: 0));
+        if(!gameManager.getPlayer(0).isWinner() && !gameManager.getPlayer(1).isWinner()) {
+            gameManager.getPlayers().forEach(player -> player.setScore(player.getCurrentCredit()));
+        }
+        else {
+            gameManager.getPlayers().forEach(player -> player.setScore(player.isWinner()? 1: 0));
+        }
+
         endScreenModule.setScores(
                 gameManager.getPlayers()
                         .stream()

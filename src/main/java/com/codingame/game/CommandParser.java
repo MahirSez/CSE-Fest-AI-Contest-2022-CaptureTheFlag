@@ -155,10 +155,10 @@ public class CommandParser {
         }
 
         player.getAliveMinions()
-            .filter(minion -> minion.getIntendedAction() == Action.NO_ACTION)
+            .filter(minion -> minion.getIntendedAction() == Action.NO_ACTION && !minion.isFrozen())
             .forEach(minion ->
                 minion.addSummary(String.format(
-                    "Pac %d received no command.", minion.getID()
+                    "Minion %d received no command.", minion.getID()
                 ))
             );
     }

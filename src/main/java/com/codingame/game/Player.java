@@ -13,6 +13,8 @@ public class Player extends AbstractMultiplayerPlayer {
     private boolean isWinner;
 
     private boolean leftPlayer;
+    private boolean timeout;
+
     Player() {
         this.minions = new ArrayList<>();
         this.flag = new Flag();
@@ -64,5 +66,12 @@ public class Player extends AbstractMultiplayerPlayer {
     }
     public boolean isWinner() {
         return this.isWinner;
+    }
+
+    public boolean isTimedOut() {
+        return this.timeout;
+    }
+    public void setTimedOut(boolean timeout) {
+        this.timeout = timeout;
     }
 }
