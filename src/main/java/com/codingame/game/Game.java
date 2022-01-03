@@ -29,6 +29,35 @@ public class Game {
         setFlagBasePosition();
         setFlagPosition();
         setMinionsPositionsRandom();
+        generateCoins();
+    }
+
+    private void generateCoins() {
+        int row = maze.getRow();
+        int col = maze.getCol();
+        ArrayList<Coin> availableCoins = maze.getAvailableCoins();
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j <= col/2; j++) {
+                if (maze.getGrid()[i][j] == 1) continue;
+                boolean occupied = false;
+                for (Player player : gameManager.getPlayers()) {
+                    for (Minion minion : player.getMinions()) {
+                        if (minion.getPos().manhattanTo(i, j) == 0) {
+                            occupied = true;
+                        }
+                    }
+                    if (player.getFlagBase().getPos().manhattanTo(i, j) == 0) {
+                        occupied = true;
+                    }
+                }
+                if (!occupied) {
+                    availableCoins.add(new Coin(new Coord(i, j), 1));
+                    if (j < col-1-j) {
+                        availableCoins.add(new Coin(new Coord(i, col-1-j), 1));
+                    }
+                }
+            }
+        }
     }
 
     private void setPlayerSide() {
@@ -261,9 +290,31 @@ public class Game {
         return path;
     }
 
+    private void updateCoins() {
+        ArrayList<Coin> acquiredCoins = new ArrayList<>();
+        for (Coin coin : maze.getAvailableCoins()) {
+            boolean acquired = false;
+            for (Player player : gameManager.getPlayers()) {
+                for (Minion minion : player.getMinions()) {
+                    if (minion.isDead()) continue;
+                    if (minion.getPos().manhattanTo(coin.getPosition()) == 0) {
+                        player.addCredit(coin.getValue());
+                        acquired = true;
+                        break;
+                    }
+                }
+            }
+            if (acquired) {
+                acquiredCoins.add(coin);
+            }
+        }
+        view.removeCoins(acquiredCoins);
+        maze.getAvailableCoins().removeAll(acquiredCoins);
+    }
 
     public void updateGameState() {
         this.updateMinionMovement();
+        this.updateCoins();
         this.updateFlagPosition();
         this.printGameSummary();
     }
@@ -294,6 +345,7 @@ public class Game {
 
     private void printGameSummary() {
         for (Player player : gameManager.getPlayers()) {
+            gameManager.addToGameSummary("Player " + player.getNicknameToken() + " credits: " + player.getCurrentCredit());
             if (player.getMinions().stream().anyMatch(minion -> !minion.getGameSummary().isEmpty())) {
                 gameManager.addToGameSummary(String.format("%s:", player.getNicknameToken()));
                 player.getMinions().stream()

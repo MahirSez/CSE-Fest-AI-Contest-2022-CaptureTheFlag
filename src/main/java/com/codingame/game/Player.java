@@ -6,8 +6,7 @@ import java.util.stream.Stream;
 
 
 public class Player extends AbstractMultiplayerPlayer {
-
-
+    private int currentCredit;
     private final ArrayList<Minion> minions;
     private final Flag flag;
     private final FlagBase flagBase;
@@ -18,6 +17,14 @@ public class Player extends AbstractMultiplayerPlayer {
         this.minions = new ArrayList<>();
         this.flag = new Flag();
         this.flagBase = new FlagBase();
+        this.currentCredit = Config.INITIAL_CREDIT;
+    }
+
+    void addCredit(int add) {
+        currentCredit += add;
+    }
+    public int getCurrentCredit() {
+        return currentCredit;
     }
 
     void setLeftPlayer(boolean isLeftPlayer) { this.leftPlayer = isLeftPlayer; }

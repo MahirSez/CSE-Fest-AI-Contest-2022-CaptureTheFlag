@@ -4,12 +4,15 @@ import com.codingame.game.grid.Grid;
 import com.codingame.game.grid.TetrisBasedMapGenerator;
 import com.google.inject.Singleton;
 
+import java.util.ArrayList;
+
 
 @Singleton
 public class Maze {
 
     private int[][] grid;
     private int row, col;
+    private ArrayList<Coin> availableCoins;
 
     public int[][] getGrid() {
         return grid;
@@ -36,6 +39,11 @@ public class Maze {
                 if(i == 0 || j == 0 || i == row-1 || j == col-1) grid[i][j] = 1;
             }
         }
+
+        availableCoins = new ArrayList<>();
     }
 
+    public ArrayList<Coin> getAvailableCoins() {
+        return availableCoins;
+    }
 }

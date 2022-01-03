@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class View {
@@ -22,9 +23,11 @@ public class View {
     HashMap<Flag, Sprite>flagToSprite;
 
     List<Minion> movers;
+    HashMap<Coin, Circle>coinToCircle;
 
     World world;
     Sprite background;
+    Text leftScore, rightScore;
 
     List<Sprite> walls;
     int wallWidth, wallHeight;
@@ -172,6 +175,43 @@ public class View {
         }
     }
 
+    private void drawCoins() {
+        for (Coin coin : maze.getAvailableCoins()) {
+             Circle circle = graphicEntityModule.createCircle()
+                     .setRadius( (int) (this.wallHeight * 0.7 / 2))
+                     .setLineWidth(0)
+                     .setX(this.toPixelCenterX(coin.getPosition().getY()))
+                     .setY(this.toPixelCenterY(coin.getPosition().getX()))
+                     .setLineColor(0)
+                     .setLineWidth(2);
+             coinToCircle.put(coin, circle);
+        }
+    }
+
+    private void drawScore() {
+        for (Player player : gameManager.getPlayers()) {
+            if (player.isLeftPlayer()) {
+                leftScore = graphicEntityModule.createText("Left: " + player.getCurrentCredit())
+                        .setFontFamily("Lato")
+                        .setStrokeThickness(5) // Adding an outline
+                        .setStrokeColor(0xffffff) // a white outline
+                        .setFontSize(50)
+                        .setX(10)
+                        .setY(10)
+                        .setFillColor(0x000000); // Setting the text color to black
+            } else {
+                rightScore = graphicEntityModule.createText("Right: " + player.getCurrentCredit())
+                        .setFontFamily("Lato")
+                        .setStrokeThickness(5) // Adding an outline
+                        .setStrokeColor(0xffffff) // a white outline
+                        .setFontSize(50)
+                        .setX(world.getWidth()-250)
+                        .setY(10)
+                        .setFillColor(0x000000); // Setting the text color to black
+            }
+        }
+    }
+
     public void init() {
         this.world = graphicEntityModule.getWorld();
 
@@ -187,12 +227,15 @@ public class View {
         this.walls = new ArrayList<>();
         this.minionToCircle = new HashMap<>();
         this.flagToSprite = new HashMap<>();
+        this.coinToCircle = new HashMap<>();
 
         drawBackground();
         // drawOuterRectangle();
         drawMaze(row, col, grid);
         drawMinions();
         drawFlags();
+        drawCoins();
+        drawScore();
     }
     public void resetData() {
         movers.clear();
@@ -201,6 +244,17 @@ public class View {
     public void updateFrame() {
         performMoves();
         updateFlag();
+        updateScore();
+    }
+
+    private void updateScore() {
+        for (Player player : gameManager.getPlayers()) {
+            if (player.isLeftPlayer()) {
+                leftScore.setText("Left: " + player.getCurrentCredit());
+            } else {
+                rightScore.setText("Right: " + player.getCurrentCredit());
+            }
+        }
     }
 
     private void updateFlag() {
@@ -208,6 +262,13 @@ public class View {
             Sprite flag = this.flagToSprite.get(player.getFlag());
             flag.setX(this.toPixelCornerX(player.getFlag().getPos().getY()))
                 .setY(this.toPixelCornerY(player.getFlag().getPos().getX()));
+        }
+    }
+
+    public void removeCoins(ArrayList<Coin> acquiredCoins) {
+        for (Coin coin : acquiredCoins) {
+            coinToCircle.get(coin).setVisible(false);
+            coinToCircle.remove(coin);
         }
     }
 

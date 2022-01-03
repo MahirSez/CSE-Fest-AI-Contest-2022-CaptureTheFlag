@@ -9,6 +9,8 @@ public class Config {
     public static final String LEFT_PLAYER_COLOR_NAME = "red";
     public static final String RIGHT_PLAYER_COLOR_NAME = "blue";
 
+    public static final int INITIAL_CREDIT = 15;
+    public static final int[] COIN_VALUES = {1, 2, 5};
 
     public static final int MIN_MINIONS = 3;
     public static final int MAX_MINIONS = 3;
