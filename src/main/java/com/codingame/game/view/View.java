@@ -23,7 +23,7 @@ public class View {
     HashMap<Flag, Sprite>flagToSprite;
 
     List<Minion> movers;
-    HashMap<Coin, Circle>coinToCircle;
+    HashMap<Coin, Sprite>coinToSprite;
 
     World world;
     Sprite background;
@@ -176,15 +176,41 @@ public class View {
     }
 
     private void drawCoins() {
+        final int COIN_DIMENSION = 84;
+
+
+        String[] coinSprites = graphicEntityModule.createSpriteSheetSplitter()
+                .setSourceImage("coin/coin-sprite.png")
+                .setImageCount(6)
+                .setWidth(COIN_DIMENSION)
+                .setHeight(COIN_DIMENSION)
+                .setOrigRow(0)
+                .setOrigCol(0)
+                .setImagesPerRow(6)
+                .setName("coin")
+                .split();
+
         for (Coin coin : maze.getAvailableCoins()) {
-             Circle circle = graphicEntityModule.createCircle()
-                     .setRadius( (int) (this.wallHeight * 0.7 / 2))
-                     .setLineWidth(0)
-                     .setX(this.toPixelCenterX(coin.getPosition().getY()))
-                     .setY(this.toPixelCenterY(coin.getPosition().getX()))
-                     .setLineColor(0)
-                     .setLineWidth(2);
-             coinToCircle.put(coin, circle);
+//            int x = this.toPixelCornerX(coin.getPosition().getY());
+            int x = this.toPixelCenterX(coin.getPosition().getY());
+//            int y = this.toPixelCornerY(coin.getPosition().getX());
+            int y = this.toPixelCornerY(coin.getPosition().getX());
+//             Circle circle = graphicEntityModule.createCircle()
+//                     .setRadius( (int) (this.wallHeight * 0.7 / 2))
+//                     .setLineWidth(0)
+//                     .setX(this.toPixelCenterX(coin.getPosition().getY()))
+//                     .setY(this.toPixelCenterY(coin.getPosition().getX()))
+//                     .setLineColor(0)
+//                     .setLineWidth(2);
+
+             Sprite sprite = graphicEntityModule.createSprite()
+                     .setImage(coinSprites[0])
+                     .setScale(wallHeight/(double)COIN_DIMENSION * 0.8)
+                     .setAnchorX(0.5)
+                     .setX(x)
+                     .setY(y);
+
+             coinToSprite.put(coin, sprite);
         }
     }
 
@@ -227,7 +253,7 @@ public class View {
         this.walls = new ArrayList<>();
         this.minionToCircle = new HashMap<>();
         this.flagToSprite = new HashMap<>();
-        this.coinToCircle = new HashMap<>();
+        this.coinToSprite = new HashMap<>();
 
         drawBackground();
         // drawOuterRectangle();
@@ -267,8 +293,8 @@ public class View {
 
     public void removeCoins(ArrayList<Coin> acquiredCoins) {
         for (Coin coin : acquiredCoins) {
-            coinToCircle.get(coin).setVisible(false);
-            coinToCircle.remove(coin);
+            coinToSprite.get(coin).setVisible(false);
+            coinToSprite.remove(coin);
         }
     }
 
