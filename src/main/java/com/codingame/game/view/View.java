@@ -176,39 +176,25 @@ public class View {
     }
 
     private void drawCoins() {
-        final int COIN_DIMENSION = 84;
-
-
-        String[] coinSprites = graphicEntityModule.createSpriteSheetSplitter()
-                .setSourceImage("coin/coin-sprite.png")
-                .setImageCount(6)
-                .setWidth(COIN_DIMENSION)
-                .setHeight(COIN_DIMENSION)
-                .setOrigRow(0)
-                .setOrigCol(0)
-                .setImagesPerRow(6)
-                .setName("coin")
-                .split();
+        final int COIN_DIMENSION = 564;
 
         for (Coin coin : maze.getAvailableCoins()) {
-//            int x = this.toPixelCornerX(coin.getPosition().getY());
             int x = this.toPixelCenterX(coin.getPosition().getY());
-//            int y = this.toPixelCornerY(coin.getPosition().getX());
             int y = this.toPixelCornerY(coin.getPosition().getX());
-//             Circle circle = graphicEntityModule.createCircle()
-//                     .setRadius( (int) (this.wallHeight * 0.7 / 2))
-//                     .setLineWidth(0)
-//                     .setX(this.toPixelCenterX(coin.getPosition().getY()))
-//                     .setY(this.toPixelCenterY(coin.getPosition().getX()))
-//                     .setLineColor(0)
-//                     .setLineWidth(2);
 
              Sprite sprite = graphicEntityModule.createSprite()
-                     .setImage(coinSprites[0])
-                     .setScale(wallHeight/(double)COIN_DIMENSION * 0.8)
+                     .setScale(wallHeight/(double)COIN_DIMENSION * 0.9)
                      .setAnchorX(0.5)
                      .setX(x)
                      .setY(y);
+
+             if (coin.getValue() == Config.COIN_VALUES[0]) {
+                 sprite.setImage("coin/Bronze.png");
+             } else if (coin.getValue() == Config.COIN_VALUES[1]) {
+                 sprite.setImage("coin/Silver.png");
+             } else if (coin.getValue() == Config.COIN_VALUES[2]) {
+                 sprite.setImage("coin/Gold.png");
+             }
 
              coinToSprite.put(coin, sprite);
         }

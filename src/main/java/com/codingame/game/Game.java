@@ -51,9 +51,10 @@ public class Game {
                     }
                 }
                 if (!occupied) {
-                    availableCoins.add(new Coin(new Coord(i, j), 1));
+                    int coinValue = Config.COIN_VALUES[RandomUtil.randomWeightedIndex(Config.COIN_WEIGHTS)];
+                    availableCoins.add(new Coin(new Coord(i, j), coinValue));
                     if (j < col-1-j) {
-                        availableCoins.add(new Coin(new Coord(i, col-1-j), 1));
+                        availableCoins.add(new Coin(new Coord(i, col-1-j), coinValue));
                     }
                 }
             }
