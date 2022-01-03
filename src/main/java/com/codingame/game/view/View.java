@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Singleton
 public class View {
@@ -22,9 +23,11 @@ public class View {
     HashMap<Flag, Sprite>flagToSprite;
 
     List<Minion> movers;
+    HashMap<Coin, Sprite>coinToSprite;
 
     World world;
     Sprite background;
+    Text leftScore, rightScore;
 
     List<Sprite> walls;
     int wallWidth, wallHeight;
@@ -172,6 +175,55 @@ public class View {
         }
     }
 
+    private void drawCoins() {
+        final int COIN_DIMENSION = 564;
+
+        for (Coin coin : maze.getAvailableCoins()) {
+            int x = this.toPixelCenterX(coin.getPosition().getY());
+            int y = this.toPixelCornerY(coin.getPosition().getX());
+
+             Sprite sprite = graphicEntityModule.createSprite()
+                     .setScale(wallHeight/(double)COIN_DIMENSION * 0.9)
+                     .setAnchorX(0.5)
+                     .setX(x)
+                     .setY(y);
+
+             if (coin.getValue() == Config.COIN_VALUES[0]) {
+                 sprite.setImage("coin/Bronze.png");
+             } else if (coin.getValue() == Config.COIN_VALUES[1]) {
+                 sprite.setImage("coin/Silver.png");
+             } else if (coin.getValue() == Config.COIN_VALUES[2]) {
+                 sprite.setImage("coin/Gold.png");
+             }
+
+             coinToSprite.put(coin, sprite);
+        }
+    }
+
+    private void drawScore() {
+        for (Player player : gameManager.getPlayers()) {
+            if (player.isLeftPlayer()) {
+                leftScore = graphicEntityModule.createText("Left: " + player.getCurrentCredit())
+                        .setFontFamily("Lato")
+                        .setStrokeThickness(5) // Adding an outline
+                        .setStrokeColor(0xffffff) // a white outline
+                        .setFontSize(50)
+                        .setX(10)
+                        .setY(10)
+                        .setFillColor(0x000000); // Setting the text color to black
+            } else {
+                rightScore = graphicEntityModule.createText("Right: " + player.getCurrentCredit())
+                        .setFontFamily("Lato")
+                        .setStrokeThickness(5) // Adding an outline
+                        .setStrokeColor(0xffffff) // a white outline
+                        .setFontSize(50)
+                        .setX(world.getWidth()-250)
+                        .setY(10)
+                        .setFillColor(0x000000); // Setting the text color to black
+            }
+        }
+    }
+
     public void init() {
         this.world = graphicEntityModule.getWorld();
 
@@ -187,12 +239,15 @@ public class View {
         this.walls = new ArrayList<>();
         this.minionToCircle = new HashMap<>();
         this.flagToSprite = new HashMap<>();
+        this.coinToSprite = new HashMap<>();
 
         drawBackground();
         // drawOuterRectangle();
         drawMaze(row, col, grid);
         drawMinions();
         drawFlags();
+        drawCoins();
+        drawScore();
     }
     public void resetData() {
         movers.clear();
@@ -201,6 +256,17 @@ public class View {
     public void updateFrame() {
         performMoves();
         updateFlag();
+        updateScore();
+    }
+
+    private void updateScore() {
+        for (Player player : gameManager.getPlayers()) {
+            if (player.isLeftPlayer()) {
+                leftScore.setText("Left: " + player.getCurrentCredit());
+            } else {
+                rightScore.setText("Right: " + player.getCurrentCredit());
+            }
+        }
     }
 
     private void updateFlag() {
@@ -208,6 +274,13 @@ public class View {
             Sprite flag = this.flagToSprite.get(player.getFlag());
             flag.setX(this.toPixelCornerX(player.getFlag().getPos().getY()))
                 .setY(this.toPixelCornerY(player.getFlag().getPos().getX()));
+        }
+    }
+
+    public void removeCoins(ArrayList<Coin> acquiredCoins) {
+        for (Coin coin : acquiredCoins) {
+            coinToSprite.get(coin).setVisible(false);
+            coinToSprite.remove(coin);
         }
     }
 
