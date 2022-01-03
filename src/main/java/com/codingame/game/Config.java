@@ -24,6 +24,14 @@ public class Config {
 
     public static final int MAZE_UPPER_OFFSET = 200;
 
+
+    public static final int FIRE_DAMAGE = 60;
+    public static final int FREEZE_TIMEOUT = 10;
+
+
+    public static final int FIRE_PRICE = 20;
+    public static final int FREEZE_PRICE = 10;
+
     public static final Coord[] ADJACENCY = {
             new Coord(-1, 0),
             new Coord(1, 0),
@@ -32,5 +40,5 @@ public class Config {
     };
 
     public static final int INF = 10000000;
-    public static final int FRAME_DURATION = 200;
+    public static final int FRAME_DURATION = 300;
 }

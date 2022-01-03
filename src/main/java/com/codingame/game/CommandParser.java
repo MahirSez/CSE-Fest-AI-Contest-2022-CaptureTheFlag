@@ -1,8 +1,6 @@
 package com.codingame.game;
 
-import com.codingame.game.action.Action;
-import com.codingame.game.action.MoveAction;
-import com.codingame.game.action.WaitAction;
+import com.codingame.game.action.*;
 import com.codingame.game.exception.GameException;
 import com.codingame.game.exception.InvalidInputException;
 import com.codingame.gameengine.core.MultiplayerGameManager;
@@ -36,9 +34,23 @@ public class CommandParser {
                     + "$",
             Pattern.CASE_INSENSITIVE
     );
+    static final Pattern PLAYER_FIRE_PATTERN = Pattern.compile(
+            "^FIRE\\s+(?<id>\\d+)"
+                    + "(?:\\s+(?<message>.+))?"
+                    + "$",
+            Pattern.CASE_INSENSITIVE
+    );
+
+    static final Pattern PLAYER_FREEZE_PATTERN = Pattern.compile(
+            "^FREEZE\\s+(?<id>\\d+)"
+                    + "(?:\\s+(?<message>.+))?"
+                    + "$",
+            Pattern.CASE_INSENSITIVE
+    );
+
 
     static final Pattern PLAYER_ACTION_PATTERN = Pattern.compile(
-            "^(WAIT|MOVE)\\s+(?<id>\\d+).*",
+            "^(WAIT|MOVE|FIRE|FREEZE|MINE)\\s+(?<id>\\d+).*",
             Pattern.CASE_INSENSITIVE
     );
 
@@ -68,10 +80,7 @@ public class CommandParser {
                     .filter( (value) -> (value.getID() == minionID))
                     .findFirst()
                     .get();
-            if(minion.isDead()) {
-                minion.addSummary(String.format("Minion %d is dead! It cannot be commanded anymore!", minionID));
-            }
-            else if(minion.getIntendedAction() != Action.NO_ACTION) {
+            if(minion.getIntendedAction() != Action.NO_ACTION) {
                 throw new GameException(String.format("Minion %d cannot be commanded twice!", minionID));
             }
             return minion;
@@ -83,6 +92,14 @@ public class CommandParser {
 
     private void handleWaitCommand(Minion minion) {
         minion.setIntendedAction(new WaitAction());
+    }
+
+    private void handleFireCommand(Minion minion) {
+        minion.setIntendedAction(new FirePower(minion.getPos(), minion));
+    }
+
+    private void handleFreezeCommand(Minion minion) {
+        minion.setIntendedAction(new FreezePower(minion.getPos(), minion));
     }
 
     public void parseCommands(Player player, List<String> outputs) {
@@ -98,6 +115,14 @@ public class CommandParser {
                 if (match.matches()) {
                     int minionID = Integer.parseInt(match.group("id"));
                     minion = getMinionFromId(player, minionID);
+                    if(minion.isDead()) {
+                        minion.addSummary(String.format("Minion %d is dead! It cannot be commanded anymore!", minionID));
+                        continue;
+                    }
+                    else if(minion.isFrozen()) {
+                        minion.addSummary(String.format("Minion %d is Frozen! It has to wait %d more moves!", minionID, minion.getTimeOut()));
+                        continue;
+                    }
                 }
                 else {
                     throw new InvalidInputException(EXPECTED, str);
@@ -108,6 +133,12 @@ public class CommandParser {
                 }
                 else if(PLAYER_WAIT_PATTERN.matcher(str).matches()) {
                     handleWaitCommand(minion);
+                }
+                else if(PLAYER_FIRE_PATTERN.matcher(str).matches()) {
+                    handleFireCommand(minion);
+                }
+                else if(PLAYER_FREEZE_PATTERN.matcher(str).matches()) {
+                    handleFreezeCommand(minion);
                 }
                 else {
                     throw new InvalidInputException(EXPECTED, str);
@@ -131,6 +162,7 @@ public class CommandParser {
                 ))
             );
     }
+
 
     private void deactivatePlayer(Player player, String message) {
         player.deactivate(escapeHTMLEntities(message));

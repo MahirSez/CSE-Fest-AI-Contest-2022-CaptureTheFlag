@@ -1,6 +1,7 @@
 package com.codingame.game.view;
 
 import com.codingame.game.*;
+import com.codingame.game.action.PowerUpType;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.*;
 import com.codingame.gameengine.module.tooltip.TooltipModule;
@@ -22,6 +23,10 @@ public class View {
     HashMap<Minion, Sprite>minionToCircle;
     HashMap<Flag, Sprite>flagToSprite;
 
+
+    // Note: Damaged minions also contain dead minions
+    List<Minion> deadMinions, damagedMinions, frozenMinions;
+    List<Minion> flamers, freezers, miners;
     List<Minion> movers;
     HashMap<Coin, Sprite>coinToSprite;
 
@@ -236,6 +241,13 @@ public class View {
         this.wallHeight = (world.getHeight() - Config.MAZE_UPPER_OFFSET) / row;
 
         this.movers = new ArrayList<>();
+        this.deadMinions = new ArrayList<>();
+        this.flamers = new ArrayList<>();
+        this.freezers = new ArrayList<>();
+        this.miners = new ArrayList<>();
+        this.damagedMinions = new ArrayList<>();
+        this.frozenMinions = new ArrayList<>();
+
         this.walls = new ArrayList<>();
         this.minionToCircle = new HashMap<>();
         this.flagToSprite = new HashMap<>();
@@ -251,6 +263,12 @@ public class View {
     }
     public void resetData() {
         movers.clear();
+        deadMinions.clear();
+        flamers.clear();
+        freezers.clear();
+        miners.clear();
+        damagedMinions.clear();
+        frozenMinions.clear();
     }
 
     public void updateFrame() {
@@ -324,4 +342,42 @@ public class View {
     public void moveMinion(Minion minion) {
         movers.add(minion);
     }
+
+    public void addDeadMinion(Minion minion) {
+        deadMinions.add(minion);
+    }
+
+    public void addPowerUpUser(Minion minion, PowerUpType power) {
+        switch (power) {
+            case FIRE:
+                flamers.add(minion);
+                break;
+            case MINE:
+                miners.add(minion);
+                break;
+            case FREEZE:
+                freezers.add(minion);
+        }
+    }
+
+    public void addDamagedMinions(List<Minion> damagedMinions) {
+        this.damagedMinions.addAll(damagedMinions);
+    }
+
+    private void addFrozenMinions(List<Minion> frozenMinions) {
+        this.frozenMinions.addAll(frozenMinions);
+    }
+
+
+    public void addAffectedMinions(List<Minion> affectedMinions, PowerUpType power) {
+        switch (power) {
+            case FIRE:
+            case MINE:
+                addDamagedMinions(affectedMinions);
+                break;
+            case FREEZE:
+                addFrozenMinions(affectedMinions);
+        }
+    }
+
 }

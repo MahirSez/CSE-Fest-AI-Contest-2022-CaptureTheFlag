@@ -21,8 +21,6 @@ public class Referee extends AbstractReferee {
     @Inject CommandParser commandParser;
     @Inject private EndScreenModule endScreenModule;
 
-
-
     boolean gameOverFrame;
 
     @Override
@@ -45,17 +43,20 @@ public class Referee extends AbstractReferee {
         }
     }
     void sendGameStateToPlayers() {
+
         for(Player player: gameManager.getPlayers()) {
             for(String line: game.getGameState(player)) {
                 player.sendInputLine(line);
             }
+        }
+        for(Player player: gameManager.getPlayers()) {
             player.execute();
         }
     }
 
 
     private void handlePlayerCommands() {
-        for (Player player : gameManager.getActivePlayers()) {
+        for (Player player : gameManager.getPlayers()) {
             try {
                 List<String> outputs = player.getOutputs();
                 commandParser.parseCommands(player, outputs);
