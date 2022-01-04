@@ -3,12 +3,14 @@ package com.codingame.game;
 import com.codingame.game.action.ActionType;
 import com.codingame.game.action.MoveAction;
 import com.codingame.game.action.PowerUp;
+import com.codingame.game.action.PowerUpType;
 import com.codingame.game.view.View;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.google.inject.Inject;
 
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Singleton
 public class Game {
@@ -61,6 +63,29 @@ public class Game {
                 }
             }
         }
+    }
+
+    /**
+     *
+     *
+     * Todo: Need to optimize this
+     */
+    ArrayList<Coin>getVisibleCoins(Player player) {
+        int cnt = 0;
+        ArrayList<Coin>visibleCoins = new ArrayList<>();
+        for(Minion minion: player.getMinions()) {
+            if(minion.isDead()) continue;
+            for(Coin coin: maze.getAvailableCoins()) {
+                cnt++;
+                if(maze.isVisible(coin.getPosition(), minion.getPos())) {
+                    visibleCoins.add(coin);
+                }
+            }
+        }
+        System.out.println("Required operations: " +  cnt);
+        return visibleCoins.stream()
+                .distinct()
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Minion> getAliveMinions() {
@@ -117,7 +142,7 @@ public class Game {
         }
     }
 
-
+    // sets minion's positions to the edge of the board. Currently not used
     void setMinionsPositions() {
         int leftPlayer = 0;
         int rightPlayer = (leftPlayer ^ 1);
@@ -170,6 +195,10 @@ public class Game {
         }
         ret.add(player.getFlagBase().getPos().getX() + " " + player.getFlagBase().getPos().getY());
         ret.add(opponent.getFlagBase().getPos().getX() + " " + opponent.getFlagBase().getPos().getY());
+        ret.add(PowerUpType.FIRE + " "+ Config.FIRE_PRICE + " " + Config.FIRE_DAMAGE);
+        ret.add(PowerUpType.FREEZE + " "+ Config.FREEZE_PRICE + " " + Config.FREEZE_TIMEOUT);
+        ret.add(PowerUpType.FREEZE + " "+ Config.MINE_PRICE + " " + Config.MINE_DAMAGE);
+
         return ret;
     }
 
@@ -178,8 +207,8 @@ public class Game {
         Player opponent = gameManager.getPlayers().get(player.getIndex() ^ 1);
         ArrayList<String>ret = new ArrayList<>();
         ret.add(player.getScore() + " " + opponent.getScore());
-        ret.add(player.getFlag().getPos().getX() + " " + player.getFlag().getPos().getY() + " " + (player.getFlag().isCaptured() ? 1 : 0) );
-        ret.add(opponent.getFlag().getPos().getX() + " " + opponent.getFlag().getPos().getY() + " " + (opponent.getFlag().isCaptured() ? 1 : 0));
+        ret.add(player.getFlag().getPos().getX() + " " + player.getFlag().getPos().getY() + " " + (player.getFlag().isCaptured() ? player.getFlag().getCarrier().getID() : -1) );
+        ret.add(opponent.getFlag().getPos().getX() + " " + opponent.getFlag().getPos().getY() + " " + (opponent.getFlag().isCaptured() ? opponent.getFlag().getCarrier().getID() : -1));
 
         ArrayList<Minion>aliveMinions = new ArrayList<>();
         for(Minion minion: player.getMinions()) {
@@ -187,7 +216,7 @@ public class Game {
         }
         ret.add(aliveMinions.size() + "");
         for(Minion minion: aliveMinions) {
-            ret.add(minion.getID() + " " +minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth());
+            ret.add(minion.getID() + " " +minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth() + " " + minion.getTimeOut());
         }
         ArrayList<Minion>visibleOpponents = new ArrayList<>();
 
@@ -206,8 +235,19 @@ public class Game {
         }
         ret.add(visibleOpponents.size() + "");
         for(Minion minion: visibleOpponents) {
-            ret.add(minion.getID() + " " + minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth());
+            ret.add(minion.getID() + " " + minion.getPos().getX() + " " + minion.getPos().getY() + " " + minion.getHealth() + " "  + minion.getTimeOut());
         }
+
+        ArrayList<Coin>visibleCoins = this.getVisibleCoins(player);
+        ret.add(visibleCoins.size() + "");
+        for(Coin coin: visibleCoins) {
+            ret.add(coin.getPosition().getX() + " " + coin.getPosition().getY());
+        }
+
+//        for(String str: ret) {
+//            System.err.println(str);
+//        }
+//        System.err.println();
         return ret;
     }
 
