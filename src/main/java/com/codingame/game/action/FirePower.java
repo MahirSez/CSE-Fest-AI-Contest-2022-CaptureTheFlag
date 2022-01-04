@@ -1,15 +1,14 @@
 package com.codingame.game.action;
 
-import com.codingame.game.Config;
-import com.codingame.game.Coord;
-import com.codingame.game.Game;
-import com.codingame.game.Minion;
+import com.codingame.game.*;
 import com.google.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FirePower extends PowerUp {
+
+    @Inject private Maze maze;
 
     public FirePower(Coord origin, Minion minion) {
         super(origin, minion);
@@ -19,11 +18,11 @@ public class FirePower extends PowerUp {
 
 
     @Override
-    public List<Minion> damageMinions(Game game) {
+    public List<Minion> damageMinions(Game game, Maze maze) {
         List<Minion>damagedMinions = new ArrayList<>();
         System.out.println("Shooting " + this.powerUpUser.getOwner().getColor() + " " + this.powerUpUser.getID());
         for(Minion minion: game.getAliveMinions()) {
-            if(minion != this.powerUpUser && game.isVisible(minion.getPos(), this.origin) ) {
+            if(minion != this.powerUpUser && maze.isVisible(minion.getPos(), this.origin) ) {
                 System.out.println("\tDealing Damage " + minion.getOwner().getColor() + " " + minion.getID());
                 minion.dealDamage(this.damage);
                 damagedMinions.add(minion);

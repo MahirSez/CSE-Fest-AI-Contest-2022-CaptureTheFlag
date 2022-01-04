@@ -21,11 +21,11 @@ public class Maze {
         return grid;
     }
 
-    int getRow() {
+    public int getRow() {
         return row;
     }
 
-    int getCol() {
+    public int getCol() {
         return col;
     }
 
@@ -94,6 +94,18 @@ public class Maze {
 
     public ArrayList<Coin> getAvailableCoins() {
         return availableCoins;  
+    }
+
+    public boolean isVisible(Coord pos1, Coord pos2) {
+        int x1 = pos1.getX(), y1 = pos1.getY();
+        int x2 = pos2.getX(), y2 = pos2.getY();
+        if (x1 == x2) {
+            return rowVisibility[x1][y1][y2];
+        }
+        if (y1 == y2) {
+            return colVisibility[y1][x1][x2];
+        }
+        return false;
     }
 
     boolean isVisible(Coord pos1, Coord pos2, int limit) {

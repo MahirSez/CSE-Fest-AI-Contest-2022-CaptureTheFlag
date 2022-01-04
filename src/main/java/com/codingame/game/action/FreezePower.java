@@ -1,9 +1,6 @@
 package com.codingame.game.action;
 
-import com.codingame.game.Config;
-import com.codingame.game.Coord;
-import com.codingame.game.Game;
-import com.codingame.game.Minion;
+import com.codingame.game.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +14,11 @@ public class FreezePower extends PowerUp{
     }
 
     @Override
-    public List<Minion> damageMinions(Game game) {
+    public List<Minion> damageMinions(Game game, Maze maze) {
         List<Minion>frozenMinions = new ArrayList<>();
         System.out.println("Freezer " + this.powerUpUser.getOwner().getColor() + " " + this.powerUpUser.getID());
         for(Minion minion: game.getAliveMinions()) {
-            if(minion != this.powerUpUser && game.isVisible(minion.getPos(), this.origin) ) {
+            if(minion != this.powerUpUser && maze.isVisible(minion.getPos(), this.origin) ) {
                 System.out.println("\tGetting frozen " + minion.getOwner().getColor() + " " + minion.getID());
                 minion.addTimeOut(this.damage);
                 frozenMinions.add(minion);

@@ -74,4 +74,8 @@ public class Player extends AbstractMultiplayerPlayer {
     public void setTimedOut(boolean timeout) {
         this.timeout = timeout;
     }
+
+    public void decreaseCredit(int price) {
+        this.currentCredit -= price;
+    }
 }

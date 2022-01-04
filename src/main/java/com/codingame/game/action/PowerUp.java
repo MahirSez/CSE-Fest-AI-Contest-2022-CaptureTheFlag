@@ -1,10 +1,6 @@
 package com.codingame.game.action;
 
-import com.codingame.game.Coord;
-import com.codingame.game.Game;
-import com.codingame.game.Minion;
-import com.codingame.game.Player;
-import com.google.inject.Inject;
+import com.codingame.game.*;
 
 import java.util.List;
 
@@ -22,16 +18,14 @@ public abstract class PowerUp implements Action {
         this.powerUpUser = powerUpUser;
     }
 
-    public abstract List<Minion> damageMinions(Game game);
+    public abstract List<Minion> damageMinions(Game game, Maze maze);
     public abstract PowerUpType getPowerType();
 
-    /**
-     *
-     * Todo: uncomment the line after credit has been added
-     */
     public boolean canBuy(Player player) {
-        return true;
-//        return player.getScore() >= this.price;
+        return player.getCurrentCredit() >= this.price;
+    }
+    public int getPrice() {
+        return this.price;
     }
 
     @Override

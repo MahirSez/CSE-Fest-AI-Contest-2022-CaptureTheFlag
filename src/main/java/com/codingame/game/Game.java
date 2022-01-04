@@ -52,7 +52,8 @@ public class Game {
                     }
                 }
                 if (!occupied) {
-                    int coinValue = Config.COIN_VALUES[RandomUtil.randomWeightedIndex(Config.COIN_WEIGHTS)];
+//                    int coinValue = Config.COIN_VALUES[RandomUtil.randomWeightedIndex(Config.COIN_WEIGHTS)];
+                    int coinValue = Config.COIN_VALUES[0];
                     availableCoins.add(new Coin(new Coord(i, j), coinValue));
                     if (j < col-1-j) {
                         availableCoins.add(new Coin(new Coord(i, col-1-j), coinValue));
@@ -172,35 +173,6 @@ public class Game {
         return ret;
     }
 
-    /**
-     * returns True if pos1 and pos2 resides in the same row/column and
-     * there exists no wall between them
-     *
-     * Todo: Optimize with cumulative sum
-     */
-    public boolean isVisible(Coord pos1, Coord pos2) {
-
-        if(pos1.getX() == pos2.getX()) {
-            int minY = Math.min(pos1.getY(), pos2.getY());
-            int maxY = Math.max(pos1.getY(), pos2.getY());
-            int i = pos1.getX();
-            for(int j = minY ; j <= maxY ; j++) {
-                if(maze.getGrid()[i][j] == 1) return false;
-            }
-            return true;
-        }
-
-        if(pos1.getY() == pos2.getY()) {
-            int minX = Math.min(pos1.getX(), pos2.getX());
-            int maxX = Math.max(pos1.getX(), pos2.getX());
-            int j = pos1.getY();
-            for(int i = minX ; i <= maxX ; i++) {
-                if(maze.getGrid()[i][j] == 1) return false;
-            }
-            return true;
-        }
-        return false;
-    }
 
     ArrayList<String>getGameState(Player player) {
         Player opponent = gameManager.getPlayers().get(player.getIndex() ^ 1);
@@ -222,7 +194,7 @@ public class Game {
         for(Minion opponentMinion: opponent.getMinions()) {
             boolean visible = false;
             for(Minion minion: player.getMinions()) {
-                if(!minion.isDead() && !opponentMinion.isDead() && this.isVisible(opponentMinion.getPos(), minion.getPos())) {
+                if(!minion.isDead() && !opponentMinion.isDead() && maze.isVisible(opponentMinion.getPos(), minion.getPos())) {
                     visible = true;
                     break;
                 }
@@ -373,7 +345,8 @@ public class Game {
                 }
                 else {
                     minion.addSummary(String.format("Minion %d is using power: %s", minion.getID(), power.getPowerType()));
-                    List<Minion>affectedMinions = power.damageMinions(this);
+                    minion.getOwner().decreaseCredit(power.getPrice());
+                    List<Minion>affectedMinions = power.damageMinions(this, maze);
                     view.addAffectedMinions(affectedMinions, power.getPowerType());
                     view.addPowerUpUser(minion, power.getPowerType());
                 }

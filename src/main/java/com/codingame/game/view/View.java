@@ -11,7 +11,6 @@ import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Singleton
 public class View {
@@ -20,7 +19,7 @@ public class View {
     @Inject GraphicEntityModule graphicEntityModule;
     @Inject private MultiplayerGameManager<Player> gameManager;
     @Inject TooltipModule tooltips;
-    HashMap<Minion, Sprite>minionToCircle;
+    HashMap<Minion, Sprite> minionToSprite;
     HashMap<Flag, Sprite>flagToSprite;
 
 
@@ -28,6 +27,9 @@ public class View {
     List<Minion> deadMinions, damagedMinions, frozenMinions;
     List<Minion> flamers, freezers, miners;
     List<Minion> movers;
+    List<Sprite> currentFrameSprites;
+
+
     HashMap<Coin, Sprite>coinToSprite;
 
     World world;
@@ -97,7 +99,7 @@ public class View {
                     minionSprite.setRotation(-Math.PI / 2);
                 }
 
-                this.minionToCircle.put(minion, minionSprite);
+                this.minionToSprite.put(minion, minionSprite);
              }
          }
     }
@@ -185,11 +187,10 @@ public class View {
 
         for (Coin coin : maze.getAvailableCoins()) {
             int x = this.toPixelCenterX(coin.getPosition().getY());
-            int y = this.toPixelCornerY(coin.getPosition().getX());
+            int y = this.toPixelCenterY(coin.getPosition().getX());
 
              Sprite sprite = graphicEntityModule.createSprite()
-                     .setScale(wallHeight/(double)COIN_DIMENSION * 0.9)
-                     .setAnchorX(0.5)
+                     .setScale(wallHeight/(double)COIN_DIMENSION * 0.3)
                      .setX(x)
                      .setY(y);
 
@@ -247,9 +248,10 @@ public class View {
         this.miners = new ArrayList<>();
         this.damagedMinions = new ArrayList<>();
         this.frozenMinions = new ArrayList<>();
+        this.currentFrameSprites = new ArrayList<>();
 
         this.walls = new ArrayList<>();
-        this.minionToCircle = new HashMap<>();
+        this.minionToSprite = new HashMap<>();
         this.flagToSprite = new HashMap<>();
         this.coinToSprite = new HashMap<>();
 
@@ -269,13 +271,87 @@ public class View {
         miners.clear();
         damagedMinions.clear();
         frozenMinions.clear();
+        for(Sprite sprite: currentFrameSprites) {
+            sprite.setVisible(false);
+        }
+        currentFrameSprites.clear();
+    }
+
+    private void showPowerUps() {
+        showFirePower();
+        showFreezePower();
+    }
+
+
+
+    private ArrayList<Coord>getAffectedCells(Coord origin) {
+
+        ArrayList<Coord>affectedCoords = new ArrayList<>();
+        affectedCoords.add(origin);
+
+        int x = origin.getX();
+        int y = origin.getY();
+
+        int[] dx = {1 ,-1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+
+        for(int k = 0 ; k < 4 ; k++) {
+            for(int scale = 1 ; ; scale++) {
+                int xx = x + dx[k] * scale;
+                int yy = y + dy[k] * scale;
+                if(xx < 0 || xx >= maze.getRow() || yy < 0 || yy >= maze.getCol() || maze.getGrid()[xx][yy] == 1) {
+                    break;
+                }
+                affectedCoords.add(new Coord(xx, yy));
+            }
+        }
+        return affectedCoords;
+    }
+
+    private void generatePowerUpSprites(List<Minion> minions, String imageFile) {
+
+        for(Minion minion: minions) {
+            Coord origin = minion.getPos();
+
+            for(Coord coord : this.getAffectedCells(origin)) {
+
+                int x = this.toPixelCornerX(coord.getY());
+                int y = this.toPixelCornerY(coord.getX());
+                Sprite sprite = graphicEntityModule.createSprite()
+                        .setBaseHeight((int) (this.wallHeight * 0.9))
+                        .setBaseWidth((int) (this.wallHeight * 0.9))
+                        .setX(x)
+                        .setY(y)
+                        .setAnchorX(-0.2)
+                        .setImage(imageFile);
+                currentFrameSprites.add(sprite);
+            }
+        }
+    }
+
+    private void showFirePower() {
+        generatePowerUpSprites(flamers, "powerups/flame.png");
+    }
+
+    private void showFreezePower() {
+        generatePowerUpSprites(freezers, "powerups/freeze.png");
+    }
+
+    private void removeDeadMinions() {
+        for(Minion minion: this.deadMinions) {
+            minionToSprite.get(minion).setVisible(false);
+        }
     }
 
     public void updateFrame() {
+        removeDeadMinions();
         performMoves();
+        showPowerUps();
         updateFlag();
         updateScore();
     }
+
+
 
     private void updateScore() {
         for (Player player : gameManager.getPlayers()) {
@@ -304,7 +380,7 @@ public class View {
 
     private void performMoves() {
         movers.forEach(minion -> {
-            Sprite circle = this.minionToCircle.get(minion);
+            Sprite circle = this.minionToSprite.get(minion);
             int targetX = this.toPixelCenterX(minion.getPos().getY());
             int targetY = this.toPixelCenterY(minion.getPos().getX());
             int currentX = circle.getX();
