@@ -14,7 +14,7 @@ import java.util.List;
 
 @Singleton
 public class View {
-
+    @Inject Game game;
     @Inject Maze maze;
     @Inject GraphicEntityModule graphicEntityModule;
     @Inject private MultiplayerGameManager<Player> gameManager;
@@ -185,7 +185,7 @@ public class View {
     private void drawCoins() {
         final int COIN_DIMENSION = 564;
 
-        for (Coin coin : maze.getAvailableCoins()) {
+        for (Coin coin : game.getAvailableCoins()) {
             int x = this.toPixelCenterX(coin.getPosition().getY());
             int y = this.toPixelCenterY(coin.getPosition().getX());
 

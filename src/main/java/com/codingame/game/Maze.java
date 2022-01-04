@@ -13,7 +13,6 @@ public class Maze {
     private int[][] grid;
     private int row, col;
 
-    private ArrayList<Coin> availableCoins;
 
     private boolean[][][] rowVisibility, colVisibility;
 
@@ -86,14 +85,9 @@ public class Maze {
         }
 
 
-        availableCoins = new ArrayList<>();
       
         setRowVisibility();
         setColVisibility();
-    }
-
-    public ArrayList<Coin> getAvailableCoins() {
-        return availableCoins;  
     }
 
     public boolean isVisible(Coord pos1, Coord pos2) {
