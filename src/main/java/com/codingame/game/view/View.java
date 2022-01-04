@@ -39,6 +39,7 @@ public class View {
 
     List<Sprite> walls;
     int wallWidth, wallHeight;
+    int emptyPixelX, emptyPixelY;
 
     final String theme = "tank";
 
@@ -56,10 +57,10 @@ public class View {
         return this.toPixelCornerY(y) + this.wallHeight / 2;
     }
     int toPixelCornerX(int x) {
-        return x * wallWidth;
+        return x * wallWidth + this.emptyPixelX / 2;
     }
     int toPixelCornerY(int y) {
-        return Config.MAZE_UPPER_OFFSET + wallHeight * y;
+        return Config.MAZE_UPPER_OFFSET + wallHeight * y + this.emptyPixelY;
     }
 
     public void drawMinions() {
@@ -107,7 +108,8 @@ public class View {
 
     public void drawBackground() {
         // add background image / texture
-        background = graphicEntityModule.createSprite().setImage(theme + "/back.png")
+        // TODO: change background image
+        background = graphicEntityModule.createSprite().setImage(theme + "/back2.png")
             .setBaseHeight(world.getHeight())
             .setBaseWidth(world.getWidth());
     }
@@ -138,11 +140,11 @@ public class View {
                     // graphicEntityModule.commitWorldState(0.5);
                     // cellBlock.setRotation(Math.PI);
                     // graphicEntityModule.commitWorldState(1);
+                } else {
+                    cellBlock.setImage(theme + "/back.png");
                 }
 
-            
                 tooltips.setTooltipText(cellBlock, i + " , " + j);
-
                 walls.add(cellBlock);
             }
         }
@@ -208,7 +210,7 @@ public class View {
     }
 
     private void drawHud() {
-
+        // TODO: change HUD design
         int hudWidth = 530;
         Group hudGroup = graphicEntityModule.createGroup()
                 .setZIndex(10);
@@ -281,6 +283,10 @@ public class View {
 
         this.wallWidth = world.getWidth() / col;
         this.wallHeight = (world.getHeight() - Config.MAZE_UPPER_OFFSET) / row;
+
+        // because of integer division there will remain empty pixels
+        this.emptyPixelX = world.getWidth() - col * this.wallWidth;
+        this.emptyPixelY = (world.getHeight() - Config.MAZE_UPPER_OFFSET) - row * this.wallHeight;
 
         this.movers = new ArrayList<>();
         this.deadMinions = new ArrayList<>();
