@@ -1,9 +1,6 @@
 package com.codingame.game;
 
-import com.codingame.game.action.ActionType;
-import com.codingame.game.action.MoveAction;
-import com.codingame.game.action.PowerUp;
-import com.codingame.game.action.PowerUpType;
+import com.codingame.game.action.*;
 import com.codingame.game.view.View;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.google.inject.Inject;
@@ -21,6 +18,7 @@ public class Game {
     @Inject private View view;
     ArrayList<Minion> aliveMinions;
     private ArrayList<Coin> availableCoins;
+    private ArrayList<MinePower>activeMines;
 
     void init() {
 
@@ -34,6 +32,8 @@ public class Game {
         setFlagPosition();
         setMinionsPositionsRandom();
         generateCoins();
+
+        activeMines = new ArrayList<>();
     }
 
 
@@ -253,11 +253,11 @@ public class Game {
         for(Coin coin: visibleCoins) {
             ret.add(coin.getPosition().getX() + " " + coin.getPosition().getY());
         }
-
+//        System.out.println("Sening to player");
 //        for(String str: ret) {
-//            System.err.println(str);
+//            System.out.println(str);
 //        }
-//        System.err.println();
+//        System.out.println();
         return ret;
     }
 
@@ -356,6 +356,7 @@ public class Game {
         updateMinionMovement(); // resolve movement
         updateCoins();          // update coin position
         updateDamage();         // use power ups
+        detonateMine();         // check and activate mines
         removeDeadMinions();    // remove damaged minions from global list
         updateFlagPosition();   // update flag position again for moving minions
         updateMinionTimeOut();  // decrease freeze time out
@@ -367,6 +368,33 @@ public class Game {
                 System.out.println(minion.getID() + " -> "  + minion.getPos() +  " = " + minion.getHealth());
             }
         }
+    }
+
+    private void detonateMine() {
+
+        List<MinePower>detonatedMines = new ArrayList<>();
+
+        for(MinePower mine: activeMines) {
+            boolean isDetonated = false;
+            for(Minion minion: aliveMinions) {
+                if(mine.getOrigin().equals(minion.getPos())) {
+                    isDetonated = true;
+                    break;
+                }
+            }
+            if(isDetonated) {
+                gameManager.addToGameSummary( String.format("Mine detonated at (%d, %d)", mine.getOrigin().getX(), mine.getOrigin().getY()));
+
+                detonatedMines.add(mine);
+
+                List<Minion> damagedMinions = mine.damageMinions(this, maze);
+                List<Coord> affectedCells = mine.getAffectedCells(maze);
+                view.addDetonatedMine(mine);
+                view.addAffectedCells(affectedCells, PowerUpType.MINE);
+                view.addAffectedMinions(damagedMinions, PowerUpType.MINE);
+            }
+        }
+        this.activeMines.removeAll(detonatedMines);
     }
 
     private void updateMinionTimeOut() {
@@ -394,11 +422,24 @@ public class Game {
                 if(!power.canBuy(minion.getOwner())) {
                     minion.addSummary(String.format("Cannot buy power %s, not enough credit available", power.getPowerType()));
                 }
+                else if(power.getPowerType() == PowerUpType.MINE) {
+                    MinePower mine = (MinePower) power;
+                    if(!mine.placeable(maze)) {
+                        minion.addSummary(String.format("Minion %d cannot place mine at (%d, %d)", minion.getID(), mine.getOrigin().getX(), mine.getOrigin().getY()));
+                        continue;
+                    }
+                    minion.addSummary(String.format("Minion %d is placing mine at (%d, %d)", minion.getID(), mine.getOrigin().getX(), mine.getOrigin().getY()));
+                    minion.getOwner().decreaseCredit(mine.getPrice());
+                    activeMines.add(mine);
+                    view.addMine(mine);
+                }
                 else {
                     minion.addSummary(String.format("Minion %d is using power: %s", minion.getID(), power.getPowerType()));
                     minion.getOwner().decreaseCredit(power.getPrice());
                     List<Minion>affectedMinions = power.damageMinions(this, maze);
+                    List<Coord>affectedCells = power.getAffectedCells(maze);
                     view.addAffectedMinions(affectedMinions, power.getPowerType());
+                    view.addAffectedCells(affectedCells, power.getPowerType());
                     view.addPowerUpUser(minion, power.getPowerType());
                 }
             }

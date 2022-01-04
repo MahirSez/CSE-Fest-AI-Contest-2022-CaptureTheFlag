@@ -28,9 +28,9 @@ public class Config {
     public static final int FIRE_DAMAGE = 20;
     public static final int FIRE_PRICE = 2;
 
-    public static final int MINE_DAMAGE = 20;
-    public static final int MINE_PRICE = 5;
-    public static final int MINE_RANGE = 5;
+    public static final int MINE_DAMAGE = 30;
+    public static final int MINE_PRICE = 1;
+    public static final int MINE_RANGE = 2;
 
 
     public static final int FREEZE_TIMEOUT = 10;

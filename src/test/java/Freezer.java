@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Agent3 {
+public class Freezer {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -24,19 +24,30 @@ public class Agent3 {
         opp_base_x = scanner.nextInt();
         opp_base_y = scanner.nextInt();
 
-        for(int i = 0 ; i < 3 ; i++) {
-            String powerName;
-            int price, damage;
-            powerName = scanner.next();
-            price = scanner.nextInt();
-            damage = scanner.nextInt();
-        }
+        String fireName;
+        int firePrice, fireDamage;
+        fireName = scanner.next();
+        firePrice = scanner.nextInt();
+        fireDamage = scanner.nextInt();
+
+        String freezeName;
+        int freezePrice, freezeDamage;
+        freezeName = scanner.next();
+        freezePrice = scanner.nextInt();
+        freezeDamage = scanner.nextInt();
+
+        String mineName;
+        int minePrice, mineDamage;
+        mineName = scanner.next();
+        minePrice = scanner.nextInt();
+        mineDamage = scanner.nextInt();
+
 
         System.err.print("Entering game loop\n");
         while (true) {
             int my_score, opp_score;
-            int my_flag_x, my_flag_y, my_carrier;
-            int opp_flag_x, opp_flag_y, opp_carrier;
+            int my_flag_x, my_flag_y, my_flag_carrier;
+            int opp_flag_x, opp_flag_y, opp_flag_carrier;
             int alive_cnt, opp_seen_cnt;
             int visible_coin_cnt;
 
@@ -46,11 +57,11 @@ public class Agent3 {
 
             my_flag_x = scanner.nextInt();
             my_flag_y= scanner.nextInt();
-            my_carrier = scanner.nextInt();
+            my_flag_carrier = scanner.nextInt();
 
             opp_flag_x = scanner.nextInt();
             opp_flag_y= scanner.nextInt();
-            opp_carrier = scanner.nextInt();
+            opp_flag_carrier = scanner.nextInt();
 
             alive_cnt = scanner.nextInt();
             ArrayList<Integer>ids = new ArrayList<>(alive_cnt);
@@ -86,7 +97,9 @@ public class Agent3 {
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-                if(opp_carrier != -1) str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
+
+                if(opp_seen_cnt > 0 && my_score >= freezePrice && my_flag_carrier != -1) str.append(String.format("FREEZE %d", ids.get(i)));
+                else if(opp_flag_carrier != -1) str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
                 else str.append(String.format("MOVE %d %d %d", ids.get(i), opp_base_x, opp_flag_y) );
             }
             System.out.println(str);

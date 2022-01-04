@@ -11,6 +11,7 @@ public class FirePower extends PowerUp {
         super(origin, minion);
         this.damage = Config.FIRE_DAMAGE;
         this.price = Config.FIRE_PRICE;
+        this.damageDistLimit = Config.INF;
     }
 
 

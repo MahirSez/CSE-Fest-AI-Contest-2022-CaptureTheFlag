@@ -59,6 +59,8 @@ public class Referee extends AbstractReferee {
         for (Player player : gameManager.getPlayers()) {
             try {
                 List<String> outputs = player.getOutputs();
+//                System.out.println("???????????????");
+//                System.out.println(outputs);
                 commandParser.parseCommands(player, outputs);
             } catch (TimeoutException e) {
                 player.deactivate(String.format("$%d timeout!", player.getIndex()));
