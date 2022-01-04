@@ -34,7 +34,8 @@ public class View {
 
     World world;
     Sprite background;
-    Text leftScore, rightScore;
+    BitmapText leftScore, rightScore;
+    List<BitmapText> scoreLabels;
 
     List<Sprite> walls;
     int wallWidth, wallHeight;
@@ -206,27 +207,134 @@ public class View {
         }
     }
 
-    private void drawScore() {
-        for (Player player : gameManager.getPlayers()) {
-            if (player.isLeftPlayer()) {
-                leftScore = graphicEntityModule.createText("Left: " + player.getCurrentCredit())
-                        .setFontFamily("Lato")
-                        .setStrokeThickness(5) // Adding an outline
-                        .setStrokeColor(0xffffff) // a white outline
-                        .setFontSize(50)
-                        .setX(10)
-                        .setY(10)
-                        .setFillColor(0x000000); // Setting the text color to black
-            } else {
-                rightScore = graphicEntityModule.createText("Right: " + player.getCurrentCredit())
-                        .setFontFamily("Lato")
-                        .setStrokeThickness(5) // Adding an outline
-                        .setStrokeColor(0xffffff) // a white outline
-                        .setFontSize(50)
-                        .setX(world.getWidth()-250)
-                        .setY(10)
-                        .setFillColor(0x000000); // Setting the text color to black
-            }
+//    private void drawHud() {
+//        Group hudGroup = graphicEntityModule.createGroup();
+//
+//        // TODO: change width later
+//        int hudWidth = 530;
+//
+//        Sprite hudLeft = graphicEntityModule.createSprite()
+//                .setImage("HUD_Masque_RED")
+//                .setZIndex(1);
+//
+//        Sprite hudRight = graphicEntityModule.createSprite()
+//                .setImage("HUD_Masque_BLUE")
+//                .setX(world.getWidth() - hudWidth)
+//                .setZIndex(1);
+//
+////        hudGroup.add(hudLeft, hudRight);
+//
+//        int playerHudZoneWidth = world.getWidth() / (gameManager.getPlayerCount());
+//        int playerHudScoreOffset = 320;
+//
+//        for (Player player : gameManager.getPlayers()) {
+//            int x = world.getWidth() / 2;
+//            int color;
+//            if (player.isLeftPlayer()) {
+//                x -= 180;
+//                color = 0xb61e23;
+//
+//                leftScore = graphicEntityModule.createBitmapText()
+//                        .setFont("BRLNS_66")
+//                        .setFontSize(72)
+//                        .setText("0")
+//                        .setAnchorX(0.5)
+//                        .setX(playerHudZoneWidth - playerHudScoreOffset)
+//                        .setY(10)
+//                        .setZIndex(2);
+//                /*leftScore = graphicEntityModule.createText("Left: " + player.getCurrentCredit())
+//                        .setFontFamily("Lato")
+//                        .setStrokeThickness(5) // Adding an outline
+//                        .setStrokeColor(0xffffff) // a white outline
+//                        .setFontSize(50)
+//                        .setX(10)
+//                        .setY(10)
+//                        .setFillColor(0x000000); // Setting the text color to black*/
+//            } else {
+//                x += 180;
+//                color = player.getColorToken();
+//                /*rightScore = graphicEntityModule.createText("Right: " + player.getCurrentCredit())
+//                        .setFontFamily("Lato")
+//                        .setStrokeThickness(5) // Adding an outline
+//                        .setStrokeColor(0xffffff) // a white outline
+//                        .setFontSize(50)
+//                        .setX(world.getWidth()-250)
+//                        .setY(10)
+//                        .setFillColor(0x000000); // Setting the text color to black*/
+//                rightScore = graphicEntityModule.createBitmapText()
+//                        .setFont("BRLNS_66")
+//                        .setFontSize(72)
+//                        .setText("0")
+//                        .setAnchorX(0.5)
+//                        .setX(playerHudZoneWidth + playerHudScoreOffset)
+//                        .setY(10)
+//                        .setZIndex(2);
+//            }
+//
+//        }
+//    }
+
+    private void drawHud() {
+
+        int hudWidth = 530;
+        Group hudGroup = graphicEntityModule.createGroup()
+                .setZIndex(10);
+
+        Sprite hudRed = graphicEntityModule.createSprite()
+                .setImage("HUD_Masque_RED")
+                .setZIndex(1);
+
+        Sprite hudBlue = graphicEntityModule.createSprite()
+                .setImage("HUD_Masque_BLUE")
+                .setX(world.getWidth() - hudWidth)
+                .setZIndex(1);
+
+        hudGroup.add(hudRed, hudBlue);
+
+        scoreLabels = new ArrayList<BitmapText>(gameManager.getPlayerCount());
+
+        int playerHudZoneWidth = world.getWidth() / (gameManager.getPlayerCount());
+        double avatarRotation = 0.08;
+        int avatarSize = 130;
+        int playerHudNameOffset = 630;
+        int playerHudScoreOffset = 320;
+        int playerHudAvatarOffset = 882;
+
+        for (Player p : gameManager.getPlayers()) {
+
+            int coefMirror = p.getIndex() == 0 ? -1 : 1;
+
+            BitmapText nameLabel = graphicEntityModule.createBitmapText()
+                    .setFont("BRLNS_66")
+                    .setFontSize(36)
+                    .setText(p.getNicknameToken())
+                    .setMaxWidth(300)
+                    .setAnchorX(0.5)
+                    .setX(playerHudZoneWidth + coefMirror * playerHudNameOffset)
+                    .setY(7)
+                    .setZIndex(2);
+
+            BitmapText scoreLabel = graphicEntityModule.createBitmapText()
+                    .setFont("BRLNS_66")
+                    .setFontSize(72)
+                    .setText("0")
+                    .setAnchorX(0.5)
+                    .setX(playerHudZoneWidth + coefMirror * playerHudScoreOffset)
+                    .setY(10)
+                    .setZIndex(2);
+
+            Sprite avatar = graphicEntityModule.createSprite()
+                    .setImage(p.getAvatarToken())
+                    .setAnchor(0.5)
+                    .setX(playerHudZoneWidth + coefMirror * playerHudAvatarOffset)
+                    .setY(70)
+                    .setRotation(coefMirror * avatarRotation)
+                    .setBaseHeight(avatarSize)
+                    .setBaseWidth(avatarSize)
+                    .setZIndex(0);
+
+            hudGroup.add(nameLabel, scoreLabel, avatar);
+            scoreLabels.add(scoreLabel);
         }
     }
 
@@ -261,7 +369,7 @@ public class View {
         drawMinions();
         drawFlags();
         drawCoins();
-        drawScore();
+        drawHud();
     }
     public void resetData() {
         movers.clear();
@@ -348,18 +456,14 @@ public class View {
         performMoves();
         showPowerUps();
         updateFlag();
-        updateScore();
+        updateScores();
     }
 
 
-
-    private void updateScore() {
-        for (Player player : gameManager.getPlayers()) {
-            if (player.isLeftPlayer()) {
-                leftScore.setText("Left: " + player.getCurrentCredit());
-            } else {
-                rightScore.setText("Right: " + player.getCurrentCredit());
-            }
+    public void updateScores() {
+        for (Player p : gameManager.getPlayers()) {
+            BitmapText scoreLabel = scoreLabels.get(p.getIndex());
+            scoreLabel.setText(String.valueOf(p.getCurrentCredit()));
         }
     }
 
