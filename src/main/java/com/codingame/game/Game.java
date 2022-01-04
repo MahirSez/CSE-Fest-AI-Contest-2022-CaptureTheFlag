@@ -20,6 +20,7 @@ public class Game {
     @Inject private Maze maze;
     @Inject private View view;
     ArrayList<Minion> aliveMinions;
+    private ArrayList<Coin> availableCoins;
 
     void init() {
 
@@ -35,10 +36,11 @@ public class Game {
         generateCoins();
     }
 
+
     private void generateCoins() {
         int row = maze.getRow();
         int col = maze.getCol();
-        ArrayList<Coin> availableCoins = maze.getAvailableCoins();
+        availableCoins = new ArrayList<>();
         for (int i = 0; i < row; i++) {
             for (int j = 0; j <= col/2; j++) {
                 if (maze.getGrid()[i][j] == 1) continue;
@@ -65,6 +67,10 @@ public class Game {
         }
     }
 
+    public ArrayList<Coin> getAvailableCoins() {
+        return availableCoins;
+    }
+
     /**
      *
      *
@@ -75,7 +81,7 @@ public class Game {
         ArrayList<Coin>visibleCoins = new ArrayList<>();
         for(Minion minion: player.getMinions()) {
             if(minion.isDead()) continue;
-            for(Coin coin: maze.getAvailableCoins()) {
+            for(Coin coin: availableCoins) {
                 cnt++;
                 if(maze.isVisible(coin.getPosition(), minion.getPos())) {
                     visibleCoins.add(coin);
@@ -324,7 +330,7 @@ public class Game {
 
     private void updateCoins() {
         ArrayList<Coin> acquiredCoins = new ArrayList<>();
-        for (Coin coin : maze.getAvailableCoins()) {
+        for (Coin coin : availableCoins) {
             boolean acquired = false;
             for (Player player : gameManager.getPlayers()) {
                 for (Minion minion : player.getMinions()) {
@@ -341,7 +347,7 @@ public class Game {
             }
         }
         view.removeCoins(acquiredCoins);
-        maze.getAvailableCoins().removeAll(acquiredCoins);
+        availableCoins.removeAll(acquiredCoins);
     }
 
     public void updateGameState() {
