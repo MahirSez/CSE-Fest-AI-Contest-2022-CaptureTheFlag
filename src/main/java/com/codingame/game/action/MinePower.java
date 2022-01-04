@@ -5,21 +5,23 @@ import com.codingame.game.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirePower extends PowerUp {
+public class MinePower extends PowerUp{
 
-    public FirePower(Coord origin, Minion minion) {
-        super(origin, minion);
-        this.damage = Config.FIRE_DAMAGE;
-        this.price = Config.FIRE_PRICE;
+    private final int damageDistance;
+
+    public MinePower(Coord origin, Minion powerUpUser) {
+        super(origin, powerUpUser);
+        this.damage = Config.MINE_DAMAGE;
+        this.price = Config.MINE_PRICE;
+        this.damageDistance = Config.MINE_RANGE;
     }
-
 
     @Override
     public List<Minion> damageMinions(Game game, Maze maze) {
         List<Minion>damagedMinions = new ArrayList<>();
-        System.out.println("Shooting " + this.powerUpUser.getOwner().getColor() + " " + this.powerUpUser.getID());
+        System.out.println("Mine Detonated");
         for(Minion minion: game.getAliveMinions()) {
-            if(minion != this.powerUpUser && maze.isVisible(minion.getPos(), this.origin) ) {
+            if(maze.isVisible(minion.getPos(), this.origin, damageDistance)) {
                 System.out.println("\tDealing Damage " + minion.getOwner().getColor() + " " + minion.getID());
                 minion.dealDamage(this.damage);
                 damagedMinions.add(minion);
@@ -30,6 +32,6 @@ public class FirePower extends PowerUp {
 
     @Override
     public PowerUpType getPowerType() {
-        return PowerUpType.FIRE ;
+        return PowerUpType.MINE;
     }
 }

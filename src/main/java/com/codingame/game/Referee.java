@@ -99,6 +99,8 @@ public class Referee extends AbstractReferee {
         else {
             gameManager.getPlayers().forEach(player -> player.setScore(player.isWinner()? 1: 0));
         }
+//        endScreenModule.setTitleRankingsSprite("tank1/player1.png");
+
 
         endScreenModule.setScores(
                 gameManager.getPlayers()

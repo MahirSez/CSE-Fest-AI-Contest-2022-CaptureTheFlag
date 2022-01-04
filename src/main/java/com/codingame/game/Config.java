@@ -30,6 +30,8 @@ public class Config {
 
     public static final int MINE_DAMAGE = 20;
     public static final int MINE_PRICE = 5;
+    public static final int MINE_RANGE = 5;
+
 
     public static final int FREEZE_TIMEOUT = 10;
     public static final int FREEZE_PRICE = 5;

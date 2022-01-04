@@ -40,20 +40,40 @@ public class CommandParser {
                     + "$",
             Pattern.CASE_INSENSITIVE
     );
-
+    static final Pattern PLAYER_MINE_PATTERN = Pattern.compile(
+            "^MINE\\s+(?<id>\\d+)"
+                    + "(?:\\s+(?<message>.+))?"
+                    + "$",
+            Pattern.CASE_INSENSITIVE
+    );
     static final Pattern PLAYER_FREEZE_PATTERN = Pattern.compile(
             "^FREEZE\\s+(?<id>\\d+)"
                     + "(?:\\s+(?<message>.+))?"
                     + "$",
             Pattern.CASE_INSENSITIVE
     );
-
-
     static final Pattern PLAYER_ACTION_PATTERN = Pattern.compile(
             "^(WAIT|MOVE|FIRE|FREEZE|MINE)\\s+(?<id>\\d+).*",
             Pattern.CASE_INSENSITIVE
     );
 
+    private void handleMineCommand(Matcher match, Minion minion) throws GameException, InvalidInputException{
+        if(!match.matches()) throw new InvalidInputException(EXPECTED, "");
+        int x = Integer.parseInt(match.group("x"));
+        int y = Integer.parseInt(match.group("y"));
+        if ( x < 0 || x >= maze.getRow() || y < 0 || y >= maze.getCol() && new Coord(x, y).manhattanTo(minion.getPos()) != 1) {
+            throw new GameException(
+                    String.format(
+                            "Minion %d (%s) cannot place Mine at (%d, %d). Target cell has to be adjacent to minion",
+                            minion.getID(),
+                            minion.getOwner().getColor(),
+                            x,
+                            y
+                    )
+            );
+        }
+        minion.setIntendedAction(new MinePower(new Coord(x, y), minion));
+    }
 
     private void handleMoveCommand(Matcher match, Minion minion) throws GameException, InvalidInputException {
         if(!match.matches()) throw new InvalidInputException(EXPECTED, "");
@@ -62,7 +82,7 @@ public class CommandParser {
         if ( x < 0 || x >= maze.getRow() || y < 0 || y >= maze.getCol()) {
             throw new GameException(
                     String.format(
-                            "Pac %d (%s) cannot reach its target (%d, %d) because it is out of grid!",
+                            "Minion %d (%s) cannot reach its target (%d, %d) because it is out of grid!",
                             minion.getID(),
                             minion.getOwner().getColor(),
                             x,
@@ -140,6 +160,9 @@ public class CommandParser {
                 else if(PLAYER_FREEZE_PATTERN.matcher(str).matches()) {
                     handleFreezeCommand(minion);
                 }
+                else if(PLAYER_FIRE_PATTERN.matcher(str).matches()) {
+                    handleMineCommand(PLAYER_MOVE_PATTERN.matcher(str), minion);
+                }
                 else {
                     throw new InvalidInputException(EXPECTED, str);
                 }
@@ -162,6 +185,8 @@ public class CommandParser {
                 ))
             );
     }
+
+
 
 
     private void deactivatePlayer(Player player, String message) {

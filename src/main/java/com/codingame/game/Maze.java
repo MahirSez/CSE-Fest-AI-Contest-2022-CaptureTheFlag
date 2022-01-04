@@ -102,7 +102,7 @@ public class Maze {
         return false;
     }
 
-    boolean isVisible(Coord pos1, Coord pos2, int limit) {
+    public boolean isVisible(Coord pos1, Coord pos2, int limit) {
         int x1 = pos1.getX(), y1 = pos1.getY();
         int x2 = pos2.getX(), y2 = pos2.getY();
         if (x1 == x2) {
