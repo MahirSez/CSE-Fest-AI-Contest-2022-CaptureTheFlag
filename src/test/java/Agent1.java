@@ -88,7 +88,6 @@ public class Agent1 {
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-                System.err.println("captured = " + captured);
                 if(captured == 1) {
                     str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
                 }

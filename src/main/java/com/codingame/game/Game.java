@@ -207,7 +207,7 @@ public class Game {
         ret.add(opponent.getFlagBase().getPos().getX() + " " + opponent.getFlagBase().getPos().getY());
         ret.add(PowerUpType.FIRE + " "+ Config.FIRE_PRICE + " " + Config.FIRE_DAMAGE);
         ret.add(PowerUpType.FREEZE + " "+ Config.FREEZE_PRICE + " " + Config.FREEZE_TIMEOUT);
-        ret.add(PowerUpType.FREEZE + " "+ Config.MINE_PRICE + " " + Config.MINE_DAMAGE);
+        ret.add(PowerUpType.MINE + " "+ Config.MINE_PRICE + " " + Config.MINE_DAMAGE);
 
         return ret;
     }
@@ -216,7 +216,7 @@ public class Game {
     ArrayList<String>getGameState(Player player) {
         Player opponent = gameManager.getPlayers().get(player.getIndex() ^ 1);
         ArrayList<String>ret = new ArrayList<>();
-        ret.add(player.getScore() + " " + opponent.getScore());
+        ret.add(player.getCurrentCredit() + " " + opponent.getCurrentCredit());
         ret.add(player.getFlag().getPos().getX() + " " + player.getFlag().getPos().getY() + " " + (player.getFlag().isCaptured() ? player.getFlag().getCarrier().getID() : -1) );
         ret.add(opponent.getFlag().getPos().getX() + " " + opponent.getFlag().getPos().getY() + " " + (opponent.getFlag().isCaptured() ? opponent.getFlag().getCarrier().getID() : -1));
 

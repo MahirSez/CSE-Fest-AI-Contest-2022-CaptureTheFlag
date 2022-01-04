@@ -28,6 +28,7 @@ public class View {
     List<Minion> flamers, freezers, miners;
     List<Minion> movers;
     List<Sprite> currentFrameSprites;
+    List<Coin> removedCoins;
 
 
     HashMap<Coin, Sprite>coinToSprite;
@@ -79,17 +80,9 @@ public class View {
                     .setBaseWidth((int) (this.wallHeight))
                     .setAnchor(0.5)
                     .setX(this.toPixelCenterX(coord.getY()))
-                    .setY(this.toPixelCenterY(coord.getX()));
-                // Circle circle = graphicEntityModule.createCircle()
-                //         .setRadius( (int) (this.wallHeight*0.8 /2))
-                //         .setLineWidth(0)
-                //         .setX(this.toPixelCenterX(coord.getY()))
-                //         .setY(this.toPixelCenterY(coord.getX()))
-                //         .setLineColor(0)
-                //         .setLineWidth(2);
+                    .setY(this.toPixelCenterY(coord.getX()))
+                    .setZIndex(3);
 
-                // if(player.isLeftPlayer()) circle.setFillColor(Config.LEFT_PLAYER_COLOR);
-                // else circle.setFillColor(Config.RIGHT_PLAYER_COLOR);
                 if(player.isLeftPlayer()) {
                     minionSprite.setImage(theme + "/player1.png");
                     minionSprite.setRotation(Math.PI / 2);
@@ -165,7 +158,7 @@ public class View {
                     .setBaseHeight(this.wallHeight)
                     .setX(x)
                     .setY(y)
-                    .setZIndex(2);
+                    .setZIndex(5);
 
 
             if(player.isLeftPlayer()) {
@@ -249,6 +242,7 @@ public class View {
         this.damagedMinions = new ArrayList<>();
         this.frozenMinions = new ArrayList<>();
         this.currentFrameSprites = new ArrayList<>();
+        this.removedCoins = new ArrayList<>();
 
         this.walls = new ArrayList<>();
         this.minionToSprite = new HashMap<>();
@@ -271,10 +265,13 @@ public class View {
         miners.clear();
         damagedMinions.clear();
         frozenMinions.clear();
+        removedCoins.clear();
+
         for(Sprite sprite: currentFrameSprites) {
             sprite.setVisible(false);
         }
         currentFrameSprites.clear();
+
     }
 
     private void showPowerUps() {
@@ -345,12 +342,19 @@ public class View {
 
     public void updateFrame() {
         removeDeadMinions();
+        removeCoins();
         performMoves();
         showPowerUps();
         updateFlag();
         updateScore();
     }
 
+    private void removeCoins() {
+        for (Coin coin : this.removedCoins) {
+            coinToSprite.get(coin).setVisible(false);
+            coinToSprite.remove(coin);
+        }
+    }
 
 
     private void updateScore() {
@@ -372,10 +376,7 @@ public class View {
     }
 
     public void removeCoins(ArrayList<Coin> acquiredCoins) {
-        for (Coin coin : acquiredCoins) {
-            coinToSprite.get(coin).setVisible(false);
-            coinToSprite.remove(coin);
-        }
+        this.removedCoins.addAll(acquiredCoins);
     }
 
     private void performMoves() {
