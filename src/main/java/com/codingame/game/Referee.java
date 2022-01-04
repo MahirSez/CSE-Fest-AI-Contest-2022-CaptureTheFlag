@@ -59,8 +59,6 @@ public class Referee extends AbstractReferee {
         for (Player player : gameManager.getPlayers()) {
             try {
                 List<String> outputs = player.getOutputs();
-//                System.out.println("???????????????");
-//                System.out.println(outputs);
                 commandParser.parseCommands(player, outputs);
             } catch (TimeoutException e) {
                 player.deactivate(String.format("$%d timeout!", player.getIndex()));
@@ -103,12 +101,31 @@ public class Referee extends AbstractReferee {
         }
 //        endScreenModule.setTitleRankingsSprite("tank1/player1.png");
 
-
         endScreenModule.setScores(
                 gameManager.getPlayers()
                         .stream()
                         .mapToInt(AbstractMultiplayerPlayer::getScore)
-                        .toArray()
+                        .toArray(),
+
+                gameManager.getPlayers()
+                        .stream()
+                        .map(player -> {
+                            if( game.getOpponentOf(player).getFlag().getPos().equals(player.getFlagBase().getPos()) ) {
+                                return "Captured Flag!";
+                            }
+                            if( (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count() == 0) {
+                                return "All Minions Dead!";
+                            }
+                            if(player.isTimedOut()) {
+                                return "Timed Out!";
+                            }
+                            if(!player.isWinner() && !game.getOpponentOf(player).isWinner()) {
+                                return player.getCurrentCredit() + " credit";
+                            }
+                            return "-";
+                        })
+                        .collect(Collectors.toList())
+                        .toArray(new String[2])
         );
     }
 }

@@ -27,7 +27,6 @@ public class Game {
 
         setPlayerSide();
         generateMinions();
-//        setMinionsPositions();
         setFlagBasePosition();
         setFlagPosition();
         setMinionsPositionsRandom();
@@ -253,7 +252,7 @@ public class Game {
         for(Coin coin: visibleCoins) {
             ret.add(coin.getPosition().getX() + " " + coin.getPosition().getY());
         }
-//        System.out.println("Sening to player");
+//        System.out.println("Sending to player");
 //        for(String str: ret) {
 //            System.out.println(str);
 //        }
@@ -503,9 +502,11 @@ public class Game {
                 getOpponentOf(player).setWinner(true);
                 gameOver = true;
             }
-        }
-        for(Player player: gameManager.getPlayers()) {
             if( (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count() == 0) {
+                getOpponentOf(player).setWinner(true);
+                gameOver = true;
+            }
+            if( player.isTimedOut() ) {
                 getOpponentOf(player).setWinner(true);
                 gameOver = true;
             }

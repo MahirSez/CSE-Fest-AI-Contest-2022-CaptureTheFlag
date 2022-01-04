@@ -23,6 +23,7 @@ public class View {
     HashMap<Minion, Sprite> minionToSprite;
     HashMap<Flag, Sprite>flagToSprite;
     HashMap<MinePower, Sprite>mineToSprite;
+    HashMap<Coord, Sprite>cellToSprite;
 
 
     // Note: Damaged minions also contain dead minions
@@ -49,13 +50,6 @@ public class View {
 
     final String theme = "tank";
 
-    public void drawOuterRectangle() {
-        graphicEntityModule.createRectangle()
-                .setHeight(world.getHeight() - Config.MAZE_UPPER_OFFSET)
-                .setWidth(world.getWidth())
-                .setX(0)
-                .setY(Config.MAZE_UPPER_OFFSET);
-    }
     int toPixelCenterX(int x) {
         return this.toPixelCornerX(x) + this.wallWidth / 2;
     }
@@ -116,8 +110,7 @@ public class View {
 
         for(int i = 0 ; i < row ; i++) {
             for(int j = 0 ; j < col ; j++) {
-                // int x = this.toPixelCornerX(j);
-                // int y = this.toPixelCornerY(i);
+
                 int x = this.toPixelCenterX(j);
                 int y = this.toPixelCenterY(i);
                 Sprite cellBlock = graphicEntityModule.createSprite()
@@ -126,22 +119,14 @@ public class View {
                         .setAnchor(0.5)
                         .setX(x)
                         .setY(y);
-                        // .setLineColor(0)
-                        // .setLineWidth(2);
                 if(grid[i][j] == 1) {
-                    // cellBlock.setFillColor(Config.WALL_COLOR);
+
                     cellBlock.setImage(theme + "/wall" + (int) (1 + Math.random() * 1) + ".png");
-                  
-                    // cellBlock.setRotation(0);
-                    // graphicEntityModule.commitWorldState(0);
-                    // cellBlock.setRotation(Math.PI * 0.5);
-                    // graphicEntityModule.commitWorldState(0.5);
-                    // cellBlock.setRotation(Math.PI);
-                    // graphicEntityModule.commitWorldState(1);
                 } else {
                     cellBlock.setImage(theme + "/back.png");
                 }
 
+                cellToSprite.put(new Coord(i, j), cellBlock);
                 tooltips.setTooltipText(cellBlock, i + " , " + j);
                 walls.add(cellBlock);
             }
@@ -151,16 +136,11 @@ public class View {
     private void drawFlags() {
         for(Player player: gameManager.getPlayers()) {
 
-            int x = this.toPixelCornerX(player.getFlag().getPos().getY());
-            int y = this.toPixelCornerY(player.getFlag().getPos().getX());
-//            Rectangle cellBlock = graphicEntityModule.createRectangle()
-//                    .setHeight(wallHeight)
-//                    .setWidth(wallWidth)
-//                    .setX(x)
-//                    .setY(y)
-//                    .setZIndex(1);
+            Flag flag = player.getFlag();
+            int x = this.toPixelCornerX(flag.getPos().getY());
+            int y = this.toPixelCornerY(flag.getPos().getX());
 
-            Sprite flag = graphicEntityModule.createSprite()
+            Sprite flagSprite = graphicEntityModule.createSprite()
                     .setImage(theme + "/flag.png")
                     .setBaseWidth(this.wallWidth)
                     .setBaseHeight(this.wallHeight)
@@ -168,18 +148,18 @@ public class View {
                     .setY(y)
                     .setZIndex(5);
 
+            cellToSprite.get(flag.getPos())
+                    .setImage(theme + String.format("/flag_base_%s.png",player.getColor()));
+
+
 
             if(player.isLeftPlayer()) {
-                flag.setTint(Config.LEFT_PLAYER_COLOR);
-//                cellBlock.setLineColor(Config.LEFT_PLAYER_COLOR);
+                flagSprite.setTint(Config.LEFT_PLAYER_COLOR);
             }
             else {
-                flag.setTint(Config.RIGHT_PLAYER_COLOR);
-//                cellBlock.setLineColor(Config.RIGHT_PLAYER_COLOR);
+                flagSprite.setTint(Config.RIGHT_PLAYER_COLOR);
             }
-//            cellBlock.setLineWidth(7);
-
-            flagToSprite.put(player.getFlag(), flag);
+            flagToSprite.put(player.getFlag(), flagSprite);
         }
     }
 
@@ -233,14 +213,15 @@ public class View {
         int playerHudScoreOffset = 320;
         int playerHudAvatarOffset = 882;
 
-        for (Player p : gameManager.getPlayers()) {
+        for (Player player : gameManager.getPlayers()) {
 
-            int coefMirror = p.getIndex() == 0 ? -1 : 1;
+            int coefMirror = player.getIndex() == 0 ? -1 : 1;
+            int color = player.isLeftPlayer() ? Config.LEFT_PLAYER_COLOR: Config.RIGHT_PLAYER_COLOR;
 
             BitmapText nameLabel = graphicEntityModule.createBitmapText()
                     .setFont("BRLNS_66")
                     .setFontSize(36)
-                    .setText(p.getNicknameToken())
+                    .setText(player.getNicknameToken())
                     .setMaxWidth(300)
                     .setAnchorX(0.5)
                     .setX(playerHudZoneWidth + coefMirror * playerHudNameOffset)
@@ -250,14 +231,15 @@ public class View {
             BitmapText scoreLabel = graphicEntityModule.createBitmapText()
                     .setFont("BRLNS_66")
                     .setFontSize(72)
-                    .setText("0")
+                    .setText(player.getCurrentCredit()+"")
                     .setAnchorX(0.5)
                     .setX(playerHudZoneWidth + coefMirror * playerHudScoreOffset)
                     .setY(10)
-                    .setZIndex(2);
+                    .setZIndex(2)
+                    .setTint(color);
 
             Sprite avatar = graphicEntityModule.createSprite()
-                    .setImage(p.getAvatarToken())
+                    .setImage(player.getAvatarToken())
                     .setAnchor(0.5)
                     .setX(playerHudZoneWidth + coefMirror * playerHudAvatarOffset)
                     .setY(70)
@@ -304,6 +286,7 @@ public class View {
         this.minedCells = new ArrayList<>();
 
         this.walls = new ArrayList<>();
+        this.cellToSprite = new HashMap<>();
         this.minionToSprite = new HashMap<>();
         this.flagToSprite = new HashMap<>();
         this.coinToSprite = new HashMap<>();

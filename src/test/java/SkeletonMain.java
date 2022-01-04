@@ -8,8 +8,8 @@ public class SkeletonMain {
         MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
 
         // Adds as many player as you need to test your game
-        gameRunner.addAgent(Freezer.class, "red");
-        gameRunner.addAgent(Flamer.class, "blue");
+        gameRunner.addAgent(Mover.class, "red");
+        gameRunner.addAgent(Freezer.class, "blue");
         gameRunner.setSeed(243L);
 
         // Another way to add a player
