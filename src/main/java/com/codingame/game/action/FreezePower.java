@@ -11,6 +11,7 @@ public class FreezePower extends PowerUp{
         super(origin, powerUpUser);
         this.damage = Config.FREEZE_TIMEOUT;
         this.price = Config.FREEZE_PRICE;
+        this.damageDistLimit = Config.INF;
     }
 
     @Override

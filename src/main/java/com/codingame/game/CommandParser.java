@@ -20,7 +20,15 @@ public class CommandParser {
 
     static String MOVE_COMMAND = "MOVE <id> <x> <y>";
     static String WAIT_COMMAND = "WAIT <id>";
-    String EXPECTED = MOVE_COMMAND + " or " + WAIT_COMMAND;
+    static String FIRE_COMMAND = "FIRE <id>";
+    static String FREEZE_COMMAND = "FREEZE <id>";
+    static String MINE_COMMAND = "MINE <id> <x> <y>";
+    String EXPECTED =
+            MOVE_COMMAND +
+            " or " + WAIT_COMMAND +
+            " or " + FIRE_COMMAND +
+            " or " + FREEZE_COMMAND +
+            " or " + MINE_COMMAND;
 
     static final Pattern PLAYER_MOVE_PATTERN = Pattern.compile(
             "^MOVE\\s+(?<id>\\d+)\\s+(?<x>-?\\d+)\\s+(?<y>-?\\d+)"
@@ -41,7 +49,7 @@ public class CommandParser {
             Pattern.CASE_INSENSITIVE
     );
     static final Pattern PLAYER_MINE_PATTERN = Pattern.compile(
-            "^MINE\\s+(?<id>\\d+)"
+            "^MINE\\s+(?<id>\\d+)\\s+(?<x>-?\\d+)\\s+(?<y>-?\\d+)"
                     + "(?:\\s+(?<message>.+))?"
                     + "$",
             Pattern.CASE_INSENSITIVE
@@ -160,8 +168,8 @@ public class CommandParser {
                 else if(PLAYER_FREEZE_PATTERN.matcher(str).matches()) {
                     handleFreezeCommand(minion);
                 }
-                else if(PLAYER_FIRE_PATTERN.matcher(str).matches()) {
-                    handleMineCommand(PLAYER_MOVE_PATTERN.matcher(str), minion);
+                else if(PLAYER_MINE_PATTERN.matcher(str).matches()) {
+                    handleMineCommand(PLAYER_MINE_PATTERN.matcher(str), minion);
                 }
                 else {
                     throw new InvalidInputException(EXPECTED, str);

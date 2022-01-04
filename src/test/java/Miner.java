@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
-public class Agent1 {
+public class Miner {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -24,20 +25,34 @@ public class Agent1 {
         opp_base_x = scanner.nextInt();
         opp_base_y = scanner.nextInt();
 
-        for(int i = 0 ; i < 3 ; i++) {
-            String powerName;
-            int price, damage;
-            powerName = scanner.next();
-            price = scanner.nextInt();
-            damage = scanner.nextInt();
-        }
+        String fireName;
+        int firePrice, fireDamage;
+        fireName = scanner.next();
+        firePrice = scanner.nextInt();
+        fireDamage = scanner.nextInt();
+
+        String freezeName;
+        int freezePrice, freezeDamage;
+        freezeName = scanner.next();
+        freezePrice = scanner.nextInt();
+        freezeDamage = scanner.nextInt();
+
+        String mineName;
+        int minePrice, mineDamage;
+        mineName = scanner.next();
+        minePrice = scanner.nextInt();
+        mineDamage = scanner.nextInt();
+
+
+        int[] dx = {-1, 0, 1, 0};
+        int[] dy = {0, -1, 0, -1};
+        int k = 0;
 
         System.err.print("Entering game loop\n");
-        int captured = 0;
         while (true) {
             int my_score, opp_score;
-            int my_flag_x, my_flag_y, my_carrier;
-            int opp_flag_x, opp_flag_y, opp_carrier;
+            int my_flag_x, my_flag_y, my_flag_carrier;
+            int opp_flag_x, opp_flag_y, opp_flag_carrier;
             int alive_cnt, opp_seen_cnt;
             int visible_coin_cnt;
 
@@ -47,14 +62,15 @@ public class Agent1 {
 
             my_flag_x = scanner.nextInt();
             my_flag_y= scanner.nextInt();
-            my_carrier = scanner.nextInt();
+            my_flag_carrier = scanner.nextInt();
 
             opp_flag_x = scanner.nextInt();
             opp_flag_y= scanner.nextInt();
-            opp_carrier = scanner.nextInt();
+            opp_flag_carrier = scanner.nextInt();
 
             alive_cnt = scanner.nextInt();
-            ArrayList<Integer>ids = new ArrayList<>(alive_cnt);
+            ArrayList<Integer>xVals = new ArrayList<>(alive_cnt);
+            ArrayList<Integer>yVals = new ArrayList<>(alive_cnt);
 
             for(int i = 0 ; i < alive_cnt ; i++) {
                 int id, x, y, health, timeout;
@@ -63,7 +79,8 @@ public class Agent1 {
                 y = scanner.nextInt();
                 health = scanner.nextInt();
                 timeout = scanner.nextInt();
-                ids.add(id);
+                xVals.add(x);
+                yVals.add(y);
             }
 
             opp_seen_cnt = scanner.nextInt();
@@ -84,18 +101,17 @@ public class Agent1 {
                 y = scanner.nextInt();
             }
 
-
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-                if(captured == 1) {
-                    str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
-                }
-                else {
-                    if(opp_carrier != -1) captured = 1;
-                    str.append(String.format("MOVE %d %d %d", ids.get(i), opp_base_x, opp_flag_y) );
-                }
+
+                int x = xVals.get(i) + dx[k];
+                int y = yVals.get(i) + dy[k];
+
+                str.append(String.format("MINE %d %d %d", i, x, y));
             }
+            k++;
+            k %= 4;
             System.out.println(str);
         }
     }

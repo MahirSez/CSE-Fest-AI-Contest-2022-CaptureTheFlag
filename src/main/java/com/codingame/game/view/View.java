@@ -1,6 +1,7 @@
 package com.codingame.game.view;
 
 import com.codingame.game.*;
+import com.codingame.game.action.MinePower;
 import com.codingame.game.action.PowerUpType;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.*;
@@ -21,14 +22,18 @@ public class View {
     @Inject TooltipModule tooltips;
     HashMap<Minion, Sprite> minionToSprite;
     HashMap<Flag, Sprite>flagToSprite;
+    HashMap<MinePower, Sprite>mineToSprite;
 
 
     // Note: Damaged minions also contain dead minions
     List<Minion> deadMinions, damagedMinions, frozenMinions;
     List<Minion> flamers, freezers, miners;
+    List<Coord> flamedCells, frozenCells, minedCells;
     List<Minion> movers;
     List<Sprite> currentFrameSprites;
     List<Coin> removedCoins;
+    List<MinePower> placedMines;
+    List<MinePower> detonatedMines;
 
 
     HashMap<Coin, Sprite>coinToSprite;
@@ -290,11 +295,19 @@ public class View {
         this.frozenMinions = new ArrayList<>();
         this.currentFrameSprites = new ArrayList<>();
         this.removedCoins = new ArrayList<>();
+        this.placedMines = new ArrayList<>();
+        this.detonatedMines = new ArrayList<>();
+
+
+        this.flamedCells = new ArrayList<>();
+        this.frozenCells = new ArrayList<>();
+        this.minedCells = new ArrayList<>();
 
         this.walls = new ArrayList<>();
         this.minionToSprite = new HashMap<>();
         this.flagToSprite = new HashMap<>();
         this.coinToSprite = new HashMap<>();
+        this.mineToSprite = new HashMap<>();
 
         drawBackground();
         // drawOuterRectangle();
@@ -313,72 +326,60 @@ public class View {
         damagedMinions.clear();
         frozenMinions.clear();
         removedCoins.clear();
+        placedMines.clear();
+        detonatedMines.clear();
+
+        flamedCells.clear();
+        frozenCells.clear();
+        minedCells.clear();
 
         for(Sprite sprite: currentFrameSprites) {
             sprite.setVisible(false);
         }
         currentFrameSprites.clear();
 
+
     }
 
-    private void showPowerUps() {
-        showFirePower();
-        showFreezePower();
-    }
+    private void generatePowerUpSprites(List<Coord> affectedCells, String imageFile) {
 
+        for(Coord coord : affectedCells) {
 
-
-    private ArrayList<Coord>getAffectedCells(Coord origin) {
-
-        ArrayList<Coord>affectedCoords = new ArrayList<>();
-        affectedCoords.add(origin);
-
-        int x = origin.getX();
-        int y = origin.getY();
-
-        int[] dx = {1 ,-1, 0, 0};
-        int[] dy = {0, 0, -1, 1};
-
-        for(int k = 0 ; k < 4 ; k++) {
-            for(int scale = 1 ; ; scale++) {
-                int xx = x + dx[k] * scale;
-                int yy = y + dy[k] * scale;
-                if(xx < 0 || xx >= maze.getRow() || yy < 0 || yy >= maze.getCol() || maze.getGrid()[xx][yy] == 1) {
-                    break;
-                }
-                affectedCoords.add(new Coord(xx, yy));
-            }
+            int x = this.toPixelCornerX(coord.getY());
+            int y = this.toPixelCornerY(coord.getX());
+            Sprite sprite = graphicEntityModule.createSprite()
+                    .setBaseHeight((int) (this.wallHeight * 0.9))
+                    .setBaseWidth((int) (this.wallHeight * 0.9))
+                    .setX(x)
+                    .setY(y)
+                    .setAnchorX(-0.2)
+                    .setImage(imageFile)
+                    .setZIndex(4);
+            currentFrameSprites.add(sprite);
         }
-        return affectedCoords;
     }
 
-    private void generatePowerUpSprites(List<Minion> minions, String imageFile) {
 
-        for(Minion minion: minions) {
-            Coord origin = minion.getPos();
-
-            for(Coord coord : this.getAffectedCells(origin)) {
-
-                int x = this.toPixelCornerX(coord.getY());
-                int y = this.toPixelCornerY(coord.getX());
-                Sprite sprite = graphicEntityModule.createSprite()
-                        .setBaseHeight((int) (this.wallHeight * 0.9))
-                        .setBaseWidth((int) (this.wallHeight * 0.9))
-                        .setX(x)
-                        .setY(y)
-                        .setAnchorX(-0.2)
-                        .setImage(imageFile);
-                currentFrameSprites.add(sprite);
-            }
+    private void showDetonatedMines() {
+        for(MinePower mine: detonatedMines) {
+            mineToSprite.get(mine).setVisible(false);
         }
+        generatePowerUpSprites(minedCells, "powerups/mine_explosion.png");
     }
 
     private void showFirePower() {
-        generatePowerUpSprites(flamers, "powerups/flame.png");
+        generatePowerUpSprites(flamedCells, "powerups/flame.png");
     }
 
     private void showFreezePower() {
-        generatePowerUpSprites(freezers, "powerups/freeze.png");
+        generatePowerUpSprites(frozenCells, "powerups/freeze.png");
+    }
+
+
+    private void showPowerUpsInCells() {
+        showFirePower();
+        showFreezePower();
+        showDetonatedMines();
     }
 
     private void removeDeadMinions() {
@@ -391,9 +392,26 @@ public class View {
         removeDeadMinions();
         removeCoins();
         performMoves();
-        showPowerUps();
+        addMines();
+        showPowerUpsInCells();
         updateFlag();
         updateScores();
+    }
+
+    private void addMines() {
+        for(MinePower mine: placedMines) {
+            int x = this.toPixelCornerX(mine.getOrigin().getY());
+            int y = this.toPixelCornerY(mine.getOrigin().getX());
+            Sprite sprite = graphicEntityModule.createSprite()
+                    .setBaseHeight((int) (this.wallHeight))
+                    .setBaseWidth((int) (this.wallHeight))
+                    .setX(x)
+                    .setY(y)
+                    .setAnchorX(-0.2)
+                    .setImage("powerups/mine.png");
+
+            mineToSprite.put(mine, sprite);
+        }
     }
 
     private void removeCoins() {
@@ -480,23 +498,38 @@ public class View {
         }
     }
 
-    public void addDamagedMinions(List<Minion> damagedMinions) {
-        this.damagedMinions.addAll(damagedMinions);
-    }
-
-    private void addFrozenMinions(List<Minion> frozenMinions) {
-        this.frozenMinions.addAll(frozenMinions);
-    }
 
 
     public void addAffectedMinions(List<Minion> affectedMinions, PowerUpType power) {
         switch (power) {
             case FIRE:
             case MINE:
-                addDamagedMinions(affectedMinions);
+                this.damagedMinions.addAll(affectedMinions);
                 break;
             case FREEZE:
-                addFrozenMinions(affectedMinions);
+                this.frozenMinions.addAll(affectedMinions);
+        }
+    }
+
+    public void addMine(MinePower mine) {
+        this.placedMines.add(mine);
+    }
+
+    public void addDetonatedMine(MinePower mine) {
+        this.detonatedMines.add(mine);
+    }
+
+    public void addAffectedCells(List<Coord> affectedCells, PowerUpType power) {
+        switch (power) {
+            case FIRE:
+                this.flamedCells.addAll(affectedCells);
+                break;
+            case MINE:
+                this.minedCells.addAll(affectedCells);
+                break;
+            case FREEZE:
+                this.frozenCells.addAll(affectedCells);
+                break;
         }
     }
 
