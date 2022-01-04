@@ -148,12 +148,12 @@ public class View {
 
             int x = this.toPixelCornerX(player.getFlag().getPos().getY());
             int y = this.toPixelCornerY(player.getFlag().getPos().getX());
-            Rectangle cellBlock = graphicEntityModule.createRectangle()
-                    .setHeight(wallHeight)
-                    .setWidth(wallWidth)
-                    .setX(x)
-                    .setY(y)
-                    .setZIndex(1);
+//            Rectangle cellBlock = graphicEntityModule.createRectangle()
+//                    .setHeight(wallHeight)
+//                    .setWidth(wallWidth)
+//                    .setX(x)
+//                    .setY(y)
+//                    .setZIndex(1);
 
             Sprite flag = graphicEntityModule.createSprite()
                     .setImage(theme + "/flag.png")
@@ -166,13 +166,13 @@ public class View {
 
             if(player.isLeftPlayer()) {
                 flag.setTint(Config.LEFT_PLAYER_COLOR);
-                cellBlock.setLineColor(Config.LEFT_PLAYER_COLOR);
+//                cellBlock.setLineColor(Config.LEFT_PLAYER_COLOR);
             }
             else {
                 flag.setTint(Config.RIGHT_PLAYER_COLOR);
-                cellBlock.setLineColor(Config.RIGHT_PLAYER_COLOR);
+//                cellBlock.setLineColor(Config.RIGHT_PLAYER_COLOR);
             }
-            cellBlock.setLineWidth(7);
+//            cellBlock.setLineWidth(7);
 
             flagToSprite.put(player.getFlag(), flag);
         }
