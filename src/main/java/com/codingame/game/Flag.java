@@ -10,4 +10,8 @@ public class Flag {
     public Coord getPos() { return pos; }
     public boolean isCaptured() { return carrier != null; }
     Minion getCarrier() { return carrier; }
+
+    public void drop() {
+        this.carrier = null;
+    }
 }

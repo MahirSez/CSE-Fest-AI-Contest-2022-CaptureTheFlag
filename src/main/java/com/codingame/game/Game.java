@@ -92,6 +92,10 @@ public class Game {
         return this.aliveMinions;
     }
 
+    /**
+     *
+     * Todo: Need to test this. Randomly swap players' sides at the beginning
+     */
     private void setPlayerSide() {
         gameManager.getPlayer(0).setLeftPlayer(true);
         gameManager.getPlayer(1).setLeftPlayer(false);
@@ -342,12 +346,13 @@ public class Game {
 
     public void updateGameState() {
 
-        updateMinionTimeOut();
-        updateMinionMovement();
-        updateCoins();
-        updateDamage();
-        removeDeadMinions();
-        updateFlagPosition();
+        updateFlagPosition();   // acquire flag for immediately unfrozen minions
+        updateMinionMovement(); // resolve movement
+        updateCoins();          // update coin position
+        updateDamage();         // use power ups
+        removeDeadMinions();    // remove damaged minions from global list
+        updateFlagPosition();   // update flag position again for moving minions
+        updateMinionTimeOut();  // decrease freeze time out
         printGameSummary();
 
         for(Player player: gameManager.getPlayers()) {
@@ -401,20 +406,29 @@ public class Game {
     private void updateFlagPosition() {
         for(Player player: gameManager.getPlayers()) {
             Flag flag = player.getFlag();
-            if(flag.isCaptured() && !flag.getCarrier().isDead()) {
+
+            if(flag.isCaptured()) {
+                // move the flag 1st
                 flag.setPos(flag.getCarrier().getPos());
+
+                // then drop it if dead/frozen
+                if(flag.getCarrier().isDead() || flag.getCarrier().isFrozen()) {
+                    gameManager.addToGameSummary(String.format("%s flag is dropped", player.getColor()));
+                    flag.drop();
+                }
             }
-            else {
+
+            if(!flag.isCaptured()) {
                 Player opponent = getOpponentOf(player);
                 for(Minion minion: opponent.getMinions()) {
-                    if(!minion.isDead() && minion.getPos().equals(flag.getPos())) {
+                    if(!minion.isDead() && !minion.isFrozen() && minion.getPos().equals(flag.getPos())) {
+                        gameManager.addToGameSummary(String.format("%s's flag is captured by %s minion %d", player.getColor(), opponent.getColor(), minion.getID()));
                         flag.setCarrier(minion);
                         flag.setPos(flag.getCarrier().getPos());
                         break;
                     }
                 }
             }
-
         }
     }
 

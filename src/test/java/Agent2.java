@@ -86,7 +86,8 @@ public class Agent2 {
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-                if(opp_seen_cnt > 0) str.append(String.format("FIRE %d", ids.get(i)));
+
+                if(opp_seen_cnt > 0 && my_carrier != -1) str.append(String.format("FREEZE %d", ids.get(i)));
                 else if(opp_carrier != -1) str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
                 else str.append(String.format("MOVE %d %d %d", ids.get(i), opp_base_x, opp_flag_y) );
             }
