@@ -36,11 +36,23 @@ public class View {
     List<MinePower> placedMines;
     List<MinePower> detonatedMines;
 
+    // animation state variables
+
+    final int STARTED = 0;
+    final int ONGOING = 1;
+    final int STOPPED = -1;
+    int fireAnimState = STOPPED;
+
+    List<Sprite> firesLX = null;
+    List<Sprite> firesRX = null;
+    List<Sprite> firesTY = null;
+    List<Sprite> firesBY = null;
+
 
     HashMap<Coin, Sprite>coinToSprite;
 
     World world;
-    Sprite background;
+    TilingSprite background;
     BitmapText leftScore, rightScore;
     List<BitmapText> scoreLabels;
 
@@ -49,6 +61,13 @@ public class View {
     int emptyPixelX, emptyPixelY;
 
     final String theme = "tank";
+    final int numWalls = 1;
+    final float wallScaling = 0.8f;
+    final float minionScaling = 1.5f;
+    final int wallFillerOffset = 1;
+
+    // firing params
+    final double fireSpriteScaleFactor = 30;
 
     int toPixelCenterX(int x) {
         return this.toPixelCornerX(x) + this.wallWidth / 2;
@@ -77,8 +96,8 @@ public class View {
 
 
                 Sprite minionSprite = graphicEntityModule.createSprite()    
-                    .setBaseHeight((int) (this.wallHeight))
-                    .setBaseWidth((int) (this.wallHeight))
+                    .setBaseHeight((int) ((this.wallHeight) * 1.5 *  minionScaling))
+                    .setBaseWidth((int) ((this.wallHeight) * minionScaling))
                     .setAnchor(0.5)
                     .setX(this.toPixelCenterX(coord.getY()))
                     .setY(this.toPixelCenterY(coord.getX()))
@@ -101,7 +120,7 @@ public class View {
     public void drawBackground() {
         // add background image / texture
         // TODO: change background image
-        background = graphicEntityModule.createSprite().setImage(theme + "/back2.png")
+        background = graphicEntityModule.createTilingSprite().setImage(theme + "/back2.png")
             .setBaseHeight(world.getHeight())
             .setBaseWidth(world.getWidth());
     }
@@ -114,16 +133,43 @@ public class View {
                 int x = this.toPixelCenterX(j);
                 int y = this.toPixelCenterY(i);
                 Sprite cellBlock = graphicEntityModule.createSprite()
-                        .setBaseHeight( (int) (wallHeight ))
-                        .setBaseWidth( (int) (wallWidth))
+                        .setBaseHeight( (int) (wallHeight * wallScaling))
+                        .setBaseWidth( (int) (wallWidth * wallScaling))
                         .setAnchor(0.5)
                         .setX(x)
                         .setY(y);
+
+
                 if(grid[i][j] == 1) {
 
-                    cellBlock.setImage(theme + "/wall" + (int) (1 + Math.random() * 1) + ".png");
+                    cellBlock.setImage(theme + "/wall" + (int) (1 + Math.random() * (numWalls)) + ".png");
+                    
+                    
+                    if(i + 1 < row && grid[i + 1][j] == 1) {
+                        // wall to right
+                        Sprite filler = graphicEntityModule.createSprite()
+                            .setBaseHeight( (int) (wallHeight * 0.5))
+                            .setBaseWidth( (int) (wallWidth * 0.5))
+                            .setAnchorY(0.4)
+                            .setAnchorX(0.5)
+                            .setX(x + wallFillerOffset)
+                            .setY(y)
+                            .setImage(theme + "/wall" + (int) (1 + Math.random() * (numWalls)) + ".png");
+                    }
+
+                    if(j + 1 < col && grid[i][j + 1] == 1) {
+                        Sprite filler = graphicEntityModule.createSprite()
+                            .setBaseHeight( (int) (wallHeight * 0.5))
+                            .setBaseWidth( (int) (wallWidth * 0.5))
+                            .setAnchorY(0.5)
+                            .setAnchorX(0.4)
+                            .setX(x)
+                            .setY(y + wallFillerOffset)
+                            .setImage(theme + "/wall" + (int) (1 + Math.random() * (numWalls)) + ".png");
+                    }
+                   
                 } else {
-                    cellBlock.setImage(theme + "/back.png");
+                    // cellBlock.setImage(theme + "/back.png");
                 }
 
                 cellToSprite.put(new Coord(i, j), cellBlock);
@@ -261,8 +307,8 @@ public class View {
         int row = grid.length;
         int col = grid[0].length;
 
-        this.wallWidth = world.getWidth() / col;
-        this.wallHeight = (world.getHeight() - Config.MAZE_UPPER_OFFSET) / row;
+        this.wallWidth = (int) ((world.getWidth() / col))  ;
+        this.wallHeight = (int) (((world.getHeight() - Config.MAZE_UPPER_OFFSET) / row));
 
         // because of integer division there will remain empty pixels
         this.emptyPixelX = world.getWidth() - col * this.wallWidth;
@@ -291,6 +337,11 @@ public class View {
         this.flagToSprite = new HashMap<>();
         this.coinToSprite = new HashMap<>();
         this.mineToSprite = new HashMap<>();
+
+        firesLX = new ArrayList<>();
+        firesRX = new ArrayList<>();
+        firesTY = new ArrayList<>();
+        firesBY = new ArrayList<>();
 
         drawBackground();
         // drawOuterRectangle();
@@ -321,25 +372,174 @@ public class View {
         }
         currentFrameSprites.clear();
 
+        // fireAnimState = STOPPED;
+
+
 
     }
 
     private void generatePowerUpSprites(List<Coord> affectedCells, String imageFile) {
 
-        for(Coord coord : affectedCells) {
+        // int width, height;
 
-            int x = this.toPixelCornerX(coord.getY());
-            int y = this.toPixelCornerY(coord.getX());
-            Sprite sprite = graphicEntityModule.createSprite()
-                    .setBaseHeight((int) (this.wallHeight * 0.9))
-                    .setBaseWidth((int) (this.wallHeight * 0.9))
-                    .setX(x)
-                    .setY(y)
-                    .setAnchorX(-0.2)
+        if(fireAnimState == STARTED) {
+
+            if(affectedCells.isEmpty()) {
+                fireAnimState = STOPPED;
+                
+                firesRX.clear();
+                firesLX.clear();
+                firesTY.clear();
+                firesBY.clear();
+            }
+            firesRX.forEach(fire -> {
+                if(fire.getScaleX() < 1) {
+                    fire.setScaleX(fire.getScaleX() * fireSpriteScaleFactor);
+                }
+            });
+            firesLX.forEach(fire -> {
+                if(fire.getScaleX() > -1) {
+                    fire.setScaleX(fire.getScaleX() * fireSpriteScaleFactor);
+                }
+            });
+            firesTY.forEach(fire -> {
+                if(fire.getScaleY() < 1) {
+                    fire.setScaleY(fire.getScaleY() * fireSpriteScaleFactor);
+                }   
+            });
+            firesBY.forEach(fire -> {
+                if(fire.getScaleY() > -1) {
+                    fire.setScaleY(fire.getScaleY() * fireSpriteScaleFactor);
+                }   
+            });
+
+            
+        }
+        if(affectedCells.size() > 0) {
+
+            
+            System.err.println(fireAnimState);
+
+
+        
+            if(fireAnimState == STOPPED) {
+                fireAnimState = STARTED;
+               
+
+
+
+                // flamers coords are the origins of the fire effect
+                freezers.forEach(flamer -> {
+                    //2 sprites per flamer
+                    int originX = this.toPixelCornerX(flamer.getPos().getY());
+                    int originY = this.toPixelCornerY(flamer.getPos().getX());
+
+                    // find bounds per flamer
+                    int l = 99999;
+                    int r = 0;
+                    int t = 0;
+                    int b = 99999;
+                    for(Coord coord : affectedCells) {
+                        int x = this.toPixelCornerX(coord.getY());
+                        int y = this.toPixelCornerY(coord.getX());
+                        if (x == originX) {
+                            if (y < b) b = y;
+                            if (y > t) t = y;  
+                        }
+                        if (y == originY) {
+                            if (x < l) l = x;
+                            if (x > r) r = x;  
+                        }
+                    }
+                    int lwidth = Math.abs(l - originX);
+                    int rwidth = Math.abs(r - originX);
+                    // int width = Math.abs(l - r);
+                    int theight = Math.abs(t - originY);
+                    int bheight = Math.abs(b - originY);
+    
+                    // System.out.println("width " + width);
+
+                    Sprite fireRX = graphicEntityModule.createSprite()
+                    .setBaseHeight((int) (wallHeight * 0.5))
+                    .setBaseWidth((int) rwidth)
+                    .setX(originX)
+                    .setY(originY)
+                    .setScaleX(0.001)
+                    .setAnchor(0)
                     .setImage(imageFile)
                     .setZIndex(4);
-            currentFrameSprites.add(sprite);
+
+                    Sprite fireLX = graphicEntityModule.createSprite()
+                    .setBaseHeight((int) (wallHeight * 0.5))
+                    .setBaseWidth((int) lwidth)
+                    .setX(originX)
+                    .setY(originY)
+                    .setScaleX(-0.001)
+                    .setAnchor(0)
+                    .setImage(imageFile)
+                    .setZIndex(4);
+
+                    Sprite fireTY = graphicEntityModule.createSprite()
+                    .setBaseWidth((int) (wallWidth * 0.5))
+                    .setBaseHeight((int) theight)
+                    .setX(originX)
+                    .setY(originY)
+                    .setScaleY(0.001)
+                    .setAnchor(0)
+                    .setImage(imageFile)
+                    .setZIndex(4);
+
+                    Sprite fireBY = graphicEntityModule.createSprite()
+                    .setBaseWidth((int) (wallWidth * 0.5))
+                    .setBaseHeight((int) bheight)
+                    .setX(originX)
+                    .setY(originY)
+                    .setScaleY(-0.001)
+                    .setAnchor(0)
+                    .setImage(imageFile)
+                    .setZIndex(4);
+    
+                    firesRX.add(fireRX);
+
+                    firesLX.add(fireLX);
+
+                    firesTY.add(fireTY);
+
+                    firesBY.add(fireBY);
+
+                    graphicEntityModule.commitEntityState(0, fireRX, fireLX, fireTY, fireBY);
+
+                    fireRX.setScaleX(1);
+                    fireLX.setScaleX(-1);
+                    fireTY.setScaleY(1);
+                    fireBY.setScaleY(-1);
+
+                    graphicEntityModule.commitEntityState(1, fireRX, fireLX, fireTY, fireBY);
+                    
+                });    
+
+                currentFrameSprites.addAll(firesBY);
+                currentFrameSprites.addAll(firesTY);
+                currentFrameSprites.addAll(firesRX);
+                currentFrameSprites.addAll(firesLX);
+            }
+            
         }
+            // for(Coord coord : affectedCells) {
+
+            //     int x = this.toPixelCornerX(coord.getY());
+            //     int y = this.toPixelCornerY(coord.getX());
+            //     Sprite sprite = graphicEntityModule.createSprite()
+            //             .setBaseHeight((int) (this.wallHeight * 0.9))
+            //             .setBaseWidth((int) (this.wallHeight * 0.9))
+            //             .setX(x)
+            //             .setY(y)
+            //             .setAnchorX(-0.2)
+            //             .setImage(imageFile)
+            //             .setZIndex(4);
+            //     currentFrameSprites.add(sprite);
+            // }
+        // }
     }
 
 

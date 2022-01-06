@@ -46,6 +46,7 @@ public class Coord {
     public int getY() {
         return y;
     }
+    
 
     public int manhattanTo(Coord other) {
         return manhattanTo(other.x, other.y);
