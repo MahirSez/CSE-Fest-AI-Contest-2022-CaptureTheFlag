@@ -26,7 +26,7 @@ public class Config {
 
 
     public static final int FIRE_DAMAGE = 20;
-    public static final int FIRE_PRICE = 2;
+    public static final int FIRE_PRICE = 5;
 
     public static final int MINE_DAMAGE = 30;
     public static final int MINE_PRICE = 1;

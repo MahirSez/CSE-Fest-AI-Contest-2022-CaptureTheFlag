@@ -9,7 +9,7 @@ public class SkeletonMain {
 
         // Adds as many player as you need to test your game
         gameRunner.addAgent(Mover.class, "red");
-        gameRunner.addAgent(Freezer.class, "blue");
+        gameRunner.addAgent(Miner.class, "blue");
         gameRunner.setSeed(243L);
 
         // Another way to add a player

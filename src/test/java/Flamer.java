@@ -100,7 +100,7 @@ public class Flamer {
 
                 if(opp_seen_cnt > 0 && my_score >= firePrice && my_flag_carrier != -1) str.append(String.format("FIRE %d", ids.get(i)));
                 else if(opp_flag_carrier != -1) str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
-                else str.append(String.format("MOVE %d %d %d", ids.get(i), opp_base_x, opp_flag_y) );
+                else str.append(String.format("MOVE %d %d %d", ids.get(i), opp_flag_x, opp_flag_y) );
             }
             System.out.println(str);
         }

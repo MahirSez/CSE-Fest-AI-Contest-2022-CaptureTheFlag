@@ -87,7 +87,9 @@
         <span class="statement-lineno">Line 1: </span>two integers <var>height</var> and <var>width</var> - the size of the maze. <br>
         <span class="statement-lineno">Next <var>height</var> lines:</span> a string of <var>width</var> characters each representing one cell of a row: <const>'.'</const> is an empty cell and <const>'#'</const> is a wall. <br>
         <span class="statement-lineno">Next line:</span> two integers: <var>my_flag_base_x</var> & <var>my_flag_base_y</var> - player's flag-base position <br>
-        <span class="statement-lineno">Next line:</span> two integers: <var>opponent_flag_base_x</var> & <var>opponent_flag_base_y</var> - opponent's flag-base position
+        <span class="statement-lineno">Next line:</span> two integers: <var>opponent_flag_base_x</var> & <var>opponent_flag_base_y</var> - opponent's flag-base position <br>
+        <span class="statement-lineno">Next 3 lines:</span> <var>powerUpName</var> , <var>powerUpPrice</var> & <var>powerUpDamage</var> <br>
+
 
       </div>
     </div>
@@ -103,23 +105,28 @@
         <span class="statement-lineno">Line 2:</span>
           three integers:
           <ul>
-            <li><var>my_flag_pos_x</var>, <var>my_flag_pos_y</var> & <var>my_flag_captured</var> - player's flag position and whether it is currently being carried by opponent's minion (1 if captured, 0 otherwise)</li>
+            <li><var>my_flag_pos_x</var>, <var>my_flag_pos_y</var> & <var>my_flag_carrier</var> - player's flag position and carrier of flag by opponent's minion (-1 if no minion is carrying)</li>
           </ul>
         <span class="statement-lineno">Line 3:</span>
           three integers:
           <ul>
-            <li><var>opponent_flag_pos_x</var>, <var>opponent_flag_pos_y</var> & <var>opponent_flag_captured</var> - opponent's flag position and whether it is currently being carried by player's minion (1 if captured, 0 otherwise) </li>
+            <li><var>opponent_flag_pos_x</var>, <var>opponent_flag_pos_y</var> & <var>opponent_flag_carrier</var> - opponent's flag position and carrier of opponent's flag by player's minion (-1 if no minion is carrying) </li>
           </ul>
         <span class="statement-lineno">Line 4:</span> <var>my_alive_minion_cnt</var> - number of player's alive minions <br>
         <span class="statement-lineno">Next <var>my_alive_minion_cnt</var> lines:</span>
           <ul>
-            <li> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> - player's minion's id, position & health</li>
+            <li> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> <var>timeout</var> - player's minion's id, position, health & timeout</li>
           </ul>
         <span class="statement-lineno">Next Line:</span> <var>visible_minion_cnt</var> - number of opponent's visible minions <br>
         <span class="statement-lineno">Next <var>visible_minion_cnt</var> lines:</span>
           <ul>
-            <li><var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> - opponent's minion's id, position & health </li>
+            <li><var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var>  <var>timeout</var>  - opponent's minion's id, position & health </li>
           </ul>
+        <span class="statement-lineno">Next Line:</span> <var>visible_coin_cnt</var> - number of coins visible by player's minions <br>
+        <span class="statement-lineno">Next <var>visible_coin_cnt</var> lines:</span>
+        <ul>
+          <li><var>id</var> <var>pos_x</var> <var>pos_y</var> coin position </li>
+        </ul>
       </div>
     </div>
 
@@ -131,6 +138,15 @@
         <ul>
           <li>
             <action>MOVE minionID x y</action>: the minion with the identifier <const>minionID</const> moves towards the given cell.
+          </li>
+          <li>
+            <action>FIRE minionID</action>: the minion with the identifier <const>minionID</const> uses FIRE.
+          </li>
+          <li>
+            <action>FREEZE minionID</action>: the minion with the identifier <const>minionID</const> uses FREEZE.
+          </li>
+          <li>
+            <action>MINE minionID x y</action>: the minion with the identifier <const>minionID</const> plants mine at (x,y).
           </li>
           <li>
             <action>WAIT minionID</action>: the minion with the identifier <const>minionID</const> does nothing.
