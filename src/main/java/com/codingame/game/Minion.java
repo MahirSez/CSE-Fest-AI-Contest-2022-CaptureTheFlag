@@ -66,6 +66,6 @@ public class Minion {
     }
 
     public void addTimeOut(int timeOut) {
-        this.timeOut = timeOut;
+        this.timeOut = Math.max(timeOut, this.timeOut);
     }
 }
