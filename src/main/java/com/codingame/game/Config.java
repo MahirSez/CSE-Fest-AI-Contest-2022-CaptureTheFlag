@@ -14,7 +14,7 @@ public class Config {
     public static final int[] COIN_WEIGHTS = {10, 3, 1};
 
     public static final int MIN_MINIONS = 3;
-    public static final int MAX_MINIONS = 3;
+    public static final int MAX_MINIONS = 5;
 
     public static final int MIN_MAZE_ROW = 17;
     public static final int MAX_MAZE_ROW = 20;
@@ -29,7 +29,7 @@ public class Config {
     public static final int FIRE_PRICE = 5;
 
     public static final int MINE_DAMAGE = 30;
-    public static final int MINE_PRICE = 5;
+    public static final int MINE_PRICE = 10;
     public static final int MINE_RANGE = 2;
 
 

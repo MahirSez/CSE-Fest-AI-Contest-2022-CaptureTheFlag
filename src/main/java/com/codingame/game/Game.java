@@ -22,7 +22,7 @@ public class Game {
 
     void init() {
 
-        this.minionsPerPlayer = RandomUtil.randomOddInt(Config.MIN_MINIONS, Config.MAX_MINIONS);
+        this.minionsPerPlayer = RandomUtil.randomInt(Config.MIN_MINIONS, Config.MAX_MINIONS);
         this.totalMinions = minionsPerPlayer * gameManager.getPlayerCount();
 
         setPlayerSide();

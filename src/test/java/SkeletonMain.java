@@ -7,8 +7,8 @@ public class SkeletonMain {
 
         MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
 
-        gameRunner.addAgent(Flamer.class, "red");
-        gameRunner.addAgent(Freezer.class, "blue");
+        gameRunner.addAgent(Mover.class, "red");
+        gameRunner.addAgent(Mover.class, "blue");
 
         gameRunner.setSeed(243L);
 
