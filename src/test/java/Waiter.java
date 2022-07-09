@@ -1,7 +1,11 @@
+/**
+ * All the minions simply waits
+ */
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Flamer {
+public class Waiter {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -24,30 +28,20 @@ public class Flamer {
         opp_base_x = scanner.nextInt();
         opp_base_y = scanner.nextInt();
 
-        String fireName;
-        int firePrice, fireDamage;
-        fireName = scanner.next();
-        firePrice = scanner.nextInt();
-        fireDamage = scanner.nextInt();
-
-        String freezeName;
-        int freezePrice, freezeDamage;
-        freezeName = scanner.next();
-        freezePrice = scanner.nextInt();
-        freezeDamage = scanner.nextInt();
-
-        String mineName;
-        int minePrice, mineDamage;
-        mineName = scanner.next();
-        minePrice = scanner.nextInt();
-        mineDamage = scanner.nextInt();
-
+        for(int i = 0 ; i < 3 ; i++) {
+            String powerName;
+            int price, damage;
+            powerName = scanner.next();
+            price = scanner.nextInt();
+            damage = scanner.nextInt();
+        }
 
         System.err.print("Entering game loop\n");
+        int captured = 0;
         while (true) {
             int my_score, opp_score;
-            int my_flag_x, my_flag_y, my_flag_carrier;
-            int opp_flag_x, opp_flag_y, opp_flag_carrier;
+            int my_flag_x, my_flag_y, my_carrier;
+            int opp_flag_x, opp_flag_y, opp_carrier;
             int alive_cnt, opp_seen_cnt;
             int visible_coin_cnt;
 
@@ -57,14 +51,14 @@ public class Flamer {
 
             my_flag_x = scanner.nextInt();
             my_flag_y= scanner.nextInt();
-            my_flag_carrier = scanner.nextInt();
+            my_carrier = scanner.nextInt();
 
             opp_flag_x = scanner.nextInt();
             opp_flag_y= scanner.nextInt();
-            opp_flag_carrier = scanner.nextInt();
+            opp_carrier = scanner.nextInt();
 
             alive_cnt = scanner.nextInt();
-            ArrayList<Integer>ids = new ArrayList<>(alive_cnt);
+            ArrayList<Integer> ids = new ArrayList<>(alive_cnt);
 
             for(int i = 0 ; i < alive_cnt ; i++) {
                 int id, x, y, health, timeout;
@@ -94,13 +88,11 @@ public class Flamer {
                 y = scanner.nextInt();
             }
 
+
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-
-                if(opp_seen_cnt > 0 && my_score >= firePrice) str.append(String.format("FIRE %d", ids.get(i)));
-                else if(opp_flag_carrier != -1) str.append(String.format("MOVE %d %d %d", ids.get(i), my_base_x, my_base_y) );
-                else str.append(String.format("MOVE %d %d %d", ids.get(i), opp_flag_x, opp_flag_y) );
+                str.append(String.format("WAIT %d", ids.get(i)));
             }
             System.out.println(str);
         }

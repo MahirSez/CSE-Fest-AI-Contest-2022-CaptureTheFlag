@@ -1,241 +1,769 @@
-<div id="statement_back" class="statement_back" style="display:none"></div>
+<!-- LEAGUES level1 level2 level3 level4 -->
+<div id="statement_back" class="statement_back" style="display: none"></div>
 <div class="statement-body">
-  <!-- GOAL -->
-  <div class="statement-section statement-goal">
-    <h1>
-      <span class="icon icon-goal">&nbsp;</span>
-      <span>The Goal</span>
-    </h1>
-    <div class="statement-goal-content">
-      Capture opponent's flag and take it to your base before them!
-      <br>
-    </div>
-  </div>
-  <!-- RULES -->
-  <div class="statement-section statement-rules">
-    <h1>
-      <span class="icon icon-rules">&nbsp;</span>
-      <span>Rules</span>
-    </h1>
-    <div>
-      <div class="statement-rules-content">
-        <p>
-        The game is played on a 2D grid given to you at the start of the game. The grid is made up of walls and empty
-        spaces. Each player controls a team of minions that can move along the grid.
-      </p>
-        <h3 style="font-size: 14px;
-      font-weight: 700;
-      padding-top: 5px;
-      padding-bottom: 15px;">The Map</h3>
-        <p>
-        The grid is generated randomly, and can vary in <var>height</var> and <var>width</var>.
-        Each cell of the map is either:
+
+    <!-- LEAGUE ALERT -->
+    <div style="color: #7cc576;
+background-color: rgba(124, 197, 118,.1);
+padding: 20px;
+margin-right: 15px;
+margin-left: 15px;
+margin-bottom: 10px;
+text-align: left;">
+        <div style="text-align: center; margin-bottom: 6px">
+            <img src="//cdn.codingame.com/smash-the-code/statement/league_wood_04.png" />
+        </div>
+
+        <!-- BEGIN level1 -->
+        <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
+            This is a <b>league based</b> challenge.
         </p>
-        <ul>
-          <li>A wall (represented by a pound character: <action>#</action>)</li>
-          <li>An empty space (represented by a dot character: <action>.</action>)</li>
-        </ul>
-        <p>
-        Maps are always symmetrical across the central vertical axis. Minions cannot go pass the border of the map or go
-          through walls. They can only pass through empty cells. Empty cells may contain <b>coins</b>. Minions can collect coins
-          as they move over cells that contain coins. Collecting coins increases the <var>score</var> of the player.
+        <!-- END -->
+        <!-- BEGIN level2 level3 level4 -->
+        <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
+            <b>Starter Kit</b>
         </p>
+        <!-- END -->
 
-<!--MINIONS-->
-        <h3 style="font-size: 14px;
-      font-weight: 700;
-      padding-top: 5px;
-      padding-bottom: 15px;">The Minions</h3>
-        <p>
-          Each player starts with the same number of minions, up to <action>5</action> each.
-        </p>
-        <p>
-          Your minions <b>cannot see through walls</b>. On each turn you have vision on all of the enemy minions and coins
-          that can be connected by a continuous straight line to any one of your minions.
-        </p>
-        <p>
-          At each turn, you are given information regarding your own alive minions, the opponent's visible minions and all the
-          visible coins. For each minion, you are given its identifier, its coordinates and its health. For each coins,
-          you are given its coordinates.
-        </p>
-        Minions can receive the following commands (a minion can only receive one command per turn):
-        <ul>
-          <li>
-            <action>MOVE</action>: Give the minion a target position. The minion will find a shortest route to that position
-            and <b>make the first move along the way</b>. The minion will not take into account the presence of other minions when choosing a route.
-          </li>
-          <li>
-            <action>WAIT</action>: Do nothing.
-          </li>
-        </ul>
-        <p>
-          Minions can also receive special commands which enables it to perform a powerup which can deal damage to the opponent
-          minions. Refer to the the <b>power up</b> section.
-        </p>
+        <div class="statement-league-alert-content">
+            <!-- BEGIN level1 -->
+            For this challenge, multiple leagues for the same game are available. Once you have proven yourself against the
+            first Boss, you will access a higher league and extra rules will be available.<br><br>
+            <!-- END -->
 
-        <p>
-          See the Game Protocol section for more information on sending commands to your minion. Note that, minions
-          <b>never</b> collide and multiple minions can exist in the same cell.
-        </p>
+            Starter AIs are available in the
+            <a target="_blank" href="https://github.com/CodinGame/SpringChallenge2022/tree/main/starterAIs">Starter Kit</a>.
+            They can help you get started with your own bot.
+            <br><br>
+        </div>
 
-
-<!--        FLAG and FLAG BASE-->
-        <h3 style="font-size: 14px;
-      font-weight: 700;
-      padding-top: 5px;
-      padding-bottom: 15px;">Flag and Flag Base</h3>
-        <p>Each player's flag resides at the flag-base in the beginning of the game. A player's minions can only carry
-          opponent's flag. Note that each player's minions <b>cannot</b> carry their own flag. A flag can be carried by
-          only one minion at a time. <b>Once a minion obtains a flag, it cannot let it go until it is dead.</b> Following
-          the flag-carrying-minion's death, <b>the flag remains at that cell where the minion died until some other minion
-            picks it up</b>.
-        </p>
-
-
-<!--        Power ups-->
-        <h3 style="font-size: 14px;
-      font-weight: 700;
-      padding-top: 5px;
-      padding-bottom: 15px;">Game end</h3>
-        <p>
-          There are 3 types of power ups that a minion can use.
-          <ul>
-          <li>
-            <action>FIRE</action>: A minion that uses fire will ignite every cell in its vision with fire. That is, the whole
-            row and the whole column up until the nearest wall will be ignited. Any opponent minion caught in this fire
-            will take damage.
-          </li>
-          <li>
-            <action>FREEZE</action>: A minion that uses freeze will freeze every cell in its vision with ice. That is,
-            the whole row and the whole column up until the nearest wall will be frozen. Any opponent minion caught in
-            this ice will be frozen (stuck) in its position for <var>timeout</var> amount of time.
-          </li>
-          <li>
-            <action>MINE</action>: A minion that uses mine can plant a bomb at a certain cell of the grid. Any opponent
-            minion that walks over that cell will trigger the bomb to explode. Once a bomb explodes, the opponent minion
-            takes damage.
-          </li>
-          </ul>
-        </p>
-        <p>
-          Each power up requires a certain <var>score</var>. Refer to <b>protocol</b> section on how to use power up command.
-        </p>
-
-
-
-<!--        GAME ENDS-->
-        <h3 style="font-size: 14px;
-      font-weight: 700;
-      padding-top: 5px;
-      padding-bottom: 15px;">Game end</h3>
-        <p>Game can end on any of the following 3 conditions:
-          <ul>
-            <li>
-              One of the player's minions captures opponent's flag and returns to its own flag-base.
-            </li>
-            <li>
-              All the minions of a player are killed.
-            </li>
-            <li>
-              The game doesn't end on any of the two conditions above for more than 200 rounds. In that case, the
-              player with the highest score wins and the game is forcefully ended.
-            </li>
-          </ul>
-        </p>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- PROTOCOL -->
-  <div class="statement-section statement-protocol">
-    <h1>
-      <span class="icon icon-protocol">&nbsp;</span>
-      <span>Game Input</span>
-    </h1>
-
-    <!-- Protocol block -->
-    <div class="blk">
-      <div class="title">Initialization Input</div>
-      <div class="text">
-        <span class="statement-lineno">Line 1: </span>two integers <var>height</var> and <var>width</var> - the size of the maze. <br>
-        <span class="statement-lineno">Next <var>height</var> lines:</span> a string of <var>width</var> characters each representing one cell of a row: <const>'.'</const> is an empty cell and <const>'#'</const> is a wall. <br>
-        <span class="statement-lineno">Next line:</span> two integers: <var>my_flag_base_x</var> & <var>my_flag_base_y</var> - player's flag-base position <br>
-        <span class="statement-lineno">Next line:</span> two integers: <var>opponent_flag_base_x</var> & <var>opponent_flag_base_y</var> - opponent's flag-base position <br>
-        <span class="statement-lineno">Next 3 lines:</span> <var>powerUpName</var> , <var>powerUpPrice</var> & <var>powerUpDamage</var> <br>
-      </div>
     </div>
 
-    <!-- Protocol block -->
-    <div class="blk">
-      <div class="title">Input for Each Game Turn</div>
-      <div class="text">
-        <span class="statement-lineno">Line 1:</span>
-          two integers:
-          <ul>
-            <li><var>my_score</var> & <var>opponent_score</var> - player's and opponent's current score</li>
-          </ul>
-        <span class="statement-lineno">Line 2:</span>
-          three integers:
-          <ul>
-            <li><var>my_flag_pos_x</var>, <var>my_flag_pos_y</var> & <var>my_flag_carrier</var> - player's flag position and carrier of flag by opponent's minion (-1 if no minion is carrying)</li>
-          </ul>
-        <span class="statement-lineno">Line 3:</span>
-          three integers:
-          <ul>
-            <li><var>opponent_flag_pos_x</var>, <var>opponent_flag_pos_y</var> & <var>opponent_flag_carrier</var> - opponent's flag position and carrier of opponent's flag by player's minion (-1 if no minion is carrying) </li>
-          </ul>
-        <span class="statement-lineno">Line 4:</span> <var>my_alive_minion_cnt</var> - number of player's alive minions <br>
-        <span class="statement-lineno">Next <var>my_alive_minion_cnt</var> lines:</span>
-          <ul>
-            <li> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> <var>timeout</var> - player's minion's id, position, health & timeout</li>
-          </ul>
-        <span class="statement-lineno">Next Line:</span> <var>visible_minion_cnt</var> - number of opponent's visible minions <br>
-        <span class="statement-lineno">Next <var>visible_minion_cnt</var> lines:</span>
-          <ul>
-            <li><var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var>  <var>timeout</var>  - opponent's minion's id, position & health </li>
-          </ul>
-        <span class="statement-lineno">Next Line:</span> <var>visible_coin_cnt</var> - number of coins visible by player's minions <br>
-        <span class="statement-lineno">Next <var>visible_coin_cnt</var> lines:</span>
-        <ul>
-          <li> <var>pos_x</var> <var>pos_y</var> coin position </li>
-        </ul>
-      </div>
+
+    <div style="padding: 20px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    text-align: left;">
+        <p><em>Introductory video by <b>Mathis Hammel</b>: <a href="https://youtu.be/MyHjWftmMfQ" rel="noopener"
+                                                              target="_blank">https://youtu.be/MyHjWftmMfQ</a></em></p>
+        <!-- BEGIN level3 level4 -->
+        <p><em>"Road to Silver" video by <b>Mathis Hammel</b>: <a href="https://youtu.be/_y7Uua5wwsc" rel="noopener"
+                                                                  target="_blank">https://youtu.be/_y7Uua5wwsc</a></em></p>
+        <!-- END -->
     </div>
 
-    <!-- Protocol block -->
-    <div class="blk">
-      <div class="title">Output</div>
-      <div class="text">
-        A single line with one or multiple commands separated by <const>|</const>. For example: <action>MOVE 0 5 7 | MOVE 1 16 10</action>.
-        <ul>
-          <li>
-            <action>MOVE minionID x y</action>: the minion with the identifier <const>minionID</const> moves towards the given cell.
-          </li>
-          <li>
-            <action>FIRE minionID</action>: the minion with the identifier <const>minionID</const> uses FIRE.
-          </li>
-          <li>
-            <action>FREEZE minionID</action>: the minion with the identifier <const>minionID</const> uses FREEZE.
-          </li>
-          <li>
-            <action>MINE minionID x y</action>: the minion with the identifier <const>minionID</const> plants mine at (x,y).
-          </li>
-          <li>
-            <action>WAIT minionID</action>: the minion with the identifier <const>minionID</const> does nothing.
-          </li>
-        </ul>
-      </div>
+
+
+    <!-- GOAL -->
+    <div class="statement-section statement-goal">
+        <h2>
+            <span class="icon icon-goal">&nbsp;</span>
+            <span>The Goal</span>
+        </h2>
+        <div class="statement-goal-content">
+            <span>Capture opponent's flag and take it to your base before them!</span>
+        </div>
+    </div>
+    <!-- RULES -->
+    <div class="statement-section statement-rules">
+        <h2>
+            <span class="icon icon-rules">&nbsp;</span>
+            <span>Rules</span>
+        </h2>
+
+        <div class="statement-rules-content">
+            <p>
+                The game is played on a 2D grid, made up of walls and empty cells.
+                Both players controls a team of <strong>minions</strong>.
+                <strong>Minions</strong> can move along the grid, collect
+                <strong>coins</strong>, capture opponent<strong>flag</strong> or
+                use <strong>power-ups</strong> against opponent
+                <strong>minions</strong> to damage them.
+            </p>
+<!--            The Map-->
+            <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
+                The map
+            </h3>
+            <p>
+                The grid is generated randomly, and can vary in <var>height</var>
+                and <var>width</var>. Each cell of the map is either:
+            </p>
+            <ul>
+                <li>A wall (represented by a pound character: <const>#</const>)</li>
+                <li>An empty cell (represented by a dot character: <const>.</const>)</li>
+            </ul>
+            <p>
+                Maps are always symmetrical across the central vertical axis.
+                <strong>Minions</strong> can move along the map only through empty
+                cells, they cannot pass through empty cells. The map is surrounded
+                by walls and hence, <strong>minions</strong> cannot go pass the border
+                of the map. Empty cells may contain <strong>coins</strong>.
+                <strong>Minions</strong> can collect <strong>coins</strong> as they
+                move over cells that contain <strong>coins</strong>.
+                Collecting <strong>coins</strong> increases the <strong>score</strong>
+                the player. <strong>Score</strong> points can be used to perform a
+                <strong>power-up</strong>.
+            </p>
+<!--            Minions-->
+            <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
+                Minions
+            </h3>
+            <p>
+                Each player starts with the same number of <strong>minions</strong>,
+                starting from <const>3</const> to a maximum of <const>5</const>
+                <strong>minions</strong> per player.
+            </p>
+            <p>
+                Each <strong>minion</strong> starts with a <var>health</var> of
+                <const>100</const> hp. <strong>Minions</strong> take damage
+                when a <strong>power-up</strong> is used against them and they lose
+                some hp, decreasing their <var>health</var>. A
+                <strong>minion</strong> whose <var>health</var> drops below
+                <const>1</const> dies and vanishes from the game. A dead
+                <strong>minion</strong> never returns back to the game.
+            </p>
+            <p>
+                <strong>Minions</strong> <b>cannot see through walls</b>. On each
+                turn, you have vision on all of the enemy <strong>minions</strong>
+                and <strong>coins</strong> that can be connected by a continuous
+                straight line to any one of your <strong>minions</strong>
+            </p>
+            <p>
+                <strong>Minions</strong> can receive the following commands (a
+                <strong>minion</strong> can receive only one command per turn):
+            </p>
+            <ul>
+                <li>
+                    <action>MOVE</action>: Give the <strong>minion</strong> a
+                    target position. The minion will find a shortest route to
+                    that position and <b>move to the first cell along that route</b>.
+                    The minion will not take into account the presence of any other
+                    <strong>minions</strong> or <strong>coins</strong> when choosing
+                    the route.
+                </li>
+                <li>
+                    <action>WAIT</action>: Do nothing.
+                </li>
+                <li>
+                    <action>FIRE</action>: The <strong>minion</strong> uses the
+                    <strong>power-up</strong> <strong>fire</strong>. Refer to
+                    <strong>power-up</strong> section.
+                </li>
+                <li>
+                    <action>FREEZE</action>: The <strong>minion</strong> uses the
+                    <strong>power-up</strong> <strong>freeze</strong>. Refer to
+                    <strong>power-up</strong> section.
+                </li>
+                <li>
+                    <action>MINE</action>: The <strong>minion</strong> uses the
+                    <strong>power-up</strong> <strong>mine</strong>. Refer to
+                    <strong>power-up</strong> section.
+                </li>
+            </ul>
+            <p>
+                Note that, <strong>minions</strong> <b>never collide</b> and multiple
+                <strong>minions</strong> can exist in the same cell.
+            </p>
+<!--            Flag and Flag Base-->
+            <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
+                Flag and Flag Base
+            </h3>
+            <p>
+                Each player's <strong>flag</strong> resides at their respective
+                <strong>flag-base</strong> in the beginning of the game. A player's
+                <strong>minions</strong> can only carry opponent's
+                <strong>flag</strong>. Note that, each player's
+                <strong>minions</strong> <b>cannot carry their own flag</b>
+            </p>
+            <p>
+                A <strong>flag</strong> can be carried by only one
+                <strong>minion</strong> at a time. <b>Once a minion obtains a flag
+                , it cannot let it go until it is dead.</b> Following the
+                <strong>flag</strong> carrying <strong>minion's</strong> death,
+                the <strong>flag</strong> remains at that cell where the
+                <strong>minion</strong> died until some other <strong>minion</strong>
+                picks it up.
+            </p>
+<!--            Power Ups-->
+            <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
+                Power Ups
+            </h3>
+            <p>
+                There are <const>3</const> types of <strong>power-ups</strong> that
+                a <strong>minion</strong> can use:
+            </p>
+            <ul>
+                <li>
+                    <action>FIRE</action>: A <strong>minion</strong> that uses
+                    <const>fire</const> ignites every cell in its vision. That is,
+                    all the empty cells that can be connected with a continuous
+                    straight line starting from that <strong>minion's</strong>
+                    position (along the row and column) will be ignited.
+                    Any <strong>minion</strong> caught in this fire will take
+                    <const>20</const> damage. Cost of using a <const>fire</const>
+                    is <const>5</const> <strong>score</strong> points.
+                </li>
+                <li>
+                    <action>FREEZE</action>: A <strong>minion</strong> that uses
+                    <const>freeze</const> freezes every cell in its vision. That is,
+                    all the empty cells that can be connected with a continuous
+                    straight line starting from that <strong>minion's</strong>
+                    position (along the row and column) will be frozen. Any
+                    <strong>minion</strong> caught in this <const>freeze</const>
+                    will be <strong>timed out</strong> for <const>10</const> turns.
+                    A <strong>timed out</strong> <strong>minion</strong> cannot do
+                    anything. Any commands given to a <strong>timed out</strong>
+                    minion won't have any impact. Cost of using a <const>freeze</const>
+                    is <const>5</const> <strong>score</strong> points.
+                </li>
+                <li>
+                    <action>MINE</action>: A <strong>minion</strong> that uses
+                    <const>mine</const> can plant a bomb at a certain cell of the grid.
+                    Any <strong>minion</strong> (including the one who planted the bomb)
+                    that walks over that cell will trigger the bomb to explode. Once
+                    a bomb explodes, any <strong>minion</strong> within a radius of
+                    <const>2</const> will take <const>30</const> damage. The explosion
+                    impact does not go through walls and walls are unaffected by the
+                    explosion. Cost of using a <const>mine</const> is <const>10</const>
+                    <strong>score</strong> points.
+                </li>
+            </ul>
+            <p>
+                Note that, all the <strong>power-ups</strong> have friendly fire on. That
+                is, <b>each of the <strong>power-ups</strong> affect opponent and
+                teammate <strong>minions</strong> equally</b>. Only the
+                <strong>minion</strong> that uses <action>FIRE</action> or
+                <action>FREEZE</action> is unaffected by that action. Also note that,
+                <action>MINE</action> affects every <strong>minions</strong>, including
+                the one who planted the bomb.
+            </p>
+<!--            Coins-->
+            <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
+                Coins
+            </h3>
+            <p>
+                At the start of the game, all the empty cells contain a
+                <strong>coin</strong>. Each <strong>coin</strong> is worth
+                <const>1</const> <strong>score</strong> point. A
+                <strong>minion</strong> can collect a <strong>coin</strong> if
+                it walks over a cell that contains a <strong>coin</strong>. Once
+                a <strong>coin</strong> has been collected, it disappears and
+                never reappears. A player starts with <const>15</const> score points
+            </p>
+
+
+<!--            &lt;!&ndash; BEGIN level2 &ndash;&gt;-->
+<!--            <div class="statement-new-league-rule">-->
+<!--                &lt;!&ndash; END &ndash;&gt;-->
+<!--                &lt;!&ndash; BEGIN level2 level3 level4 &ndash;&gt;-->
+<!--                <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">Spells-->
+<!--                </h3>-->
+<!--                <p>Your team will also acquire-->
+<!--                    <const>1</const> point of-->
+<!--                    <strong>mana</strong> per damage dealt to a monster, even from monsters with no health left.-->
+<!--                </p>-->
+<!--                <p>-->
+<!--                    Mana is shared across the team and heroes can spend <const>10</const> mana points to cast a-->
+<!--                    <strong>spell</strong>.-->
+<!--                </p>-->
+<!--                <p>A spell command has-->
+<!--                    <strong>parameters</strong>, which you must separate with a space.-->
+<!--                </p>-->
+<!--                &lt;!&ndash; BEGIN level3 &ndash;&gt;-->
+<!--                <div class="statement-new-league-rule">-->
+<!--                    &lt;!&ndash; END &ndash;&gt;-->
+<!--                    <table>-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th style="text-align: center; padding: 5px">command</th>-->
+<!--                            <th style="text-align: center; padding: 5px">parameters</th>-->
+<!--                            <th style="text-align: center; padding: 5px">effect</th>-->
+<!--                            &lt;!&ndash; BEGIN level3 level4 &ndash;&gt;-->
+<!--                            <th style="text-align: center; padding: 5px">range</th>-->
+<!--                            &lt;!&ndash; END &ndash;&gt;-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr>-->
+<!--                            <td style="padding: 5px">-->
+<!--                                <action>WIND</action>-->
+<!--                            </td>-->
+<!--                            <td style="padding: 5px">&lt;x&gt; &lt;y&gt;</td>-->
+<!--                            <td style="padding: 5px">All entities (except your own heroes) within-->
+<!--                                <const>1280</const> units are-->
+<!--                                <b>pushed</b>-->
+<!--                                <const>2200</const> units in the direction from the spellcaster to x,y.-->
+<!--                            </td>-->
+<!--                            &lt;!&ndash; BEGIN level3 level4 &ndash;&gt;-->
+<!--                            <td style="padding: 5px">-->
+<!--                                <const>1280</const>-->
+<!--                            </td>-->
+<!--                            &lt;!&ndash; END &ndash;&gt;-->
+<!--                        </tr>-->
+<!--                        &lt;!&ndash; BEGIN level3 level4 &ndash;&gt;-->
+<!--                        <tr>-->
+<!--                            <td style="padding: 5px">-->
+<!--                                <action>SHIELD</action>-->
+<!--                            </td>-->
+<!--                            <td style="padding: 5px">&lt;entityId&gt;</td>-->
+<!--                            <td style="padding: 5px">The target entity cannot be targeted by spells for the next-->
+<!--                                <const>12</const> rounds.-->
+<!--                            </td>-->
+<!--                            <td style="padding: 5px">-->
+<!--                                <const>2200</const>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        <tr>-->
+<!--                            <td style="padding: 5px">-->
+<!--                                <action>CONTROL</action>-->
+<!--                            </td>-->
+<!--                            <td style="padding: 5px">&lt;entityId&gt; &lt;x&gt; &lt;y&gt;</td>-->
+<!--                            <td style="padding: 5px">Override the target&apos;s next action with a step towards the given-->
+<!--                                coordinates.-->
+<!--                            </td>-->
+<!--                            <td style="padding: 5px">-->
+<!--                                <const>2200</const>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        &lt;!&ndash; END &ndash;&gt;-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                    &lt;!&ndash; BEGIN level3 &ndash;&gt;-->
+<!--                    <br>-->
+<!--                    A hero may only cast a spell on entities that are within-->
+<!--                    the spell's range from the hero.-->
+<!--                </div>-->
+<!--                &lt;!&ndash; END &ndash;&gt;-->
+
+<!--                &lt;!&ndash; BEGIN level4 &ndash;&gt;-->
+<!--                <br>-->
+<!--                A hero may only cast a spell on entities that are within-->
+<!--                the spell's range from the hero.-->
+<!--                &lt;!&ndash; END &ndash;&gt;-->
+<!--                &lt;!&ndash; END &ndash;&gt;-->
+<!--                &lt;!&ndash; BEGIN level2 &ndash;&gt;-->
+<!--            </div>-->
+<!--            &lt;!&ndash; END &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    &lt;!&ndash; BEGIN level2 level3 level4 &ndash;&gt;-->
+<!--    &lt;!&ndash; EXAMPLES &ndash;&gt;-->
+<!--    <div class="statement-section statement-examples">-->
+
+<!--        &lt;!&ndash; BEGIN level2 &ndash;&gt;-->
+<!--        <div class="statement-new-league-rule">-->
+<!--            &lt;!&ndash; END &ndash;&gt;-->
+
+<!--            <h2>-->
+<!--                <span class="icon icon-example">&nbsp;</span>-->
+<!--                <span>WIND Example</span>-->
+<!--            </h2>-->
+<!--            <div class="statement-examples-text">-->
+<!--                A hero uses WIND at position-->
+<!--                <const>(6000, 6000)</const> towards-->
+<!--                <const>(6000, 5000)</const>.-->
+<!--            </div>-->
+<!--            <div class="statement-example-container">-->
+<!--                <div class="statement-example">-->
+<!--                    <img src="/servlet/fileservlet?id=20669980430629" />-->
+<!--                    <div class="legend">-->
+<!--                        <div class="description">There are-->
+<!--                            <const>2</const> monsters within-->
+<!--                            <const>1280</const> units around the hero.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="statement-example">-->
+<!--                    <img src="/servlet/fileservlet?id=20669992024930" />-->
+<!--                    <div class="legend">-->
+<!--                        <div class="title">-->
+<!--                            <action>SPELL WIND 6000 5000</action>-->
+<!--                        </div>-->
+<!--                        <div class="description">The vector-->
+<!--                            <const style="font-family: 'Courier New', Courier, monospace">(0,-1)</const> describes the direction-->
+<!--                            between-->
+<!--                            the hero and the target point.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="statement-example">-->
+<!--                    <img src="/servlet/fileservlet?id=20669974783504" />-->
+<!--                    <div class="legend">-->
+<!--                        <div class="description">The monsters all move-->
+<!--                            <const>2200</const> in the direction defined by the vector.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="statement-example statement-example-empty" style="height: 0; margin-top: 0; margin-bottom: 0"></div>-->
+<!--                <div class="statement-example statement-example-empty" style="height: 0; margin-top: 0; margin-bottom: 0"></div>-->
+<!--                <div class="statement-example statement-example-empty" style="height: 0; margin-top: 0; margin-bottom: 0"></div>-->
+<!--                <div class="statement-example statement-example-empty" style="height: 0; margin-top: 0; margin-bottom: 0"></div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; BEGIN level2 &ndash;&gt;-->
+<!--        </div>-->
+<!--        &lt;!&ndash; END &ndash;&gt;-->
+<!--    </div>-->
+<!--    &lt;!&ndash; END &ndash;&gt;-->
+
+    <div class="statement-section statement-rules">
+        <!-- Victory conditions -->
+        <div class="statement-victory-conditions">
+            <div class="icon victory"></div>
+            <div class="blk">
+                <div class="title">Victory Conditions</div>
+                <div class="text">
+                    <ul style="padding-top:0; padding-bottom: 0;">
+                        <li>
+                            Your <strong>minion</strong> has returned to your base
+                            with the opponent's flag before opponent took your
+                            <strong>flag</strong> to their base
+                        </li>
+                        <li>
+                            All opponent <strong>minions</strong> are killed.
+                        </li>
+                        <li>
+                            If both the <strong>flags</strong> were captured at the
+                            same time, then you have more alive
+                            <strong>minions</strong> than your opponent
+                        </li>
+                        <li>
+                            If both the <strong>flags</strong> were captured at the
+                            same time and you have same number of alive
+                            <strong>minions</strong> as your opponent, then you
+                            have higher <strong>score</strong> than your opponent
+                        </li>
+                        <li>
+                            You have more alive <strong>minion</strong> count
+                            after <const>200</const> <strong>turns</strong>
+                        </li>
+                        <li>
+                            In case of having same alive <strong>minion</strong>
+                            count as your opponent after <const>200</const>
+                            <strong>turns</strong>, you have higher
+                            <strong>score</strong>.
+                        </li>
+                    </ul>
+                    <strong>In case of tie, the game is considered as a draw.</strong>
+                </div>
+            </div>
+        </div>
+        <!-- Lose conditions -->
+        <div class="statement-lose-conditions">
+            <div class="icon lose"></div>
+            <div class="blk">
+                <div class="title">Defeat Conditions</div>
+                <div class="text">
+                    <ul style="padding-top:0; padding-bottom: 0;">
+                        <li>
+                            Opponent <strong>minion</strong> took your flag to
+                            their <strong>flag-base</strong> before your
+                            <strong>minion</strong> took their
+                            <strong>flag</strong>.
+                        </li>
+                        <li>
+                            All your <strong>minions</strong> die.
+                        </li>
+                        <li>
+                            Your program does not provide a valid command in time.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br>
+<!--        <h3 style="font-size: 14px;-->
+<!--                      font-weight: 700;-->
+<!--                      padding-top: 15px;-->
+<!--    color: #838891;-->
+<!--                      padding-bottom: 15px;">-->
+<!--            🐞 Debugging tips</h3>-->
+<!--        <ul>-->
+<!--            <li>Hover over an entity to see extra information about it</li>-->
+<!--            <li>Append text after any command and that text will appear above your hero</li>-->
+<!--            <li>Press the gear icon on the viewer to access extra display options</li>-->
+<!--            <li>Use the keyboard to control the action: space to play/pause, arrows to step 1 frame at a time</li>-->
+<!--        </ul>-->
     </div>
 
-    <!-- Protocol block -->
-    <div class="blk">
-      <div class="title">Constraints</div>
-<!--      <div class="text"><var>...</var> contains between 1 and 500 characters.<br>-->
-<!--        <br>Allotted response time to output-->
-<!--        is ≤ <const>2</const> seconds.</div>-->
-      TBD
+
+    <!-- BEGIN level3 level4 -->
+    <!-- EXPERT RULES -->
+<!--    <div class="statement-section statement-expertrules">-->
+<!--        &lt;!&ndash; BEGIN level3 &ndash;&gt;-->
+<!--        <div class="statement-new-league-rule">-->
+<!--            &lt;!&ndash; END &ndash;&gt;-->
+<!--            <h2>-->
+<!--                <span class="icon icon-expertrules">&nbsp;</span>-->
+<!--                <span>Technical Details</span>-->
+<!--            </h2>-->
+<!--            <div class="statement-expert-rules-content">-->
+<!--                <ul style="padding-left: 20px;padding-bottom: 0">-->
+<!--                    <li>-->
+<!--                        <p>After an entity moves towards a point, its coordinates are-->
+<!--                            <strong>truncated</strong> (when below halfway across the map) or-->
+<!--                            <strong>rounded up</strong> (when above halfway across the map), only then are distance-based calculations-->
+<!--                            performed-->
+<!--                            (such as monster damage).-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>Spells are cast in the order of the received output. This means a spell may be-->
+<!--                            <strong>cancelled</strong> if another hero spent the necessary mana earlier in the turn.-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>If an entity is being moved via a-->
+<!--                            <action>CONTROL</action> from multiple sources at once, it will move to the average of all computed-->
+<!--                            destinations.-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>If an entity is being moved via a-->
+<!--                            <action>WIND</action> from multiple sources at once, it will move to the sum of all given directions.-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>-->
+<!--                            <action>SHIELD</action> also protects entities from receiving a new-->
+<!--                            <action>SHIELD</action>.-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>Using a spell against a shielded entity still costs mana.</p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>Players are not given the coordinates of monsters outside the map and they cannot be targetted by spells.</p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>A monster can be pushed outside of the map, unless it is within a base radius, in which case it will will-->
+<!--                            be moved no further than the border.</p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>In case of a tie, the player who gained the highest amount of-->
+<!--                            <strong>mana</strong> outside the radius of their-->
+<!--                            <strong>base</strong> will win. this is called <em>wild mana</em>.-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                    <li>-->
+<!--                        <p>The source code of this game is available <a rel="nofollow" target="_blank"-->
+<!--                                                                        href="https://github.com/CodinGame/SpringChallenge2022">on this GitHub repo</a>.-->
+<!--                        </p>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; BEGIN level3 &ndash;&gt;-->
+<!--        </div>-->
+<!--        &lt;!&ndash; END &ndash;&gt;-->
+<!--    </div>-->
+
+    <!-- ACTION ORDER -->
+    <div class="statement-section statement-examples">
+        <div class="statement-new-league-rule">
+            <h2>
+                <span class="icon icon-example">&nbsp;</span>
+                <span>Action order for one turn</span>
+            </h2>
+            <div class="statement-examples-text">
+                <ol>
+                    <li>
+                        Wait for <strong>both</strong> players to output commands
+                    </li>
+                    <li>
+                        Any <strong>frozen</strong> minions are <strong>unfrozen</strong>
+                    </li>
+                    <li>
+                        Flag positions are updated
+                    </li>
+                    <li>
+                        <strong>Minions</strong> are moved
+                    </li>
+                    <li>
+                        <strong>Coin</strong> positions are updated e.g a <strong>coin</strong>
+                        is removed if it has been taken by a <strong>minion</strong>
+                    </li>
+                    <li>
+                        Apply <strong>power ups</strong> and damage to corresponding
+                        <strong>minions</strong>
+                    </li>
+                    <li>
+                        Check and detonate <strong>mines</strong>
+                    </li>
+                    <li>
+                        Remove dead <strong>minions</strong>
+                    </li>
+                    <li>
+                        Decrease <strong>minion</strong> <strong>freeze</strong>
+                        <strong>timeout</strong>
+                    </li>
+                </ol>
+            </div>
+        </div>
     </div>
 
-  </div>
+
+
+    <!-- PROTOCOL -->
+    <div class="statement-section statement-protocol">
+        <h1>
+            <span class="icon icon-protocol">&nbsp;</span>
+            <span>Game Input</span>
+        </h1>
+
+        <!-- Protocol block -->
+        <div class="blk">
+            <div class="title">Initialization Input</div>
+            <div class="text">
+                <span class="statement-lineno">Line 1: </span>
+                two integers <var>height</var> and <var>width</var> - the size of the maze.
+                <br>
+
+                <span class="statement-lineno">Next <var>height</var> lines:</span>
+                a string of <var>width</var> characters each representing one cell of a row:
+                <const>'.'</const> is an empty cell and
+                <const>'#'</const> is a wall.
+                <br>
+
+                <span class="statement-lineno">Next line:</span>
+                two integers:
+                <var>myFlagBaseR</var> and
+                <var>myFlagBaseC</var> -
+                the row and column respectively of the cell indicating the
+                <strong>flag-base</strong> position of the player.
+                <br>
+
+                <span class="statement-lineno">Next line:</span>
+                two integers:
+                <var>opponentFlagBaseR</var> and
+                <var>opponentFlagBaseC</var> -
+                the row and column respectively of the cell indicating the
+                <strong>flag-base</strong> position of the opponent.
+                <br>
+
+                <span class="statement-lineno">Next 3 lines:</span>
+                <var>powerUpName</var> ,
+                <var>powerUpPrice</var> and
+                <var>powerUpDamage</var>
+                <br>
+            </div>
+        </div>
+
+        <!-- Protocol block -->
+        <div class="blk">
+            <div class="title">Input for Each Game Turn</div>
+            <div class="text">
+                <span class="statement-lineno">Line 1:</span>
+                two integers:
+                <var>myScore</var> and
+                <var>opponentScore</var>
+                - player's and opponent's current score respectively
+                <br>
+
+                <span class="statement-lineno">Line 2:</span>
+                three integers:
+                <var>myFlagPosR</var>,
+                <var>myFlagPosC</var> and
+                <var>myFlagCarrier</var> -
+                player's <strong>flag</strong> position
+                (row and column respectively) and
+                <var>id</var> of opponent <strong>minion</strong> who is carrying player's
+                <strong>flag</strong>
+                (<const>-1</const> if no <strong>minion</strong>is carrying)
+                <br>
+
+                <span class="statement-lineno">Line 3:</span>
+                three integers:
+                <var>opponentFlagPosR</var>,
+                <var>opponentFlagPosC</var> and
+                <var>opponentFlagCarrier</var> -
+                opponent's <strong>flag</strong> position
+                (row and column respectively) and
+                <var>id</var> of player's <strong>minion</strong> who is carrying opponent's
+                <strong>flag</strong>
+                (<const>-1</const> if no <strong>minion</strong>is carrying)
+                <br>
+
+                <span class="statement-lineno">Line 4:</span>
+                <var>myAliveMinionCnt</var> - number of player's alive <strong>minions</strong>
+                <br>
+
+                <span class="statement-lineno">Next <var>myAliveMinionCnt</var> lines:</span>
+                <var>id</var>,
+                <var>posR</var>,
+                <var>posC</var>,
+                <var>health</var>,
+                <var>timeout</var> -
+                player's <strong>minion's</strong> id, position (row and column), health and timeout
+                <br>
+
+                <span class="statement-lineno">Next Line:</span>
+                <var>visibleMinionCnt</var> - number of opponent's visible <strong>minions</strong>
+                <br>
+
+                <span class="statement-lineno">Next <var>visibleMinionCnt</var> lines:</span>
+                <var>id</var>,
+                <var>posR</var>,
+                <var>posC</var>,
+                <var>health</var>,
+                <var>timeout</var> -
+                opponent's <strong>minion's</strong> id, position (row and column), health and timeout
+                <br>
+
+                <span class="statement-lineno">Next Line:</span>
+                <var>visibleCoin_cnt</var> - number of coins visible by player's <strong>minions</strong>
+                <br>
+
+                <span class="statement-lineno">Next <var>visibleCoinCnt</var> lines:</span>
+                <var>posR</var>, <var>posC</var> <strong>coin</strong> position (row and column)
+                <br>
+            </div>
+        </div>
+
+        <!-- Protocol block -->
+        <div class="blk">
+            <div class="title">Output for One Game Turn</div>
+            <div class="text">
+                A single line with one or multiple commands separated by <const>|</const>.
+                For example: <action>MOVE 0 5 7 | MOVE 1 16 10</action>.
+                <ul>
+                    <li>
+                        <action>MOVE minionID x y</action>: the minion with the identifier
+                        <const>minionID</const> moves towards the given cell following the shortest path.
+                    </li>
+                    <li>
+                        <action>FIRE minionID</action>: the minion with the identifier <const>minionID</const>
+                        uses <const>FIRE</const>.
+                    </li>
+                    <li>
+                        <action>FREEZE minionID</action>: the minion with the identifier <const>minionID</const>
+                        uses <const>FREEZE</const>.
+                    </li>
+                    <li>
+                        <action>MINE minionID r c</action>: the minion with the identifier <const>minionID</const>
+                        plants a mine at the cell <const>(r, c)</const>
+                        i.e at row <const>r</const> and column <const>c</const>.
+                    </li>
+                    <li>
+                        <action>WAIT minionID</action>: the minion with the identifier <const>minionID</const>
+                        does nothing.
+                    </li>
+                </ul>
+                You must provide a valid command for atleast one
+                <strong>minion</strong> each turn, even if all of your <strong>minions</strong>
+                are currently <strong>frozen</strong> and timed out.
+            </div>
+        </div>
+
+        <!-- Protocol block -->
+        <div class="blk">
+            <div class="title">Constraints</div>
+            <const>17</const> ≤ <var>height</var> ≤ <const>20</const> <br>
+            <const>33</const> ≤ <var>width</var> ≤ <const>35</const> <br>
+            <const>3</const> ≤ Initial <strong>minion</strong> count ≤ <const>5</const> <br>
+            Initial score points for each player = <const>0</const> <br>
+            Response time per turn ≤ <const>50ms</const> <br>
+            Response time for the first turn ≤ <const>1000ms</const> <br>
+        </div>
+
+    </div>
 </div>
+<!-- SHOW_SAVE_PDF_BUTTON -->

@@ -497,19 +497,45 @@ public class Game {
 
     public boolean isGameOver() {
         boolean gameOver = false;
-        for(Player player: gameManager.getPlayers()) {
-            if(player.getFlag().getPos().equals(getOpponentOf(player).getFlagBase().getPos())) {
-                getOpponentOf(player).setWinner(true);
-                gameOver = true;
-            }
-            if( (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count() == 0) {
-                getOpponentOf(player).setWinner(true);
-                gameOver = true;
-            }
-            if( player.isTimedOut() ) {
-                getOpponentOf(player).setWinner(true);
-                gameOver = true;
-            }
+        Player player = gameManager.getPlayers().get(0);
+        Player opponent = getOpponentOf(player);
+        boolean iCapturedFlag = opponent.getFlag().getPos().equals(player.getFlagBase().getPos());
+        boolean oppCapturedFlag = player.getFlag().getPos().equals(opponent.getFlagBase().getPos());
+        int myScore = player.getCurrentCredit();
+        int oppScore = opponent.getCurrentCredit();
+        int myAliveCount = (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count();
+        int oppAliveCount = (int) opponent.getMinions().stream().filter(minion -> !minion.isDead()).count();
+
+        if(iCapturedFlag && oppCapturedFlag) {
+            gameOver = true;
+            if(myAliveCount > oppAliveCount)        player.setWinner(true);
+            else if(oppAliveCount > myAliveCount)   opponent.setWinner(true);
+            else if(myScore > oppScore)             player.setWinner(true);
+            else                                    opponent.setWinner(true);
+        }
+        else if(oppCapturedFlag) {
+            opponent.setWinner(true);
+            gameOver = true;
+        }
+        else if(iCapturedFlag) {
+            player.setWinner(true);
+            gameOver = true;
+        }
+        else if(oppAliveCount == 0) {
+            player.setWinner(true);
+            gameOver = true;
+        }
+        else if(myAliveCount == 0) {
+            opponent.setWinner(true);
+            gameOver = true;
+        }
+        if(player.isTimedOut()) {
+            getOpponentOf(player).setWinner(true);
+            gameOver = true;
+        }
+        if(opponent.isTimedOut()) {
+            player.setWinner(true);
+            gameOver = true;
         }
         return gameOver;
     }
@@ -526,6 +552,28 @@ public class Game {
         }
         if(flagReachedCnt == 2) {
             gameManager.addToGameSummary("Both players have captured opponent's flag at the same time\nMatch tied!");
+            Player player0 = gameManager.getPlayer(0);
+            Player player1 = gameManager.getPlayer(1);
+            if(player0.getAliveMinions().count() > player1.getAliveMinions().count()) {
+                winner = player0;
+                gameManager.addToGameSummary(String.format("%s has more alive minions\n", winner.getNicknameToken()));
+            }
+            else if(player0.getAliveMinions().count() < player1.getAliveMinions().count()) {
+                winner = player1;
+                gameManager.addToGameSummary(String.format("%s has more alive minions\n", winner.getNicknameToken()));
+            }
+            else if(player0.getCurrentCredit() > player1.getCurrentCredit()) {
+                winner = player0;
+                gameManager.addToGameSummary(String.format("%s has more score\n", winner.getNicknameToken()));
+            }
+            else if(player0.getCurrentCredit() < player1.getCurrentCredit()) {
+                winner = player1;
+                gameManager.addToGameSummary(String.format("%s has more score\n", winner.getNicknameToken()));
+            }
+            else {
+                gameManager.addToGameSummary("DRAW!!!");
+                gameManager.addToGameSummary(String.format("%s: %d\n%s: %d\n", player0.getNicknameToken(), player0.getCurrentCredit(), player1.getNicknameToken(), player1.getCurrentCredit()));
+            }
         }
         else if(flagReachedCnt == 1) {
             gameManager.addToGameSummary(String.format("%s is the winner", winner.getNicknameToken()));

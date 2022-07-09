@@ -1,18 +1,18 @@
 read height:int width:int
 loop height read row:word(50)
-read myFlagBaseX:int myFlagBaseY:int
-read opponentFlagBaseX:int opponentFlagBaseY:int
+read myFlagBaseR:int myFlagBaseC:int
+read opponentFlagBaseR:int opponentFlagBaseC:int
 read fireName:word(50) firePrice:int fireDamage:int
 read freezeName:word(50) freezePrice:int freezeDamage:int
 read mineName:word(50) minePrice:int mineDamage:int
 gameloop
 read myScore:int opponentScore:int
-read myFlagPosX:int myFlagPosY:int myFlagCarrier:int
-read opponentFlagPosX:int opponentFlagPosY:int opponentFlagCarrier:int
+read myFlagPosR:int myFlagPosC:int myFlagCarrier:int
+read opponentFlagPosR:int opponentFlagPosC:int opponentFlagCarrier:int
 read myAliveMinionCnt:int
-loop myAliveMinionCnt read id:int posX:int posY:int health:int timeout:int
+loop myAliveMinionCnt read id:int posR:int posC:int health:int timeout:int
 read visibleMinionCnt:int
-loop visibleMinionCnt read id:int posX:int posY:int health:int timeout:int
+loop visibleMinionCnt read id:int posR:int posC:int health:int timeout:int
 read visibleCoinCnt:int
-loop visibleCoinCnt read x:int y:int
+loop visibleCoinCnt read posR:int posC:int
 write MOVE 0 1 1

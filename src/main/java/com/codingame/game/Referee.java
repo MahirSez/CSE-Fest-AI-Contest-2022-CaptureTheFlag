@@ -93,8 +93,42 @@ public class Referee extends AbstractReferee {
 
     @Override
     public void onEnd() {
-        if(!gameManager.getPlayer(0).isWinner() && !gameManager.getPlayer(1).isWinner()) {
-            gameManager.getPlayers().forEach(player -> player.setScore(player.getCurrentCredit()));
+        Player player0 = gameManager.getPlayer(0);
+        Player player1 = gameManager.getPlayer(1);
+        boolean player0_CapturedFlag = player1.getFlag().getPos().equals(player0.getFlagBase().getPos());
+        boolean player1_CapturedFlag = player0.getFlag().getPos().equals(player1.getFlagBase().getPos());
+        int player0_Credit = player0.getCurrentCredit();
+        int player1_Credit = player1.getCurrentCredit();
+        int player0_AliveCount = (int) player0.getMinions().stream().filter(minion -> !minion.isDead()).count();
+        int player1_AliveCount = (int) player1.getMinions().stream().filter(minion -> !minion.isDead()).count();
+
+        // 200 turns have been completed without anyone being winner
+        if(!player0.isWinner() && !player1.isWinner()) {
+            if(player0_AliveCount > player1_AliveCount) {
+                player0.setScore(1);
+                player1.setScore(0);
+                player0.setWinner(true);
+            }
+            else if(player1_AliveCount > player0_AliveCount) {
+                player1.setScore(1);
+                player0.setScore(0);
+                player1.setWinner(true);
+            }
+            else if(player0_Credit > player1_Credit) {
+                player0.setScore(1);
+                player1.setScore(0);
+                player0.setWinner(true);
+            }
+            else if(player1_Credit > player0_Credit) {
+                player1.setScore(1);
+                player0.setScore(0);
+                player1.setWinner(true);
+            }
+            // no one is winner
+            else {
+                player1.setScore(0);
+                player0.setScore(0);
+            }
         }
         else {
             gameManager.getPlayers().forEach(player -> player.setScore(player.isWinner()? 1: 0));
@@ -110,18 +144,43 @@ public class Referee extends AbstractReferee {
                 gameManager.getPlayers()
                         .stream()
                         .map(player -> {
-                            if( game.getOpponentOf(player).getFlag().getPos().equals(player.getFlagBase().getPos()) ) {
-                                return "Captured Flag!";
+                            Player opponent = game.getOpponentOf(player);
+                            boolean iCapturedFlag = opponent.getFlag().getPos().equals(player.getFlagBase().getPos());
+                            boolean oppCapturedFlag = player.getFlag().getPos().equals(opponent.getFlagBase().getPos());
+                            int myScore = player.getCurrentCredit();
+                            int oppScore = opponent.getCurrentCredit();
+                            int myAliveCount = (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count();
+                            int oppAliveCount = (int) opponent.getMinions().stream().filter(minion -> !minion.isDead()).count();
+
+                            if(player.isWinner()) {
+                                if(iCapturedFlag && oppCapturedFlag) {
+                                    if(myAliveCount != oppAliveCount) return "Minions Alive: " + myAliveCount;
+                                    if(myScore != oppScore) return "Score: " + myScore;
+                                    return "-";
+                                }
+                                if(iCapturedFlag)
+                                    return "Captured Flag";
+
+                                if(oppAliveCount == 0)
+                                    return "All Opponent Dead";
+
+                                return "-";
                             }
-                            if( (int) player.getMinions().stream().filter(minion -> !minion.isDead()).count() == 0) {
-                                return "All Minions Dead!";
+                            else if(opponent.isWinner()) {
+                                if(iCapturedFlag && oppCapturedFlag) {
+                                    if(myAliveCount != oppAliveCount) return "Minions Alive: " + myAliveCount;
+                                    if(myScore != oppScore) return "Score: " + myScore;
+                                    return "-";
+                                }
+                                return  "-";
                             }
-                            if(player.isTimedOut()) {
+
+                            if(player.isTimedOut())
                                 return "Timed Out!";
-                            }
-                            if(!player.isWinner() && !game.getOpponentOf(player).isWinner()) {
-                                return player.getCurrentCredit() + " credit";
-                            }
+
+                            if(!player.isWinner() && !opponent.isWinner())
+                                return "Score: " + myScore;
+
                             return "-";
                         })
                         .collect(Collectors.toList())
