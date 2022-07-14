@@ -7,6 +7,12 @@ public class SkeletonMain {
 
         MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
 
+//        gameRunner.addAgent(Test1.class, "red");
+//        gameRunner.addAgent(Test2.class, "blue");
+
+//        gameRunner.addAgent(Waiter_with_more_score.class, "red");
+//        gameRunner.addAgent(Waiter_with_more_score.class, "blue");
+
         gameRunner.addAgent(Freezer.class, "red");
         gameRunner.addAgent(Flamer.class, "blue");
 

@@ -2,55 +2,55 @@
 <div id="statement_back" class="statement_back" style="display: none"></div>
 <div class="statement-body">
 
-    <!-- LEAGUE ALERT -->
-    <div style="color: #7cc576;
-background-color: rgba(124, 197, 118,.1);
-padding: 20px;
-margin-right: 15px;
-margin-left: 15px;
-margin-bottom: 10px;
-text-align: left;">
-        <div style="text-align: center; margin-bottom: 6px">
-            <img src="//cdn.codingame.com/smash-the-code/statement/league_wood_04.png" />
-        </div>
+<!--    &lt;!&ndash; LEAGUE ALERT &ndash;&gt;-->
+<!--    <div style="color: #7cc576;-->
+<!--background-color: rgba(124, 197, 118,.1);-->
+<!--padding: 20px;-->
+<!--margin-right: 15px;-->
+<!--margin-left: 15px;-->
+<!--margin-bottom: 10px;-->
+<!--text-align: left;">-->
+<!--        <div style="text-align: center; margin-bottom: 6px">-->
+<!--            <img src="//cdn.codingame.com/smash-the-code/statement/league_wood_04.png" />-->
+<!--        </div>-->
 
-        <!-- BEGIN level1 -->
-        <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
-            This is a <b>league based</b> challenge.
-        </p>
-        <!-- END -->
-        <!-- BEGIN level2 level3 level4 -->
-        <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
-            <b>Starter Kit</b>
-        </p>
-        <!-- END -->
+<!--        &lt;!&ndash; BEGIN level1 &ndash;&gt;-->
+<!--        <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">-->
+<!--            This is a <b>league based</b> challenge.-->
+<!--        </p>-->
+<!--        &lt;!&ndash; END &ndash;&gt;-->
+<!--        &lt;!&ndash; BEGIN level2 level3 level4 &ndash;&gt;-->
+<!--        <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">-->
+<!--            <b>Starter Kit</b>-->
+<!--        </p>-->
+<!--        &lt;!&ndash; END &ndash;&gt;-->
 
-        <div class="statement-league-alert-content">
-            <!-- BEGIN level1 -->
-            For this challenge, multiple leagues for the same game are available. Once you have proven yourself against the
-            first Boss, you will access a higher league and extra rules will be available.<br><br>
-            <!-- END -->
+<!--        <div class="statement-league-alert-content">-->
+<!--            &lt;!&ndash; BEGIN level1 &ndash;&gt;-->
+<!--            For this challenge, multiple leagues for the same game are available. Once you have proven yourself against the-->
+<!--            first Boss, you will access a higher league and extra rules will be available.<br><br>-->
+<!--            &lt;!&ndash; END &ndash;&gt;-->
 
-            Starter AIs are available in the
-            <a target="_blank" href="https://github.com/CodinGame/SpringChallenge2022/tree/main/starterAIs">Starter Kit</a>.
-            They can help you get started with your own bot.
-            <br><br>
-        </div>
+<!--            Starter AIs are available in the-->
+<!--            <a target="_blank" href="https://github.com/CodinGame/SpringChallenge2022/tree/main/starterAIs">Starter Kit</a>.-->
+<!--            They can help you get started with your own bot.-->
+<!--            <br><br>-->
+<!--        </div>-->
 
-    </div>
+<!--    </div>-->
 
 
-    <div style="padding: 20px;
-    margin-right: 15px;
-    margin-bottom: 10px;
-    text-align: left;">
-        <p><em>Introductory video by <b>Mathis Hammel</b>: <a href="https://youtu.be/MyHjWftmMfQ" rel="noopener"
-                                                              target="_blank">https://youtu.be/MyHjWftmMfQ</a></em></p>
-        <!-- BEGIN level3 level4 -->
-        <p><em>"Road to Silver" video by <b>Mathis Hammel</b>: <a href="https://youtu.be/_y7Uua5wwsc" rel="noopener"
-                                                                  target="_blank">https://youtu.be/_y7Uua5wwsc</a></em></p>
-        <!-- END -->
-    </div>
+<!--    <div style="padding: 20px;-->
+<!--    margin-right: 15px;-->
+<!--    margin-bottom: 10px;-->
+<!--    text-align: left;">-->
+<!--        <p><em>Introductory video by <b>Mathis Hammel</b>: <a href="https://youtu.be/MyHjWftmMfQ" rel="noopener"-->
+<!--                                                              target="_blank">https://youtu.be/MyHjWftmMfQ</a></em></p>-->
+<!--        &lt;!&ndash; BEGIN level3 level4 &ndash;&gt;-->
+<!--        <p><em>"Road to Silver" video by <b>Mathis Hammel</b>: <a href="https://youtu.be/_y7Uua5wwsc" rel="noopener"-->
+<!--                                                                  target="_blank">https://youtu.be/_y7Uua5wwsc</a></em></p>-->
+<!--        &lt;!&ndash; END &ndash;&gt;-->
+<!--    </div>-->
 
 
 
@@ -74,11 +74,13 @@ text-align: left;">
         <div class="statement-rules-content">
             <p>
                 The game is played on a 2D grid, made up of walls and empty cells.
-                Both players controls a team of <strong>minions</strong>.
-                <strong>Minions</strong> can move along the grid, collect
-                <strong>coins</strong>, capture opponent<strong>flag</strong> or
-                use <strong>power-ups</strong> against opponent
-                <strong>minions</strong> to damage them.
+                Both players control a team of <strong>minions</strong>.
+                The game is played on turns. On each turn, both the player
+                should output a command that tells each <strong>minions</strong>
+                to move along the grid, collect <strong>coins</strong>,
+                capture opponent <strong>flag</strong> or
+                use <strong>power-ups</strong> to damage oppnent
+                <strong>minions</strong>.
             </p>
 <!--            The Map-->
             <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
@@ -95,14 +97,14 @@ text-align: left;">
             <p>
                 Maps are always symmetrical across the central vertical axis.
                 <strong>Minions</strong> can move along the map only through empty
-                cells, they cannot pass through empty cells. The map is surrounded
+                cells, they cannot pass through walls. The map is surrounded
                 by walls and hence, <strong>minions</strong> cannot go pass the border
                 of the map. Empty cells may contain <strong>coins</strong>.
-                <strong>Minions</strong> can collect <strong>coins</strong> as they
-                move over cells that contain <strong>coins</strong>.
-                Collecting <strong>coins</strong> increases the <strong>score</strong>
-                the player. <strong>Score</strong> points can be used to perform a
-                <strong>power-up</strong>.
+
+                <var>height</var> of the map (number of rows) will be in range
+                <const>17</const> to <const>20</const> and
+                <var>width</var> of the map (number of columns) will be in range
+                <const>33</const> to <const>35</const>.
             </p>
 <!--            Minions-->
             <h3 style="font-size: 24px; margin-top: 20px; margin-bottom: 10px; font-weight: 500; line-height: 1.1;">
@@ -119,15 +121,30 @@ text-align: left;">
                 when a <strong>power-up</strong> is used against them and they lose
                 some hp, decreasing their <var>health</var>. A
                 <strong>minion</strong> whose <var>health</var> drops below
-                <const>1</const> dies and vanishes from the game. A dead
+                <const>1</const> dies and is removed from the game. A dead
                 <strong>minion</strong> never returns back to the game.
             </p>
             <p>
                 <strong>Minions</strong> <b>cannot see through walls</b>. On each
                 turn, you have vision on all of the enemy <strong>minions</strong>
                 and <strong>coins</strong> that can be connected by a continuous
-                straight line to any one of your <strong>minions</strong>
+                straight line to any one of your <strong>minions</strong>. That is,
+                a single <strong>minion</strong> can see everything along the
+                row and column it is in unless blocked by a wall. A player's vision is
+                the collected vision of all his/her <strong>minions</strong>.
             </p>
+            <div class="statement-example-container">
+                <div class="statement-example">
+                    <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/290714953_768432404174236_3914247274791505585_n.png?stp=dst-png_p173x172&_nc_cat=106&ccb=1-7&_nc_sid=aee45a&_nc_ohc=oyP-lbtDu6EAX_nVqoP&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AVLTtw0JBP_u44-0gJkip34iujyFA3ag9cl29KRSqBgYIQ&oe=62EE4D57" />
+                    <div class="legend">
+                        <div class="description">
+                            The white <strong>minion's</strong> vision is indicated by
+                            the arrows. It has vision on <const>2</const>
+                            opponent (red) <strong>minions</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
             <p>
                 <strong>Minions</strong> can receive the following commands (a
                 <strong>minion</strong> can receive only one command per turn):
@@ -136,7 +153,7 @@ text-align: left;">
                 <li>
                     <action>MOVE</action>: Give the <strong>minion</strong> a
                     target position. The minion will find a shortest route to
-                    that position and <b>move to the first cell along that route</b>.
+                    that position and <b>move to the first empty cell along that route</b>.
                     The minion will not take into account the presence of any other
                     <strong>minions</strong> or <strong>coins</strong> when choosing
                     the route.
@@ -177,10 +194,10 @@ text-align: left;">
             </p>
             <p>
                 A <strong>flag</strong> can be carried by only one
-                <strong>minion</strong> at a time. <b>Once a minion obtains a flag
-                , it cannot let it go until it is dead.</b> Following the
-                <strong>flag</strong> carrying <strong>minion's</strong> death,
-                the <strong>flag</strong> remains at that cell where the
+                <strong>minion</strong> at a time. <b>Once a <strong>minion</strong>
+                obtains a flag , it cannot drop the flag until it is dead.</b>
+                Following the <strong>flag</strong> carrying <strong>minion's</strong>
+                death, the <strong>flag</strong> remains at that cell where the
                 <strong>minion</strong> died until some other <strong>minion</strong>
                 picks it up.
             </p>
@@ -200,8 +217,21 @@ text-align: left;">
                     straight line starting from that <strong>minion's</strong>
                     position (along the row and column) will be ignited.
                     Any <strong>minion</strong> caught in this fire will take
-                    <const>20</const> damage. Cost of using a <const>fire</const>
-                    is <const>5</const> <strong>score</strong> points.
+                    <const>24</const> damage. Cost of using a <const>fire</const>
+                    is <const>7</const> <strong>score</strong> points.
+
+                    <div class="statement-example-container">
+                        <div class="statement-example">
+                            <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/290393634_590386612457102_2743121304416807024_n.png?stp=dst-png_s280x280&_nc_cat=106&ccb=1-7&_nc_sid=aee45a&_nc_ohc=cl-Zm9m3H1wAX_38eLN&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AVJpKFKdmNe6jaUs82vCAFGl4jPv0TPs1fuYGBwsjsf72Q&oe=62F262FB" />
+                            <div class="legend">
+                                <div class="description">
+                                    The <strong>minion</strong> marked with red circle uses <const>FIRE</const>,
+                                    igniting all the empty cells in the row and column unless blocked by a wall.
+                                    The <strong>minion</strong> marked with white circle takes damage by the fire.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
                 <li>
                     <action>FREEZE</action>: A <strong>minion</strong> that uses
@@ -210,22 +240,65 @@ text-align: left;">
                     straight line starting from that <strong>minion's</strong>
                     position (along the row and column) will be frozen. Any
                     <strong>minion</strong> caught in this <const>freeze</const>
-                    will be <strong>timed out</strong> for <const>10</const> turns.
+                    will be <strong>timed out</strong> for <const>4</const> turns.
                     A <strong>timed out</strong> <strong>minion</strong> cannot do
                     anything. Any commands given to a <strong>timed out</strong>
                     minion won't have any impact. Cost of using a <const>freeze</const>
-                    is <const>5</const> <strong>score</strong> points.
-                </li>
+                    is <const>12</const> <strong>score</strong> points.
+
+                    <div class="statement-example-container">
+                        <div class="statement-example">
+                            <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/290724107_7791665140875685_6184808829462636510_n.png?stp=dst-png_s280x280&_nc_cat=104&ccb=1-7&_nc_sid=aee45a&_nc_ohc=8hobfRL7lXAAX_lIkxq&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AVKodAxsbP4eyZukd04zge3sXgS0JjwqgjV9YQDgtV9Omg&oe=62F0CAA3" />
+                            <div class="legend">
+                                <div class="description">
+                                    The <strong>minion</strong> marked with red circle uses <const>FREEZE</const>,
+                                    freezing all the empty cells in the row and column unless blocked by a wall.
+                                    The <strong>minion</strong> marked with white circle is <strong>timed out</strong>
+                                    for <const>4</const> turns due to being frozen.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li> <br>
                 <li>
                     <action>MINE</action>: A <strong>minion</strong> that uses
-                    <const>mine</const> can plant a bomb at a certain cell of the grid.
-                    Any <strong>minion</strong> (including the one who planted the bomb)
-                    that walks over that cell will trigger the bomb to explode. Once
+                    <const>mine</const> can plant a bomb at any empty cell <b>adjacent
+                    to the current position</b> of that <strong>minion</strong>.
+                    Once planted, the bomb will remain in that position until some
+                    <strong>minion</strong> walks over that cell.
+                    Once a <strong>minion</strong> (including the one who planted the bomb)
+                    walks over that cell the bomb will explode. Once
                     a bomb explodes, any <strong>minion</strong> within a radius of
                     <const>2</const> will take <const>30</const> damage. The explosion
                     impact does not go through walls and walls are unaffected by the
-                    explosion. Cost of using a <const>mine</const> is <const>10</const>
+                    explosion. Cost of using a <const>mine</const> is <const>15</const>
                     <strong>score</strong> points.
+
+                    <p>
+                        Note that <strong>minions</strong> cannot see whether there
+                        is a mine planted on a cell or not.
+                    </p>
+
+                    <div class="statement-example-container">
+                        <div class="statement-example">
+                            <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/285037111_1023623165702567_7453575533737135685_n.png?stp=dst-png_p206x206&_nc_cat=102&ccb=1-7&_nc_sid=aee45a&_nc_ohc=vTXYcRZFI-QAX9AosSv&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AVIJ_juqMgqEL_otoNCIM2J8x6aRRpUHhCrmeIsgU4UFeg&oe=62F031D1" />
+                            <div class="legend">
+                                <div class="description">
+                                    The <strong>minion</strong> is about to take a step into a cell where a
+                                    <const>mine</const> is planted.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="statement-example">
+                            <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/286027823_2962687777356846_7411486157310698290_n.png?stp=dst-png_p206x206&_nc_cat=103&ccb=1-7&_nc_sid=aee45a&_nc_ohc=jq-EWUKC4eMAX-Od_-o&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AVL0ESTdeYb9LjLyGKf5foNTzfRmfzGJV41DmSSkIAIw_w&oe=62F152BD" />
+                            <div class="legend">
+                                <div class="description">
+                                    The <const>mine</const> is triggered and explodes with a radius of <const>2</const>,
+                                    dealing <const>30</const> damage to anyone caught in explosion.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             </ul>
             <p>
@@ -248,7 +321,7 @@ text-align: left;">
                 <strong>minion</strong> can collect a <strong>coin</strong> if
                 it walks over a cell that contains a <strong>coin</strong>. Once
                 a <strong>coin</strong> has been collected, it disappears and
-                never reappears. A player starts with <const>15</const> score points
+                never reappears. A player starts with <const>0</const> score points
             </p>
 
 
@@ -433,17 +506,17 @@ text-align: left;">
                             have higher <strong>score</strong> than your opponent
                         </li>
                         <li>
-                            You have more alive <strong>minion</strong> count
+                            You have more alive <strong>minions</strong>
                             after <const>200</const> <strong>turns</strong>
                         </li>
                         <li>
-                            In case of having same alive <strong>minion</strong>
-                            count as your opponent after <const>200</const>
+                            In case of having same number of alive <strong>minions</strong>
+                            as your opponent after <const>200</const>
                             <strong>turns</strong>, you have higher
                             <strong>score</strong>.
                         </li>
                     </ul>
-                    <strong>In case of tie, the game is considered as a draw.</strong>
+                    <strong>In case of tie, the game is considered as a draw, with both player being 1st</strong>
                 </div>
             </div>
         </div>
@@ -457,7 +530,7 @@ text-align: left;">
                         <li>
                             Opponent <strong>minion</strong> took your flag to
                             their <strong>flag-base</strong> before your
-                            <strong>minion</strong> took their
+                            <strong>minion</strong> captured opponent
                             <strong>flag</strong>.
                         </li>
                         <li>

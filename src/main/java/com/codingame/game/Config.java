@@ -25,16 +25,16 @@ public class Config {
     public static final int MAZE_UPPER_OFFSET = 200;
 
 
-    public static final int FIRE_DAMAGE = 20;
-    public static final int FIRE_PRICE = 5;
+    public static final int FIRE_DAMAGE = 24;
+    public static final int FIRE_PRICE = 7;
 
     public static final int MINE_DAMAGE = 30;
-    public static final int MINE_PRICE = 10;
+    public static final int MINE_PRICE = 15;
     public static final int MINE_RANGE = 2;
 
 
-    public static final int FREEZE_TIMEOUT = 10;
-    public static final int FREEZE_PRICE = 5;
+    public static final int FREEZE_TIMEOUT = 4;
+    public static final int FREEZE_PRICE = 12;
 
     public static final Coord[] ADJACENCY = {
             new Coord(-1, 0),

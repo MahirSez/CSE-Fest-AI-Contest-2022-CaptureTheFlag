@@ -59,6 +59,8 @@ public class Test1 {
             powerDamage.add(damage);
         }
 
+        boolean plantedMine = false;
+
         System.err.print("Entering game loop\n");
         int captured = 0;
         while (true) {
@@ -114,35 +116,24 @@ public class Test1 {
                 y = scanner.nextInt();
             }
 
-            int ii = 10, jj = 16;
-//            for(int i = 0; i < row; i++) {
-//                for(int j = 0; j < col; j++) {
-//                    if(dunia.get(i).charAt(j) == '.') {
-//                       ii = i;
-//                       jj = j;
-//                    }
-//                }
-//            }
-
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
                 Bot bot = bots.get(i);
-//                if(opp_seen_cnt > 0) {
-//                    for(Bot opbot: oppBots) {
-//                        if(opbot.x == bot.x || opbot.y == bot.y) { // this bot has a visible enemy minion
-//                            str.append(String.format("FIRE %d", bot.id));
-//                            System.err.println(bot.id + ": firing");
-//                            break;
-//                        }
-//                    }
-//                }
-                if(bot.x == ii && bot.y == jj) {
-                    str.append(String.format("FREEZE %d", bot.id));
-                    System.err.println(bot.id + ": firing");
+                if(bot.id == 0) {
+                    if((bot.x != 11 || bot.y != 12) && !plantedMine) {
+                        str.append(String.format("MOVE %d 11 12", bot.id));
+                    }
+                    else if(!plantedMine) {
+                        str.append(String.format("MINE %d 12 12", bot.id));
+                        plantedMine = true;
+                    }
+                    else {
+                        str.append(String.format("MOVE %d 8 12", bot.id));
+                    }
                 }
                 else {
-                    str.append(String.format("MOVE %d %d %d", bot.id, ii, jj));
+                    str.append(String.format("MOVE %d %d %d", bot.id, my_base_x, my_base_y));
                 }
             }
             System.out.println(str);

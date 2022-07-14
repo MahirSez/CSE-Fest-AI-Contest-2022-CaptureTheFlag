@@ -78,8 +78,10 @@ public class Test2 {
             opp_flag_y= scanner.nextInt();
             opp_carrier = scanner.nextInt();
 
+            System.err.println("Score: " + my_score);
+
             alive_cnt = scanner.nextInt();
-            ArrayList<Bot> bots = new ArrayList<>();
+            ArrayList<Test1.Bot> bots = new ArrayList<>();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 int id, x, y, health, timeout;
                 id = scanner.nextInt();
@@ -87,10 +89,11 @@ public class Test2 {
                 y = scanner.nextInt();
                 health = scanner.nextInt();
                 timeout = scanner.nextInt();
-                bots.add(new Bot(id, x, y, health, timeout));
+                bots.add(new Test1.Bot(id, x, y, health, timeout));
                 System.err.println(id + ": health(" + health + "), pos(" + x + "," + y + "), timeout(" + timeout + ")");
             }
 
+            ArrayList<Test1.Bot> oppBots = new ArrayList<>();
             opp_seen_cnt = scanner.nextInt();
             for(int i = 0 ; i < opp_seen_cnt ; i++) {
                 int id, x, y, health, timeout;
@@ -100,7 +103,9 @@ public class Test2 {
                 health = scanner.nextInt();
                 timeout = scanner.nextInt();
                 System.err.println("Seeing " + id + " " + x + " " + y + " " + health + " " + timeout);
+                oppBots.add(new Test1.Bot(id, x, y, health, timeout));
             }
+
             visible_coin_cnt = scanner.nextInt();
             for(int i = 0 ; i < visible_coin_cnt ; i++) {
                 int x, y;
@@ -108,27 +113,12 @@ public class Test2 {
                 y = scanner.nextInt();
             }
 
-            int ii = 0, jj = 0;
-            for(int i = 0; i < row; i++) {
-                for(int j = 0; j < col; j++) {
-                    if(dunia.get(i).charAt(j) == '.') {
-                        ii = i;
-                        jj = j;
-                    }
-                }
-            }
-
             StringBuilder str = new StringBuilder();
             for(int i = 0 ; i < alive_cnt ; i++) {
                 if(i > 0) str.append(" | ");
-                Bot bot = bots.get(i);
-//                if(bot.x == ii && bot.y == jj) {
-//                    str.append(String.format("FIRE %d", bot.id));
-//                    System.err.println(bot.id + " using fire");
-//                }
-//                else {
-                    str.append(String.format("MOVE %d %d %d", bot.id, ii, jj));
-//                }
+                Test1.Bot bot = bots.get(i);
+                if(bot.id == 0) str.append(String.format("MOVE %d 12 12", bot.id));
+                else str.append(String.format("WAIT %d", bot.id));
             }
             System.out.println(str);
         }
