@@ -1,6 +1,6 @@
 # Documentation
 
-Game Link: https://www.codingame.com/contribute/view/7845e540d4efbbe4d9f4b68686460bb53424
+Game Link: [https://www.codingame.com/contribute/view/7845e540d4efbbe4d9f4b68686460bb53424](https://www.codingame.com/ide/demo/9421946f2e2ee3b64f9d10ff8e195b67d51dff)
 
 
 Useful Resources
