@@ -1,21 +1,31 @@
 import com.codingame.gameengine.runner.MultiplayerGameRunner;
 
+// test-run-moidda
+
 public class SkeletonMain {
     public static void main(String[] args) {
 
-
-        /* Multiplayer Game */
         MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
 
-        // Adds as many player as you need to test your game
-        gameRunner.addAgent(Mover.class, "red");
-        gameRunner.addAgent(Freezer.class, "blue");
+//        gameRunner.addAgent(Test1.class, "red");
+//        gameRunner.addAgent(Test2.class, "blue");
+
+//        gameRunner.addAgent(Waiter_with_more_score.class, "red");
+//        gameRunner.addAgent(Waiter_with_more_score.class, "blue");
+
+        gameRunner.addAgent(Freezer.class, "red");
+        gameRunner.addAgent(Flamer.class, "blue");
+
+//        gameRunner.addAgent(Waiter.class, "red");
+//        gameRunner.addAgent(Waiter.class, "blue");
+
+//        gameRunner.addAgent(Waiter.class, "red");
+//        gameRunner.addAgent(Waiter_with_more_score.class, "blue");
+
+//        gameRunner.addAgent(Waiter.class, "red");
+//        gameRunner.addAgent(Self_killer.class, "blue");
+
         gameRunner.setSeed(243L);
-
-        // Another way to add a player
-        // gameRunner.addAgent("python3 /home/user/player.py");
-        
-
         gameRunner.start();
     }
 }

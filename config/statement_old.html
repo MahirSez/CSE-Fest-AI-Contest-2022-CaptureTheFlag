@@ -1,0 +1,241 @@
+<div id="statement_back" class="statement_back" style="display:none"></div>
+<div class="statement-body">
+  <!-- GOAL -->
+  <div class="statement-section statement-goal">
+    <h1>
+      <span class="icon icon-goal">&nbsp;</span>
+      <span>The Goal</span>
+    </h1>
+    <div class="statement-goal-content">
+      Capture opponent's flag and take it to your base before them!
+      <br>
+    </div>
+  </div>
+  <!-- RULES -->
+  <div class="statement-section statement-rules">
+    <h1>
+      <span class="icon icon-rules">&nbsp;</span>
+      <span>Rules</span>
+    </h1>
+    <div>
+      <div class="statement-rules-content">
+        <p>
+        The game is played on a 2D grid given to you at the start of the game. The grid is made up of walls and empty
+        spaces. Each player controls a team of minions that can move along the grid.
+      </p>
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">The Map</h3>
+        <p>
+        The grid is generated randomly, and can vary in <var>height</var> and <var>width</var>.
+        Each cell of the map is either:
+        </p>
+        <ul>
+          <li>A wall (represented by a pound character: <action>#</action>)</li>
+          <li>An empty space (represented by a dot character: <action>.</action>)</li>
+        </ul>
+        <p>
+        Maps are always symmetrical across the central vertical axis. Minions cannot go pass the border of the map or go
+          through walls. They can only pass through empty cells. Empty cells may contain <b>coins</b>. Minions can collect coins
+          as they move over cells that contain coins. Collecting coins increases the <var>score</var> of the player.
+        </p>
+
+<!--MINIONS-->
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">The Minions</h3>
+        <p>
+          Each player starts with the same number of minions, up to <action>5</action> each.
+        </p>
+        <p>
+          Your minions <b>cannot see through walls</b>. On each turn you have vision on all of the enemy minions and coins
+          that can be connected by a continuous straight line to any one of your minions.
+        </p>
+        <p>
+          At each turn, you are given information regarding your own alive minions, the opponent's visible minions and all the
+          visible coins. For each minion, you are given its identifier, its coordinates and its health. For each coins,
+          you are given its coordinates.
+        </p>
+        Minions can receive the following commands (a minion can only receive one command per turn):
+        <ul>
+          <li>
+            <action>MOVE</action>: Give the minion a target position. The minion will find a shortest route to that position
+            and <b>make the first move along the way</b>. The minion will not take into account the presence of other minions when choosing a route.
+          </li>
+          <li>
+            <action>WAIT</action>: Do nothing.
+          </li>
+        </ul>
+        <p>
+          Minions can also receive special commands which enables it to perform a powerup which can deal damage to the opponent
+          minions. Refer to the the <b>power up</b> section.
+        </p>
+
+        <p>
+          See the Game Protocol section for more information on sending commands to your minion. Note that, minions
+          <b>never</b> collide and multiple minions can exist in the same cell.
+        </p>
+
+
+<!--        FLAG and FLAG BASE-->
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">Flag and Flag Base</h3>
+        <p>Each player's flag resides at the flag-base in the beginning of the game. A player's minions can only carry
+          opponent's flag. Note that each player's minions <b>cannot</b> carry their own flag. A flag can be carried by
+          only one minion at a time. <b>Once a minion obtains a flag, it cannot let it go until it is dead.</b> Following
+          the flag-carrying-minion's death, <b>the flag remains at that cell where the minion died until some other minion
+            picks it up</b>.
+        </p>
+
+
+<!--        Power ups-->
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">Game end</h3>
+        <p>
+          There are 3 types of power ups that a minion can use.
+          <ul>
+          <li>
+            <action>FIRE</action>: A minion that uses fire will ignite every cell in its vision with fire. That is, the whole
+            row and the whole column up until the nearest wall will be ignited. Any opponent minion caught in this fire
+            will take damage.
+          </li>
+          <li>
+            <action>FREEZE</action>: A minion that uses freeze will freeze every cell in its vision with ice. That is,
+            the whole row and the whole column up until the nearest wall will be frozen. Any opponent minion caught in
+            this ice will be frozen (stuck) in its position for <var>timeout</var> amount of time.
+          </li>
+          <li>
+            <action>MINE</action>: A minion that uses mine can plant a bomb at a certain cell of the grid. Any opponent
+            minion that walks over that cell will trigger the bomb to explode. Once a bomb explodes, the opponent minion
+            takes damage.
+          </li>
+          </ul>
+        </p>
+        <p>
+          Each power up requires a certain <var>score</var>. Refer to <b>protocol</b> section on how to use power up command.
+        </p>
+
+
+
+<!--        GAME ENDS-->
+        <h3 style="font-size: 14px;
+      font-weight: 700;
+      padding-top: 5px;
+      padding-bottom: 15px;">Game end</h3>
+        <p>Game can end on any of the following 3 conditions:
+          <ul>
+            <li>
+              One of the player's minions captures opponent's flag and returns to its own flag-base.
+            </li>
+            <li>
+              All the minions of a player are killed.
+            </li>
+            <li>
+              The game doesn't end on any of the two conditions above for more than 200 rounds. In that case, the
+              player with the highest score wins and the game is forcefully ended.
+            </li>
+          </ul>
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- PROTOCOL -->
+  <div class="statement-section statement-protocol">
+    <h1>
+      <span class="icon icon-protocol">&nbsp;</span>
+      <span>Game Input</span>
+    </h1>
+
+    <!-- Protocol block -->
+    <div class="blk">
+      <div class="title">Initialization Input</div>
+      <div class="text">
+        <span class="statement-lineno">Line 1: </span>two integers <var>height</var> and <var>width</var> - the size of the maze. <br>
+        <span class="statement-lineno">Next <var>height</var> lines:</span> a string of <var>width</var> characters each representing one cell of a row: <const>'.'</const> is an empty cell and <const>'#'</const> is a wall. <br>
+        <span class="statement-lineno">Next line:</span> two integers: <var>my_flag_base_x</var> & <var>my_flag_base_y</var> - player's flag-base position <br>
+        <span class="statement-lineno">Next line:</span> two integers: <var>opponent_flag_base_x</var> & <var>opponent_flag_base_y</var> - opponent's flag-base position <br>
+        <span class="statement-lineno">Next 3 lines:</span> <var>powerUpName</var> , <var>powerUpPrice</var> & <var>powerUpDamage</var> <br>
+      </div>
+    </div>
+
+    <!-- Protocol block -->
+    <div class="blk">
+      <div class="title">Input for Each Game Turn</div>
+      <div class="text">
+        <span class="statement-lineno">Line 1:</span>
+          two integers:
+          <ul>
+            <li><var>my_score</var> & <var>opponent_score</var> - player's and opponent's current score</li>
+          </ul>
+        <span class="statement-lineno">Line 2:</span>
+          three integers:
+          <ul>
+            <li><var>my_flag_pos_x</var>, <var>my_flag_pos_y</var> & <var>my_flag_carrier</var> - player's flag position and carrier of flag by opponent's minion (-1 if no minion is carrying)</li>
+          </ul>
+        <span class="statement-lineno">Line 3:</span>
+          three integers:
+          <ul>
+            <li><var>opponent_flag_pos_x</var>, <var>opponent_flag_pos_y</var> & <var>opponent_flag_carrier</var> - opponent's flag position and carrier of opponent's flag by player's minion (-1 if no minion is carrying) </li>
+          </ul>
+        <span class="statement-lineno">Line 4:</span> <var>my_alive_minion_cnt</var> - number of player's alive minions <br>
+        <span class="statement-lineno">Next <var>my_alive_minion_cnt</var> lines:</span>
+          <ul>
+            <li> <var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var> <var>timeout</var> - player's minion's id, position, health & timeout</li>
+          </ul>
+        <span class="statement-lineno">Next Line:</span> <var>visible_minion_cnt</var> - number of opponent's visible minions <br>
+        <span class="statement-lineno">Next <var>visible_minion_cnt</var> lines:</span>
+          <ul>
+            <li><var>id</var> <var>pos_x</var> <var>pos_y</var> <var>health</var>  <var>timeout</var>  - opponent's minion's id, position & health </li>
+          </ul>
+        <span class="statement-lineno">Next Line:</span> <var>visible_coin_cnt</var> - number of coins visible by player's minions <br>
+        <span class="statement-lineno">Next <var>visible_coin_cnt</var> lines:</span>
+        <ul>
+          <li> <var>pos_x</var> <var>pos_y</var> coin position </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Protocol block -->
+    <div class="blk">
+      <div class="title">Output</div>
+      <div class="text">
+        A single line with one or multiple commands separated by <const>|</const>. For example: <action>MOVE 0 5 7 | MOVE 1 16 10</action>.
+        <ul>
+          <li>
+            <action>MOVE minionID x y</action>: the minion with the identifier <const>minionID</const> moves towards the given cell.
+          </li>
+          <li>
+            <action>FIRE minionID</action>: the minion with the identifier <const>minionID</const> uses FIRE.
+          </li>
+          <li>
+            <action>FREEZE minionID</action>: the minion with the identifier <const>minionID</const> uses FREEZE.
+          </li>
+          <li>
+            <action>MINE minionID x y</action>: the minion with the identifier <const>minionID</const> plants mine at (x,y).
+          </li>
+          <li>
+            <action>WAIT minionID</action>: the minion with the identifier <const>minionID</const> does nothing.
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Protocol block -->
+    <div class="blk">
+      <div class="title">Constraints</div>
+<!--      <div class="text"><var>...</var> contains between 1 and 500 characters.<br>-->
+<!--        <br>Allotted response time to output-->
+<!--        is ≤ <const>2</const> seconds.</div>-->
+      TBD
+    </div>
+
+  </div>
+</div>

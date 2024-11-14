@@ -34,7 +34,7 @@ public class Minion {
     }
 
     public Coord getPos() { return this.pos; }
-    int getHealth() { return this.health; }
+    public int getHealth() { return this.health; }
     public int getID() { return this.minionID; }
     public Player getOwner() { return this.owner; }
     public boolean isDead() { return this.health <= 0; }
@@ -66,6 +66,6 @@ public class Minion {
     }
 
     public void addTimeOut(int timeOut) {
-        this.timeOut = timeOut;
+        this.timeOut = Math.max(timeOut, this.timeOut);
     }
 }

@@ -82,6 +82,23 @@ public class View {
         return Config.MAZE_UPPER_OFFSET + wallHeight * y + this.emptyPixelY;
     }
 
+
+    void setTooltipText() {
+        for(Player player: gameManager.getPlayers()) {
+            for(int i = 0; i < player.getMinions().size(); i++) {
+                String text = String.format(
+                        "id: %d\nposR: %d\nposC: %d\nhealth: %d\ntimeout: %d",
+                        player.getMinions().get(i).getID(),
+                        player.getMinions().get(i).getPos().getX(),
+                        player.getMinions().get(i).getPos().getY(),
+                        player.getMinions().get(i).getHealth(),
+                        player.getMinions().get(i).getTimeOut()
+                );
+                tooltips.setTooltipText(minionToSprite.get(player.getMinions().get(i)), text);
+            }
+        }
+    }
+
     public void drawMinions() {
          for(Player player: gameManager.getPlayers()) {
              for(Minion minion: player.getMinions()) {
@@ -350,6 +367,7 @@ public class View {
         drawFlags();
         drawCoins();
         drawHud();
+        setTooltipText();
     }
     public void resetData() {
         movers.clear();
@@ -579,6 +597,7 @@ public class View {
         showPowerUpsInCells();
         updateFlag();
         updateScores();
+        setTooltipText();
     }
 
     private void addMines() {
